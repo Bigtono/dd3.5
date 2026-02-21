@@ -1,0 +1,17 @@
+(SELECT re_id as id, re_nom as nom,"règles" as source, "regle.php?regle" as lapage FROM `dd_regles` WHERE re_nom LIKE "%'.$critere.'%" OR re_texte LIKE "%'.$critere.'%")
+UNION
+(SELECT om_id as id, om_nom as nom, "objets magiques" as source, "objet_magique.php?om" as lapage FROM `dd_objets_magiques` WHERE om_nom LIKE "%'.$critere.'%" OR `om_description` LIKE "%'.$critere.'%")
+UNION
+(SELECT comp_id as id, comp_nom as nom,"compétences" as source, "competence.php?comp" as matable FROM `dd_competences` WHERE comp_nom LIKE "%'.$critere.'%" OR `comp_description` LIKE "%'.$critere.'%" OR `comp_test` LIKE "%'.$critere.'%" OR `comp_action` LIKE "%'.$critere.'%" OR `comp_nouvelleTentative` LIKE "%'.$critere.'%" OR `comp_special` LIKE "%'.$critere.'%")
+UNION
+(SELECT so_id as id, so_nom as nom,"sorts" as source, "sort.php?sort" as matable FROM `dd_sorts` WHERE so_nom LIKE "%'.$critere.'%" OR `so_texte` LIKE "%'.$critere.'%")
+UNION
+(SELECT do_id as id, do_nom as nom,"dons" as source, "don.php?don" as matable FROM `dd_dons` WHERE do_nom LIKE "%'.$critere.'%" OR `do_texte` LIKE "%'.$critere.'%" OR `do_resume` LIKE "%'.$critere.'%")
+UNION
+(SELECT cla_id, cla_nom, comp_nom FROM `dd_classe_competence` JOIN dd_classes ON cc_cla_id=cla_id JOIN dd_competences ON cc_comp_id=comp_id WHERE cla_nom LIKE "%'.$critere.'%" OR `cla_description` LIKE "%'.$critere.'%" OR comp_nom LIKE "%'.$critere.'%" ORDER BY cla_nom, comp_nom)
+ORDER BY nom;
+
+
+
+// selection des niveaux de lanceurs de sort d'un personnage
+SELECT pe_nom, cla_nom,`cn_niveauSortArcane` FROM `dd_personnages` JOIN `dd_personnages_classes` ON pe_id=pc_pe_id JOIN `dd_classes` ON pc_cla_id=cla_id JOIN dd_classe_niveau ON pc_cla_id=cn_cla_id WHERE pe_id=1 AND cn_niveau<=pc_niveau;

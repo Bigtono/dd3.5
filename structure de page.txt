@@ -1,0 +1,113 @@
+[...]
+<!doctype html>
+<html>
+<HEAD>
+  <? include("include/head.php"); ?>
+  [...]
+</HEAD>
+
+<BODY>
+  <div id="page">
+	<? include("include/header.php"); // entête de la page ?>
+	<? include("include/menu.php"); // Menu de gauche ?>
+	[...]
+	<div class="wrapper">
+		<? include('include/ariane.php'); // Fil d'ariane du site?>
+		<!-- Bloc titre de la page .titreAction --->
+		<div id="titre-page" class="titreAction">
+			<div class="titreA">[TITRE DE LA PAGE]</div>
+			<div>[EMPLACEMENT d'un lien contextuel]</div>
+		</div>
+    
+		<div class="page-content">
+			[CONTENU PRINCIPAL DE LA PAGE]
+		</div><!-- page-content -->
+
+		<!-- MENU CONTEXTUEL -->
+		<div id="menu-sort" class="menu-contextuel hidden">
+		  <ul></ul>
+		</div>
+		
+		<!--- Bouton de retour en haut de page --->
+		<p class="mb50">&nbsp;</p> <!--- marge pour éviter le chevauchement du texte et du bouton de retour en haut de page --->
+		<button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>    
+		
+	  </div> <!-- #wrapper --->
+	</div> <!-- #page --->
+	<div id="detail-pp"></div>
+</body>
+</html>
+
+NOTES DE CONCEPTION
+#page contient l'ensemble de la page
+#wrapper contient la partie principale de la page hors entête et menu de gauche
+#titre-page contient le titre de la page et une zone pour un ou plusieurs liens spécifiques à la page
+#page-content contient les données principales de la page. Ex: pour grimoire.php, ce sera la liste des sorts du personnage. Pour certaines page, un code du type  data-XXXX-id="<?= $XXXX_id ?>" est injecté dans cette balise où XXXX précise la nature de la variable. Exemple pour grimoire_gestion.php, XXXX est égal à perso 
+#detail-pp sert à afficher le détail de certaines informations de jeu comme les sorts ou les dons suite à une action onCLick="afficherXXXX(id)" où XXXX précise le type de l'info à afficher. L'affichage se fait via AJAX.
+
+Le code du header de la page est chargé par include("include/header.php")  et sa structure est : 
+  <header>
+    <div class="dflex clearfix">
+      <button type="button" id="toggleMenu" class="toggle_menu">
+        <i class="fa fa-bars txt-white"></i>
+      </button>
+      <h1><a href="http://<? echo $_SESSION['url_site']; ?>" class="lien txt-white"><? echo $_SESSION['titre_site']; ?></a></h1>
+      <form action="recherche.php" method="get" name="recherche" id="recherche">
+        <input type="text" name="critere_recherche" value="<? echo $critere_recherche; ?>" size="20" onClick="myFocus(this)"/>
+        <button id="fa-search"><i class="fa fa-search" aria-hidden="true"></i></button>
+      </form>
+      <div id="bouton_recherche"><div onClick="toggle('menu_recherche2')"><i class="fa fa-search" aria-hidden="true"></i></div></div>
+      <div><span class="ruleset"><? echo libvar($_SESSION['ruleset']); ?></span></div>
+    </div>
+    <div id="menu_recherche2" class="search-container">
+      <form action="recherche.php" method="get" name="recherche2" id="recherche2" class="search-form">
+        <input type="text" class="search-input" name="critere_recherche" value="<? echo $critere_recherche; ?>" size="20" onClick="myFocus(this)"/>
+        <button id="fa-search2" class="search-button"><i class="fa fa-search" aria-hidden="true"></i></button>
+      </form>
+    </div>
+  </header>
+  
+  Le code du menu latéral de gauche est chargé par include("include/menu.php") et sa structure est 
+  <nav class="vertical_nav">
+	<ul id="js-menu" class="menu">
+		<li class="menu--item  menu--item__has_sub_menu">
+		  <label class="menu--link" title="Item 1">
+			<i class="menu--icon  fa fa-fw fa-user"></i>
+			<span class="menu--label">Ressources de jeu</span>
+		  </label>
+		  <ul class="sub_menu">
+			<li class="sub_menu--item">
+			  <a href="campagnes.php" class="sub_menu--link">Campagnes</a>
+			</li>   
+			<li class="sub_menu--item">
+			  <a href="personnages.php" class="sub_menu--link">Personnages</a>
+			</li>
+		  </ul>
+		</li>
+		<li class="menu--item">
+		  <a href="regles.php" class="menu--link" title="R&egrave;gles">
+			<i class="menu--icon fa fa-fw fa-bookmark"></i>
+			<span class="menu--label">R&egrave;gles</span>
+		  </a>
+		</li>
+		[...]
+		<li class="menu--item">
+		  <a href="profil.php" class="menu--link" title="Profil">
+			<i class="menu--icon fa-solid fa-fw fa-circle-user"></i>
+			<span class="menu--label">Mon profil</span>
+		  </a>
+		</li>        
+		<li class="menu--item">
+		  <a href="deconnexion.php" class="menu--link" title="Deconnexion">
+			<i class="menu--icon fa fa-fw fa-cog"></i>
+			<span class="menu--label">D&eacute;connexion</span>
+		  </a>
+		</li>    
+	  </ul>
+	  <button id="collapse_menu" class="collapse_menu">
+		<i class="collapse_menu--icon fa fa-fw"></i>
+		<span class="collapse_menu--label">menu</span>
+	  </button>
+</nav>
+
+l'Annotation [...] das la structure indique des emplacement où du code spécifique à la page peut être inséré. Ce code n'est pas constitutif de la structure des page.

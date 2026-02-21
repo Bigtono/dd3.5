@@ -1,0 +1,20 @@
+<table>
+<thead><tr><th>Mor-vivant</th><th>Niveau</th></tr></thead>
+<tbody>
+<tr><td>Squelette de taille M</td><td>1</td></tr>
+<tr><td>Zombi de taille P</td><td>1</td></tr>
+<tr><td>Squelette de taille G</td><td>2</td></tr>
+<tr><td>Zombi de taille M</td><td>2</td></tr>
+<tr><td>Goule</td><td>3</td></tr>
+<tr><td>Squelette de taille TG</td><td>3</td></tr>
+<tr><td>Zombi de taille G</td><td>3</td></tr>
+<tr><td>Allip</td><td>4</td></tr>
+<tr><td>Blême</td><td>4</td></tr>
+<tr><td>Zombi</td><td>4</td></tr>
+<tr><td>Momie</td><td>5</td></tr>
+<tr><td>Nécrophage</td>5<td></td></tr>
+<tr><td>Ombre</td><td>5</td></tr>
+<tr><td>Vampirien</td><td>5</td></tr>
+</tbody>
+</table>
+

@@ -1,0 +1,104 @@
+/* CSS Document */
+.tabs {
+  display:flex;
+  gap:5px;
+  margin-bottom:10px;
+}
+.tab-btn {
+  padding:5px 10px;
+  cursor:pointer;
+}
+.tab-btn.active {
+  font-weight:bold;
+}
+.tab-content {
+  display:none;
+}
+.tab-content.active {
+  display:block;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column; /* empile les niveaux */
+  gap: 8px;
+}
+
+.titre-niveau {
+  margin: 10px 0 4px;
+}
+
+.ligne-sorts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sort_dispo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sort-bulle {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #777;
+  color: #fff;
+  cursor:pointer;
+  user-select: none;
+}
+
+.sort-bulle.connu {
+  background: #000;
+}
+
+.sort-bulle .charges {
+  margin-left:6px;
+  font-weight:bold;
+}
+
+.sort-bulle.memorise {
+  background: #6b4f1d;
+}
+
+.sort-bulle .nom {
+  cursor: pointer;
+}
+
+.sort-bulle .compteur {
+  margin-left: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Menu contextuel sur le clic droit sur un sort du grimoire */
+.menu-contextuel {
+  position: absolute;
+  background: #222;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  z-index: 1000;
+  min-width: 160px;
+}
+
+.menu-contextuel ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.menu-contextuel li {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.menu-contextuel li:hover {
+  background: #444;
+}
+
+.menu-contextuel.hidden {
+  display: none;
+}

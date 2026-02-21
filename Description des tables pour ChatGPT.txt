@@ -1,0 +1,125 @@
+Description mis à jour des tables de ma base.
+Version 2
+
+Informations sur la construction de la base :
+- toutes les tables sont préfixées par dd. Les préfixes sont suivis du caractère _ pour les différencier du reste du nom des tables. Exemple : dd_personnages.
+- Tous les champs sont préfixés afin d'éviter les homonymies. Par exemple la table dd_personnages a comme préfixe "pe" et la table dd_classes a comme préfixe "cla". Les préfixes sont suivis du caractère _ pour les différencier du reste du nom du champ. Exemple : pe_nom est le champ nom de la table personnage préfixée par pe.
+- tous les champs de la base sont donc distincts, il n'y aucun doublons sur les noms des champs. 
+- par défaut (il y a quelques exceptions que je n'ai pas encore corrigé), à l'exception du premier champ qui est systématiquement l'id index de la table, si un nom de champ contient le mot-clé id, il renvoie alors à l'id index d'une autre table en reprenant la syntaxe [préfixe de la table]_id. Ex : pe_ra_id est le champ contenant l'id de la race du personnage (table dd_races, préfixée avec ra).
+
+Listes des principales tables
+-----------------------------
+
+dd_personnages (liste des personnages. Préfixe pe)
+- pe_id (id, index de la table)
+- pe_nom (nom du personnage)
+- pe_ra_id (id de la race du personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 1)
+- pe_arc_id (id de l'archétype personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 2. L'archétype est optionnel, le champ par défaut est égal à 0 et indique que le personnage n'a pas d'archétype)
+- pe_for (caractéristique de Force du personnage)
+- pe_con (caractéristique de Constitution du personnage)
+- pe_dex (caractéristique de Dextérité du personnage)
+- pe_int (caractéristique d'Intelligence du personnage)
+- pe_sag (caractéristique de Sagesse du personnage)
+- pe_cha (caractéristique de Charisme du personnage)
+
+dd_caracteristiques (liste des 6 caractéristiques que possède chaque personnage. Préfixe car)
+- car_id (id, index de la table)
+- car_nom (nom de la caractéristique)
+- car_diminutif (abréviation de la caractéristique)
+Note : la valeur de car_diminutif est constituée des trois premières lettres du nom de la caractéristique. Le jeu comptes six caractéristiques (Force, Constitution, Dextérité, Intelligence, Sagesse, Charisme). Dans la table dd_personnages, la valeur chaque valeur de caractéristique du personnage (de 1 à 30) est stocké dans un champ nommé "pe_" suivi de la valeur car_diminutif. Exemple : pe_for pour force, pe_dex pour dextérité. Dans la table dd_classes, le champ cla_car_id contient l'id de la caractéristique principale de lanceur de sort si cette classe permet de lancer des sorts (cla_mag_id supérieur à 0).
+
+dd_classes (liste des classes, préfixe cla)
+- cla_id (id, index de la table)
+- cla_nom (nom du sort)
+- cla_mag_id (id du type de magie, table dd_typeMagie. Indique si la classe permet de lancer des sorts profanes des sorts divins, ou par défaut aucun sort. 0 : pas de magie, 1 : Magie profane, 2 et 3 : magie divine)
+- cla_niveauMax (indique le nombre de niveaux, de 1 à n que possède la classe. Selon les classes, cla_niveauMax peut avoir les valeurs 5, 10 ou 20)
+- cla_car_id (id de la caractéristique de lanceur de sort, table dd_caracteristiques. Par défaut 0, supérieur à 0 uniquement sur cla_mag_id supérieur à 0)
+
+dd_races (liste des races, préfixe ra)
+- ra_id (id, index de la table)
+- ra_nom (nom de la race)
+- ra_rat_id (id du type de race, table dd_race_type. Indique si la race est une race de base ou un archetype. 1 : race de base; 2 : archétype)
+Note : un personnage a forcément une race indiquée dans le champ 
+
+dd_race_type (liste des types de race. Préfixe rat)
+- rat_id (id, index de la table)
+- rat_nom (nom du type de race)
+
+dd_classe_niveau (description des niveau de chaque classe)
+- cn_id (id, index de la table)
+- cn_cla_id (id de la classe, table dd_classes)
+- cn_niveau (int, valeur de 1 à n, n égal à la valeur cla_niveauMax de la classe dans la table dd_classes)
+- cn_bba (varchar, bonus de base à l'attaque)
+- cn_reflexes (int, bonus au jet de sauvegarde de réflexes)
+- cn_vigueur (int, bonus au jet de sauvegarde de vigueur)
+- cn_volonte (int, bonus au jet de sauvegarde de volonté)
+- cn_sort_n0 (int, nombre de sorts disponibles par jour pour le niveau 0)
+- cn_sort_n1 (int, nombre de sorts disponibles par jour pour le niveau 1)
+- cn_sort_n2 (int, nombre de sorts disponibles par jour pour le niveau 2)
+- cn_sort_n3 (int, nombre de sorts disponibles par jour pour le niveau 3)
+- cn_sort_n4 (int, nombre de sorts disponibles par jour pour le niveau 4)
+- cn_sort_n5 (int, nombre de sorts disponibles par jour pour le niveau 5)
+- cn_sort_n6 (int, nombre de sorts disponibles par jour pour le niveau 6)
+- cn_sort_n7 (int, nombre de sorts disponibles par jour pour le niveau 7)
+- cn_sort_n8 (int, nombre de sorts disponibles par jour pour le niveau 8)
+- cn_sort_n9 (int, nombre de sorts disponibles par jour pour le niveau 9)
+
+
+dd_sorts (contient la description de tous les sorts du jeu. Préfixe so)
+- so_id (id, index de la table)
+- so_nom (nom du sort)
+- so_res_id (id de la ressource, table dd_resssources)
+- so_co_id (id du collège, table dd_colleges)
+
+dd_sortclasse (liste des sorts pour chaque classe. Préfixe sc)
+- sc_id (id, index de la table)
+- sc_so_id (id du sort, table dd_sorts)
+- sc_cla_id (id de la classe, table dd_classes 
+- sc_niveau (niveau auquel la classe peut lancer ce sort, de 0 à 9)
+Note : une classe peut avoir plusieurs sort mais une seule fois le même sort
+
+dd_personnages_classes (affectation d'une classe au personnage avec un niveau. Préfixe pc)
+- pc_id (id, index de la table)
+- pc_pe_id (id du personnage, table dd_ personnages)
+- pc_cla_id (id de la classe, table dd_classes)
+- pc_niveau (niveau du personnage dans cette classe)
+Note : un personnage peut avoir plusieurs classes mais une seule fois la même classe
+
+dd_personnages_sorts (contient la liste des sorts possédés par le personnage. Préfixe pes)
+- pes_id (id, index de la table)
+- pes_pe_id (id du personnage, table dd_personnages)
+- pes_so_id (id du sort, table dd_sorts)
+- pes_connu (valeur oui/non indiquant si le personnage peut lancer le sort?)
+- pes_memorise (valeur de 0 à 10 indiquant combien de fois le personnage a memorisé le sort)
+- pes_lance (valeur de 0 à 10 indiquant combien de fois le personnage a lancé le sort)
+Note : un personnage peut avoir plusieurs sorts mais une seule fois le même sort
+
+dd_ressources (livres de règles, aussi appelés ressources, dont sont issus les sorts. Préfixe res)
+- res_id (id, index de la table)
+- res_nom (nom du livre)
+- res_abreviation (abreviation du nom du livre)
+- res_selection (indique si le livre est utilisé par le maitre de jeu. O : non, 1 : oui)
+
+dd_colleges (liste des collèges de magie auxquels appartiennent les sorts. Préfixe co)
+- co_id (id, index de la table)
+- co_nom (nom du collège)
+
+dd_typeMagie (liste des types de magie. Préfixe mag)
+- mag_id (id, index de la table)
+- mag_nom (nom du type de magie)
+- mag_abreviation (abréviation du type de magie)
+
+dd_modificateurs (liste des modificateurs des caractéristiques. Préfixe mod)
+- mod_id (id, index de la table)
+- mod_carac (valeur de la caractéristique, de 1 à 30)
+- mod_modificateur (modificateur de caractéristique)
+- mod_bonusSort0 (nombre de sort bonus de niveau 0 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort1 (nombre de sort bonus de niveau 1 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort2 (nombre de sort bonus de niveau 2 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort3 (nombre de sort bonus de niveau 3 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort4 (nombre de sort bonus de niveau 4 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort5 (nombre de sort bonus de niveau 5 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort6 (nombre de sort bonus de niveau 6 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort7 (nombre de sort bonus de niveau 7 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort8 (nombre de sort bonus de niveau 8 que le personnage peut mémoriser s'il est un lanceur de sort)
+- mod_bonusSort9 (nombre de sort bonus de niveau 9 que le personnage peut mémoriser s'il est un lanceur de sort)

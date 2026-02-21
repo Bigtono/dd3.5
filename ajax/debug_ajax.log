@@ -1,0 +1,1298 @@
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+)
+
+DB OK
+AVANT EXIT - parametres introuvables
+POST=Array
+(
+)
+
+DB OK
+AVANT EXIT - parametres introuvables
+POST=Array
+(
+)
+
+DB OK
+AVANT EXIT - parametres introuvables
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 50
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 8
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 50
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 22
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 50
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 8
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 8
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 9
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 22
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 50
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 50
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 22
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 22
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 2
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 6
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 22
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 3
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 1
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 16
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 17
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 4
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 67
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 67
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 17
+    [delta] => -1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 22
+    [delta] => 1
+)
+
+DB OK
+POST=Array
+(
+    [personnage] => 1
+    [id] => 22
+    [delta] => -1
+)
+
+DB OK

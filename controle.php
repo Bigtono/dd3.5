@@ -1,0 +1,141 @@
+<?
+include("include/session.php");
+include("include/dblib.inc.php");
+include("connexion.php");
+include("connexion-mj.php");
+
+include("include/diverslib.inc.php");
+include("include/date.inc.php");
+?>
+<!doctype html>
+<HEAD>
+<? include("include/head.php"); ?>
+<script type='text/javascript' src='js/moncode-sorts.js'></script>
+<script type='text/javascript' src='js/moncode-dons.js'></script>
+<script type='text/javascript' src='js/moncode-competences.js'></script>   
+</HEAD>
+
+<BODY>
+<div id="page">
+	<? include("include/header.php"); ?>
+	<? include("include/menu.php"); ?>
+  <div class="wrapper">
+    <h2></h2>
+<?
+    
+// Remplace toute la chaîne $var par 'bob'.
+/*
+$ligne="5ème - Blessure légère, blessure modérée, boule de feu à retardement";
+$lg=strlen($ligne);
+echo '<div>'.$ligne.' : longueur : '.$lg.'</div>';
+    
+$requete='SELECT * FROM dd_sorts WHERE so_res_id=45 ORDER BY so_nom';
+$result = queryPDO($requete);
+$num_rows = $result->rowCount();
+$texte=strtolower(utf8_encode($ligne));    
+echo '<div>Texte : '.$texte.'</div>';
+echo '<div>Num_rows : '.$num_rows.'</div>';    
+if ($num_rows>0):
+  while($dn = $result->fetch(PDO::FETCH_ASSOC)):
+    $critere=strtolower($dn['so_nom']);
+    $pos=strpos($texte,$critere);
+    echo '<div>Recherche de : '.$critere.'</div>';
+    if ($pos>0):
+      echo '<div class="fondgris pl10">';
+      echo '<div>Texte : '.$texte.'</div>';
+      echo '<div>Pos : '.$pos.'</div>';
+      $lg=strlen($dn['so_nom']);
+      echo '<div>Lg : '.$lg.'</div>';
+      $remplacement='<span onClick="afficheSort('.$dn['so_id'].')" class="lien text-red">'.$dn['so_nom'].'.</span>';
+      $lg2=strlen($remplacement);
+      echo '<div>Lg2 : '.$lg2.'</div>';
+      $pos2=$pos+$lg;
+      echo '<div>Pos2 : '.$pos2.'</div>';
+      $substitution=substr($texte,0, $pos).$remplacement.substr($texte,$pos2); 
+      echo '<div>p1: '.substr($texte,0, $pos).'</div>';
+      echo '<div>p2 : '.$remplacement.'</div>';
+      echo '<div>p3 : '.substr($texte,$pos2).'</div>';
+      echo '<div>Substitution : '.$substitution.'</div>';
+      echo '</div>';
+      $texte=$substitution;
+    endif;
+  endwhile;
+endif;  
+    
+
+  $requete='SELECT `eqt_nom` FROM `dd_equipements` WHERE eqt_id>73';
+  //$requete1='SELECT DISTINCT `bonus`, `prixBase` FROM `dnd35_objetsMagiquesArmes` ORDER BY bonus';
+  //$requete3='SELECT DISTINCT `arme` as nom,`prix`,`type` FROM `dnd35_objetsMagiquesArmesInhabituelles`';
+  //$requete4='SELECT DISTINCT `type`,`modificateur`,`prix` FROM `dnd35_objetsMagiquesArmures`';
+  //$requete='SELECT DISTINCT `objet` as nom,`prix` FROM `dnd35_objetsMagiquesMerveilleux` ORDER BY objet';  
+  //$requete='SELECT DISTINCT `baguette` as nom, `prix` FROM `dnd35_objetsMagiquesBaguettes`';  
+  //$requete='SELECT DISTINCT `baton` as nom,`prix` FROM `dnd35_objetsMagiquesBatons`';  
+  //$requete='SELECT DISTINCT `sceptre` as nom,`prix` FROM `dnd35_objetsMagiquesSceptres` ORDER BY `sceptre`';  
+  //$requete='SELECT DISTINCT `potion` as nom, `prix` FROM `dnd35_objetsMagiquesPotionsHuiles` ORDER BY `potion`';  *
+  //$requete='SELECT DISTINCT `arme` as nom,`prix` FROM `dnd35_objetsMagiquesArmuresSpecifiques`';  
+  //$requete='SELECT DISTINCT `nom`,`modificateur`,`prix` FROM `dnd35_objetsMagiquesAnneaux` ORDER BY nom, modificateur';
+    
+  if ($requete!=''):
+    $resultat=queryPDO($requete);
+    while($dn = $resultat->fetch(PDO::FETCH_ASSOC)):
+      $requete2='INSERT INTO dd_objets_magiques (om_nom, om_com_id, om_modificateur) VALUES ("'.addslashes(ucfirst(strtolower($dn['eqt_nom']))).'","3","5")';
+      $resultat2=execPDO($requete2);
+      echo '<div>Ajout de '.strtolower($dn['eqt_nom']).'</div>';
+    endwhile;
+    else:
+    echo '<div>pas de requete</div>';
+  endif;
+    
+ 
+  
+  $requete='SELECT * FROM dd_capacites_speciales ORDER BY cap_nom';
+  if (strlen($requete)>0):
+    $resultat=queryPDO($requete);
+    while($dn = $resultat->fetch(PDO::FETCH_ASSOC)):
+      if (substr($dn['cap_nom'],0,1)==" "):
+        $requete2='UPDATE dd_capacites_speciales SET cap_nom="'.trim($dn['cap_nom']).'"';
+        //$resultat2=execPDO($requete2);
+        echo "<div>".$requete2."</div>";
+      endif;
+    endwhile;
+  endif;
+    
+  $requete='SELECT * FROM dd_objets_magiques WHERE om_com_id=30';
+  if (strlen($requete)>0):
+    $resultat=queryPDO($requete);
+    while($dn = $resultat->fetch(PDO::FETCH_ASSOC)):
+      $mod=0;
+      $type="MOD";
+      $pos=strpos($dn['om_description'], "Prix bonus de +");
+      $decalage=15;
+      if (!$pos):
+        $pos=strpos($dn['om_description'], "Prix&nbsp;bonus de +");
+        $decalage=20;
+      endif;
+      $mod=substr($dn['om_description'],$pos+$decalage,1);
+      if (!$pos):
+        $pos=strpos($dn['om_description'], "Prix +");
+        $decalage=6;
+        $type="PRIX";
+        $mod=substr($dn['om_description'],$pos+$decalage);
+      endif;      
+      echo "<div>".$dn['om_nom']." : ".$pos.', '.libelle("dd_ressources", "res", "nom",$dn['om_res_id']).", ".$mod;
+        if (is_numeric($mod)):
+          //$requete2='UPDATE dd_objets_magiques SET om_ajustement_prix="'.$mod.'" WHERE om_id='.$dn['om_id'];
+          //$resultat2=execPDO($requete2);
+          echo " OK ";
+          echo $requete2;
+        endif;
+      echo "</div>";
+    endwhile;
+  endif;
+  */
+
+    
+    
+?>
+  </div>
+  <div id="detail-pp"></div>  
+  <div id="modification"></div>  
+</div>
+</BODY>

@@ -1,0 +1,1625 @@
+/*******************************************
+/* DD3.5
+/******************************************/
+
+:root {
+  --largeur: 1100px;;
+}
+
+html {font-size: 16px;}
+
+body {margin: 0; font-family: "Roboto", sans-serif; line-height: 1.42857143; color: #333;}
+
+/***************** structure de la page *************************/
+header {
+  position: fixed;
+  top: 0;
+  left:0;  
+  z-index: 999;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  vertical-align: middle;
+  background: #4e342e;
+  box-shadow: rgba(0, 0, 0, 0.5) 0 -20px 20px 20px;
+}
+
+#page {
+	font-family: 'Nunito', sans-serif;
+	font-style: normal;
+  margin:none;
+  padding:none;
+}
+
+/* détail colonne de droite */
+#detail{
+  position: fixed;
+  width:380px;
+  min-height: 700px;
+  left: 1115px;
+  top: 0px;
+  z-index: 1;
+  margin:5px 10px;
+  padding:5px;
+  background: #D3CFBF;	
+  border: 1px black solid;
+  border-radius:4px 0 0 4px;
+  display:none;	
+  transition: .4s all .1s;
+}
+.detail, .detailX {max-height: 90%; margin:10px auto; overflow-y: auto; background-color:#FFF; border: thin solid black; border-radius: 0.65rem; padding:0.65rem;}
+
+h1 {text-align: left; font-weight: bold; font-size: 2em; color: #36270E; padding: none; margin:none;}
+header h1 {margin: 0; padding: 0 15px; height: 50px; line-height: 50px; font-weight: 400; font-size: 18px; color:#FFF; float: left;}
+h3 {text-align: left; font-weight: bold; font-size: 1.3em; color:#4113A0; padding: none; margin:0.3rem 0;}
+
+.clearfix:after {content: ""; display: block; clear: both;}
+.pagination {display: flex; flex-direction:row; margin:0.33rem 0;}
+
+.vertical_nav{z-index:1000;}  
+
+.debug{margin:15px 0; padding:5px; border: thin solid black; background-color: #D3D3D3;}
+
+#menuDropdown{display:none; width:99%; padding:.5rem .6rem; border-radius:.4rem; margin-bottom:1rem;}
+
+/* Medium devices (desktops)
+==========================*/
+@media (max-width: 991px) {
+  body {font-size: 1rem;} /* Proportion de la taille indiquée dnas le bloc HTML */
+  .wrapper {padding: 55px 0.3em; transition: all 0.3s ease-out;}
+  .wrapper_rencontre {margin: 50px 0 0 0; padding: 0.2em;}
+  .ecran {display:none;}  
+  .contenu {border: thin solid black; border-radius: 0.35rem; padding:0.5rem; margin-bottom: 0.3rem;}
+  #modification, #detail-pp{position: fixed; top:0; left:0;	width:100%; height:100%; margin:none; padding:none; z-index: 1000; display:none;}    
+  #ariane {margin: 0.4em 0 0.8em 0; height:1rem; line-height: 1rem;}
+  #ariane span {font-size: 0.9rem;}
+  #tabs {min-height: 25rem;}
+  #recherche {display: none;}
+  /* zone de recherche pour les mobiles */
+  #bouton_recherche {width:50px; height:50px; color:white; font-size:700; line-height: 50px; vertical-align: middle; position: absolute; right:0; top:0;}
+  #menu_recherche2{display: none; padding:1rem 0.25rem; background-color: white; border-bottom: thin solid black;}  
+  #recherche2 {margin: 0; padding: 0 15px; line-height: 50px; font-size: 13px;}
+  #recherche2 #fa-search2 {line-height: 15px;}
+  .incomplet {display: none;}
+  .bienvenue {width:100%; margin-top:2em;}
+  /* entetes */
+  .item.entete {display: none;}
+  /* taille des texte */
+  .data, .entete {font-size: 1.1em; margin:none; padding:none;}
+  /* filtrage du contenu */
+  .icone_suppr, .icone_modif {display: none;}
+  .formulaire, .affichage, #capacite, #classe, #race, #note{margin:none; width: 100%; height: 100%; overflow-y: auto; background-color:#FFFFFF; border:none; padding:0.625em;}
+  /* personnage */
+  #personnage .titre_menu {display: none;}
+  .item .niveau_perso, .item .classe_perso, .item .organisation, .item .joueur {display: none;}
+  .data .nom_note{font-style: italic; margin:none; padding:none;}
+  .data .categorie_note{font-size: 0.7rem; font-style: italic; margin:none; padding:none; margin-left: 1rem;}
+  /* classes */
+  .type_classe, .ls {display: none;}
+  /* regles */
+  .regle .categorie {display: none;}
+  /* compétences */
+  .item .carac_comp, .item .formation_comp, .item .armure_comp {display: none;} 
+  /* dons */
+  .item .categorie_don, .item .description_courte, .item .description_courte_sort, .item .source, .item .joueur {display: none;}
+  /* objets magiques */
+  .categorie_om {display: none;}
+  /* sorts et grimoires */
+  #entete_sort {display:none;}
+  .domaine_sort, .description_courte_sort, .ecole_sort, .ressource_sort, .sort .categorie, .sort .domaine {display: none;}
+  .sort .nom{font-size:1.4em;}
+  /* classes */  
+  .classe .type, .classe .ls, .ajout_classe {display: none;}
+   .entete, #personnage .entete {display: block;}
+  #classe td.gauche, #classe .droite, #personnage .gauche, #personnage .droite {float: none; text-align: left; width:100%}
+  #classe td.niveau {text-align: center; font-weight: 700;  width:15%;}
+  #classe td.bba {text-align: center; width:25%;}
+  #classe td.save {text-align: center; width:20%;}
+  #classe td.capacites {text-align: left; width:85%; display: none;}
+  #classe td.sn {text-align: center; width:8.5%; display: none;}
+  #classe td.sorts {text-align: center; display: none;}
+  /* races */
+  .item .categorie_race {display: none;}
+  /* recherche */
+  .item .categorie_recherche {display: none;}
+  .ligne {display: flex; flex-direction:row; flex-wrap: wrap; vertical-align: middle; font-size: 0.9em; font-weight: normal;}
+  .uneRegle {font-size: 1.2rem; grid-template-columns: 1.7em 1fr;}
+  .modifier, .separateur {display: none;}
+  .visu{display: none;}
+  .recherche_sort, .recherche_don, .recherche_scenario, .recherche_rencontre {display: grid; grid-template-columns: 1fr 10em; gap: 0.2em; margin-bottom: 0.625em;}
+  .recherche_sort .champ, .recherche_don .champ, .recherche_rencontre .champ {width:100%;}
+  .filtre_sort{ height: 1.3rem; line-height: 1.3rem;}
+  .entete .niveau_note, .entete .categorie_note, .data .niveau_note, #description_om{display:none;}
+  #menuDropdown{display:block;}
+}
+
+/* Medium devices (desktops)
+==========================*/
+@media (min-width: 992px) {
+  body {font-size: 0.875rem; overflow-y: scroll;} /* Proportion de la taille indiquée dnas le bloc HTML */
+  /* gestion du gabarit */
+  .wrapper {margin: 50px 0 0 190px; padding: 0.2em 2em;  transition: all 0.3s ease-out;  max-width: var(--largeur);}
+  .wrapper__minify {margin-left: 50px;}
+  .wrapper_rencontre {margin: 50px 180px 0 190px; padding: 0.2em 2em; min-height:100vh; box-sizing: border-box;}  
+  .ecran {position: fixed; top: 50px; right:0; width:180px; height:100%; padding: 0.2em 2em; transition: all 0.3s ease-out; background-color: #E3E2E2; border-left: solid 1px black; }
+  .contenu {border: thin solid black; border-radius: 0.5rem; padding:0.65rem; margin-bottom: 0.65rem;}
+  .formulaire {margin:10px 0; width: 100%; max-width: var(--largeur); height: 95%; border: none; padding:10px;}  
+  /* zones modification et détail pleine page */
+  #modification, #detail-pp{position: fixed; top:0; left:0;	width:100%; max-width:1200px; height:100%; margin:none; padding:none; z-index: 1000; display:none;}
+  .data, .entete {font-size: 0.9rem;}
+  .bienvenue {width:100%; margin:1em;}
+  .logo img {width: 190px; text-align: center; margin-top: 10px; float: none;}
+  .logo_menu{margin-right: 0.65em;}
+  #bouton_recherche, #menu_recherche2 {display: none;}
+  #ariane {margin: 0.7em 0 1.2em 0; height:1.3em; line-height: 1.3em;}
+  #ariane span {font-size: 1rem;}
+  .input_notes{width:var(--largeur); height: 4rem;}
+  
+  /* filtrage du contenu */
+  #recherche {margin: 0; padding: 0 15px; line-height: 50px; font-size: 13px; float: left;}  
+  #recherche #fa-search {line-height: 15px;}
+  #tabs {max-width: 1100px; min-height: 600px;}
+  .affichage, #capacite, #race, #note, #om {margin:10px auto; width: 100%; max-width: var(--largeur); height: 95%; overflow-y: auto; background-color:#FFFFFF; border:none; padding:10px;} 
+  #classe .entete, #race .entete {display: flex; flex-direction:row; border:none; font-weight: normal;}
+  #classe .competences {text-align: justify; margin-top: 10px;}
+  #classe #progression #avant, #classe #progression #apres {display:none;}
+  #classe td.niveau {text-align: center; font-weight: 700; width:3%;}
+  #classe td.bba {text-align: center; width:4%;}
+  #classe td.save {text-align: center; width:4%;}
+  #classe td.capacites {text-align: left; width:85%; display: none;}
+  #classe td.sn {text-align: center; width:3%; display: none;}
+  #classe td.sorts {text-align: left;}
+  
+  #classe .switch {display: none;}
+  .ligne {display: flex; flex-direction:row; flex-wrap: wrap; vertical-align: middle; font-size: 1em; margin:0 0 2px 0;}
+  .uneLigne {height: 1.2em; ligne-height: 1.2em; vertical-align: center;}
+  .uneRegle {font-size: 1rem; grid-template-columns: 2.2em 1fr;}
+  .recherche_sort, .recherche_scenario, .recherche_rencontre {margin-left:0.2em;}  
+}
+/*==========================*/
+
+/***************************************************************/
+/* Code commun
+/***************************************************************/
+table {width:100%; margin:10px 0; max-width: 1100px;}
+thead tr {padding:2px 0;border-bottom: thin solid black;}
+thead tr.noline {padding:2px 0;border:none;}
+thead tr td {font-weight: bold; vertical-align:top; text-align: left; padding:0 2px;}
+tbody tr:nth-child(even) {background-color:#B8B5A8;}
+tbody tr:nth-child(odd) {background-color:#FFF;}
+tbody tr td {font-weight: normal; vertical-align: bottom; text-align: left; padding:0 2px; margin:none;}
+tbody tr.centre td {text-align: center;}
+
+/***************************************************************************************
+/* tableau générique
+/**************************************************************************************/
+.tabMain{display:flex; padding:0.3rem 0.65rem;}
+/* tous les colonnes Ã©gales */
+.cellMain{flex:1 1 auto; text-align:center; display:flex; align-items:center; justify-content:center;}
+.cellMain > div {width:100%;}
+.cellMainSort{flex:0 1 10%; text-align:center; display:flex; align-items:left; justify-content:left;}
+.cellMainSort > div {width:100%;}
+/* tableau des armes */ 
+.cellMainCarac{flex:1 1 7%; text-align:center; display:flex; align-items:center; justify-content:center;}
+.cellMainTraits{flex:1 1 44%; text-align:center; display:flex; align-items:center; justify-content:center;}
+.cellMainTraits > div, .cellMainCarac > div {width:100%;}
+/* contenu des cellules */
+.cellEntete {border-bottom: thin solid black;}
+.cellEntete, .cellEnteteSup {font-weight:700; color:#480f0d; text-align:center; padding: 2px 4px;}
+.cellEntete, .cellEnteteLeft {} /* border-bottom: thin solid #480f0d*/
+.cellValue {font-weight: normal; color:black; text-align:center; height: 1.2em;}
+.cellEnteteLeft {font-weight:700; color:#480f0d; text-align:left;}
+.cellValueLeft {font-weight: normal; color:black; text-align:left; height: 1.2em;}
+.cellLeft {border-left: thin solid #480f0d}
+
+div.level table thead tr th:first-child {width:100px;}
+
+/* style des noms de sort, don, regle etc.... dans la div detail-pp */
+.nom_objet {
+  font-size:1.8em;
+  font-weight:bold;
+  text-align: left;
+  color: #005B6A;
+  margin: 0 0 0.33em 0;
+}
+a {text-decoration:none; color:#4E2E00;}
+a.menu {text-decoration:none; color: rgba(255, 255, 255, 0.7);}
+a:hover {color: #990000;}
+header h1 a:hover {color: #FFF;}
+.stretch {align-items: stretch;}
+.equal-height-container {display: flex; align-items: stretch; /*rend les enfants égaux en hauteur */ gap: 8px; /* optionnel : espacement entre les éléments */}
+.text-content,
+.icon {display: flex; align-items: center; padding: 0rem 0.5rem; /* pour donner un peu de hauteur et de consistance */}
+/* Facultatif : taille de lâ€™icÃ´ne */
+.icon {font-size: 1.5rem; /* ou 1.5rem, etc. */}
+
+.lien {cursor: pointer; text-decoration:none;}
+.lien:hover{cursor:pointer;}
+.description {margin-top: 0.66rem; font-size: inherit; text-align: justify; witdh: 100%; max-witdh:var(--largeur);}
+.description:nth-child(1) {margin-top: 0;}
+.description .lien {color:#4d73ff;} /* lien dans une popup */
+
+.red {background: #e00032;} .yellow {background: #fdd835;} .green {background: #0a8f08;} .blue {background: #4d73ff;} .orange {background: #ff3d00;} .brown {background: #6d4c41;} .teal {background: #00897b;} .purple {background: #9c27b0;} .indigo {background: #3f51b5;} .cyan {background: #00acc1;} .light-green {background: #7cb342;} .amber {background: #ffc107;} .gray {background: #424242;} .black {background: #000;} .blue-gray {background: #546e7a;} .lime {background: #aeea00;} .light-blue {background: #03a9f4;} .deep-purple {background: #512da8;} .deep-pink {background: #ad1457;} .deep-brown {background: #4e342e;}
+.txt-black{color: #000;} .txt-white{color: #FFF;} .txt-blue {color: #4d73ff;} .stext-red{color: #e00032;}
+.text-grey{color: #C3C3C3;}
+.text-deep-brown {color: #4e342e;}
+
+.fondrouge {background-color: red;}
+.fondgris {background-color: grey;}
+.fondbeige {background-color: beige;}
+.fondbleu {background-color: blue; color: white;}
+
+/* zones de textes particulières communes à toutes les pages */
+.precision {font-weight: normal; font-size: 0.8rem; font-style: italic;} /* notes dans un formulaire */
+.resultat_recherche {background-color: yellow; padding:none;}
+
+/* posiitonnement des objets dans la page */
+.dflex {display: flex; flex-direction:row;}
+.agauche {text-align: left;}
+.adroite {text-align: right;}
+.aucentre {text-align: center;}
+
+/* gestion des dimensions de blocs et des espacements */
+.w20 {width:1.25em;} .w30 {width:30px;} .w40 {width:40px;} .w50 {width:50px;} .w75 {width:75px;} .w90 {width:90px;} .w100 {width:100px;} .w120 {width:120px;} .w150 {width:150px;} .w200 {width:200px;} .w250 {width:250px;} .w300 {width:300px;} .w350 {width:350px;} .w400 {width:400px;} .w500 {width:500px;} .w600 {width:600px;} .w700 {width:700px;} 
+.wm400 {max-width:400px;}
+.wp10 {width:10%;} .wp20 {width:20%;} .wp25 {width:25%;} .wp30 {width:30%;} .wp33 {width:33%;} .wp40 {width:40%;} .wp50 {width:50%;} .wp60 {width:60%;} .wp70 {width:70%;} .wp75 {width:75%;} .wp80 {width:80%;} .wp90 {width:90%;} .wp99 {width:99%;} .wp100 {width:100%;}
+.hp100 {height:100%}
+.m2 {margin:2px} .m5 {margin:5px} .m10 {margin:10px} .m15 {margin:15px} .m20 {margin:20px}
+.mt2 {margin-top:2px} .mt5 {margin-top:5px} .mt10 {margin-top:10px} .mt15 {margin-top:15px} .mt20 {margin-top:20px} .mt25 {margin-top:25px} .mt30 {margin-top:30px} .mt50 {margin-left:50px}
+.mr2 {margin-right:2px} .mr3 {margin-right:3px} .mr5 {margin-right:5px} .mr10 {margin-right:0.625em} .mr15 {margin-right:15px} .mr20 {margin-right:20px} .mr25 {margin-right:25px} .mr30 {margin-right:30px} .mr40 {margin-right:40px} .mr50 {margin-right:50px} .mr75 {margin-right:75px} .mr150 {margin-right:150px}
+.ml2 {margin-left:2px} .ml5 {margin-left:5px} .ml10 {margin-left:10px} .ml15 {margin-left:15px} .ml20 {margin-left:20px} .ml25 {margin-left:25px} .ml30 {margin-left:30px} .ml35 {margin-left:35px} .ml50 {margin-left:50px} .ml100 {margin-left:100px} .ml150 {margin-left:150px} .ml200 {margin-left:200px} .ml250 {margin-left:250px} .ml300 {margin-left:300px} .ml350 {margin-left:350px}
+.mb2 {margin-bottom:2px} .mb5 {margin-bottom:5px} .mb10 {margin-bottom:10px} .mb15 {margin-bottom:15px} .mb20 {margin-bottom:20px} .mb25 {margin-bottom:25px} .mb30 {margin-bottom:30px} .mb32 {margin-bottom:32px} .mb48 {margin-bottom:48px} .mb58 {margin-bottom:58px}
+.pr2 {padding-right:2px} .pr5 {padding-right:5px} .pr10 {padding-right:10px} .pr15 {padding-right:15px} .pr20 {padding-right:20px} .pr25 {padding-right:25px}
+.pl2 {padding-left:2px} .pl5 {padding-left:5px} .pl10 {padding-left:10px} .pl15 {padding-left:15px} .pl20 {padding-left:20px} .pl25 {padding-left:25px}
+.pb2 {padding-bottom:2px} .pb5 {padding-bottom:5px} .pb10 {padding-bottom:10px} .pb15 {padding-bottom:15px} .pb20 {padding-bottom:20px} .pb25 {padding-bottom:25px}
+.decalage2 {margin-left: 20px} .decalage3 {margin-left: 40px} .decalage4 {margin-left: 60px} .decalage5 {margin-left: 80px} 
+input {text-align: center;}
+.input_left {text-align: left; padding:2px 5px;}
+#fermer, #modifier {cursor: pointer; font-size:1.5em; margin-right: 1em;}
+.entete {font-weight: bold; border-bottom: 2px black solid;}
+.nodata {margin: 25px 50px; font-weight:bold; color: #5E0E0F;}
+.confirmation {margin: 0.625rem; width:100%; text-align: center; font-weight:bold; color: #4FCE00;}
+.separateur {margin:0 10px;}
+img {vertical-align: sub;}
+.switch {cursor: pointer; margin-left: 20px;}
+.noshow{display:none;}
+
+/* gestion des affichages par défaut **********************************************/
+.noDisplay {display:none;}
+.contenuMain {display: none;}
+.contenuMainV {display: inherit;}
+
+.trait-gauche {border-left: solid black 0.2rem; padding-left:1rem;}
+
+/* menux principaux haut de page *************************************************/
+.menu_main{background-color:white; margin-bottom:1rem; display:flex; padding:0.65rem;}  
+.btMain{flex:1 1 0%; padding:0 0.2rem; text-align:center; color:black; font-size:1rem; font-weight:500; display:flex; align-items:center; justify-content:center; cursor: pointer;}
+.btTools{flex:1 1 0%; padding:0 0.1rem; text-align:center; color:black; display:flex; align-items:center; justify-content:center; cursor: pointer;}
+
+/* bloc titre d'une page *********************************************************/
+.titreAction {display:flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; max-width: var(--largeur);}
+.titreAction .titreA {font-size:1.5rem; line-height:2rem; font-weight:700;}
+.titreAction .titre2A {display:flex; font-size:1rem; line-height:2rem; font-weight:normal; color: gray;}
+.titreAction .titreMonstre {font-size:1.2rem; line-height:2rem; font-weight:700; color:#3265AB;}
+/* .titreAction .boutons {} */
+
+/* boutons actions **************************************************************/
+.ligneBouton {width:100%;}
+.btDisabled, .btNoir, .btRouge, .btToolsNoir, .btToolsRouge {border-radius: .25rem; border: none; padding: 0.2rem 0.7rem;}
+.btToolsNoir, .btToolsRouge {width:100%;}
+@media (max-width: 991px) {
+  .ligneBouton {flex:1 1 auto; text-align:center; column-gap: 0.3rem; display:flex; align-items:center; justify-content:center; margin: 1.4rem 0;}
+  .btDisabled, .btNoir, .btRouge {font-size: 1rem; width:100%;}
+}
+@media (min-width: 992px) {
+  .ligneBouton {width:100%; text-align: left; margin-top: 1.4rem;}
+  .btDisabled, .btNoir, .btRouge {font-size: 1rem;}
+}
+.btNoir, .btToolsNoir {background-color: black; color: white;}
+.btDisabled {background-color: lightgrey; color: black;}
+.btRouge, .btToolsRouge {background-color: red; color: black;}
+.btIcone {font-size:1em; text-align:center; border: none; background-color: none; padding:0 2px; cursor: pointer;}
+.btSmall {font-size:0.8em; font-weight: 700; text-align:center; border: thin solid #EDEDED; border-radius: .25rem; background-color: none; padding:2px; cursor: pointer;}
+.btSmallDelete {font-size:0.8em; font-weight: 700; color: white; text-align:center; border: thin solid #EDEDED; border-radius: .25rem; background-color: #FF5153; padding:2px; cursor: pointer;}
+
+/* Affichage de données sour la forme de bloc aux bords arrondis (pastilles). Ex : sorts dans un grimoire de la page personnage */
+.lignePastille {width:100%; text-align: right; margin-top:0.1em;}
+.pastille {float:right; background-color: #E8E7D2; border-radius: .5rem; font-size: 1em; color:black; padding: 0.2rem 0.4rem; margin: 0 0.15rem;}
+.pastille span{margin:0 0.33rem;}
+.pastille a {color:brown;}
+.lignePastille2 {display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;}
+.pastille2 {background-color: #E3E3E3; border-radius: .5rem; font-size: 1em; color:black; padding: 0.2rem 0.4rem; white-space: nowrap;}
+.pastilleR24 {width: 24px; height: 24px; border-radius: 50%; border: 1px solid #aaa; box-shadow: 0 0 3px rgba(0,0,0,0.2);} /* affichage niveau de sort dans la page grimoire */
+.ruleset {background-color: #E8E7D2; border-radius: .5rem; font-size: 1em; color:black; padding: 0.2rem 0.4rem; margin: 0 0.15rem;}
+
+.capacite {margin-bottom: 0.65rem}
+.capacite div:first-child{font-weight: 700; margin-bottom: 0.33rem; border-bottom: thin solid #EDEDED; font-size: 1.2rem}
+
+/* Ariane ************************************************************************/
+#ariane {
+  display: flex;
+  flex-direction:row;
+  flex-wrap: wrap;
+  vertical-align: middle; 
+  color:#6F6F6F;
+}
+#ariane i {font-size:1em;}
+#ariane span {font-weight: bold; margin:0 3px; padding-bottom: 2px;}
+#ariane span a {color:#6F6F6F;}
+
+/* Menu secondaire ***************************************************************/
+/* A remplacer par TitreAction */
+.menu2 {
+  width:100%;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 0.2em;
+  box-sizing: border-box;
+  font-size: 1.5em;
+  margin: none;
+}
+.menu2 .ga {
+  grid-column: 1;
+  text-align:left;
+  padding: 5px;
+  box-sizing: border-box;
+}
+.menu2 .ce {
+  grid-column: 2;
+  text-align:center;
+  padding: 5px;
+  box-sizing: border-box;
+}
+.menu2 .dr {
+  grid-column: 3;
+  text-align:right;
+  padding: 5px;
+  box-sizing: border-box;  
+}
+.menu2 .nom {
+  margin:0;
+  font-size: 3em;
+  font-weight: bold;
+}
+.sommaire{
+  border: thin black solid;
+  padding:10px;
+  margin:10px 0;
+  font-size: 1.2em;
+  font-style: normal;
+}
+.sousmenu a{font-size: 2em;}
+
+.bouton {
+  width:200px;
+  text-align:center;
+  margin: 5px auto;
+  padding: 3px 5px;
+  border: 1px black solid;
+  border-radius: 3px;
+  background-color: #C1C1C1;
+  box-shadow: 2px 2px 2px 1px grey;
+}
+.bouton3 {
+  height:1em;
+  text-align:center;
+  padding: 1px 4px;
+  border: 0.5px black solid;
+  border-radius: 2px;
+  background-color: #C1C1C1;
+  font-size:0.9em;  
+  font-weight: bold;
+}
+.bouton:hover {cursor:pointer;}
+.message {margin:10px; color: #3D3322;}
+
+/**************** contenu du wrapper **************************************/
+.titre {
+  width: 100%;
+  text-align:center;
+  color:#4e342e;
+  font-size:2em;
+  font-variant: small-caps;
+  font-weight: bold;
+}
+.titre2 {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom:10px;
+  text-align:center;
+  font-weight: bold;
+  color: #000000;
+  font-size: 1em;
+}
+.action {
+  width: var(--largeur);
+  margin:5px auto 5px auto;
+  padding: 0 auto 0 auto;
+  font-weight: bold;
+  text-align:center;
+}
+
+.selection {font-size:1em; padding-left:15px; margin-bottom: 10px; color: black;}
+
+.gauche {float: left; width:49%;}
+.droite{float:right; width:49%;}
+
+.regle, .sort, .item, .competence, .classe, .ressource, .race {
+  display: flex;
+  flex-direction:row;
+  flex-wrap: wrap;
+  vertical-align: middle;
+  margin-bottom: 3px;
+  cursor:pointer;
+}
+.data {
+  vertical-align: middle;
+  border-bottom: 0.25px solid #C0C0C0;
+}
+.filtre {
+  display: flex;
+  flex-direction:row;
+  flex-wrap: wrap;
+  vertical-align: middle;
+  font-size: 1em;
+  margin-botton:3px;
+  margin: 10px auto;
+}
+.label {font-size: inherit; font-weight: bold; line-height: inherit; margin-right:5px;}
+.icone {
+  width: 30px;
+  text-align:center;
+  padding:inherit;
+}
+.texte {padding:0; font-size: 16px; text-align: justify;}
+.sm-text {padding:0; font-size: 10px; text-align: left;}
+.alerte {margin:20px 50px; font-weight: bold;}
+
+/*****************************************************************************
+/* tabs jquery
+/****************************************************************************/
+/* conteneur */
+.ui-tabs {
+  padding:none;
+  margin-top:0.5em;
+  background-color:#D3CFBF;
+}
+.ui-corner-all {}
+.ui-widget {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 0.9em;  
+}
+.ui-widget-content {
+  border-top: 1px solid black;
+  border: none;
+  background-color: none;
+  color: #333333;
+}
+/* ul*/
+.ui-tabs-nav {background: none; border:none;}
+.ui-corner-all {}
+.ui-helper-reset {}
+.ui-helper-clearfix {}
+.ui-widget-header {
+  border-bottom: solid thin black;
+  border-radius:0;
+  background: none;
+  padding: none;
+  margin:none;
+  color: #333333;
+  font-weight: bold;
+  font-size: 1.3em;
+}
+/* li */
+.ui-tabs-tab {}
+.ui-corner-top {}
+.ui-state-default {}
+.ui-tab {}
+.ui-tabs-active {}
+.ui-state-active {}
+/* div */
+.ui-tabs-panel {
+  display: block;
+  border-width: 0;
+  padding: 1em 1.4em;
+  background-color:aquamarine;
+}
+.ui-widget-header .ui-state-active {
+	border: 1px solid #4e342e;
+	background: #4e342e;
+	font-weight: normal;
+	color: #ffffff;
+}
+.ui-corner-bottom {}
+
+/* Login ***************************************************/
+
+.login {
+  width: 100%;
+  max-width:500px;
+  margin:2em auto;
+  padding: 1em;
+  border: thin #4e342e solid;
+  border-radius: 0.33em;
+} 
+.login .forgotpwd {margin-top:15px;}
+.login #password, .login #email {width:100%; margin: 1rem auto; font-size: 1.3em;}
+.login #submit {width:100%; height: 3em; margin: 0.6em auto;}
+
+/*****************************************************************************
+/* Listes d'items 
+/****************************************************************************/
+.liste-items{width: 100%; margin: 10px 0 0 0; font-size:13px;}
+
+.item .source,
+.item .niveau_perso {width:50px; text-align:left; padding:4px;}
+.item .carac_comp,
+.item .niveau_note{width:100px; text-align:left; padding:4px;}
+.item .domaine_sort{width:105px; text-align:left; padding:4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.item .ecole_sort,
+.item .type_classe{ width:115px; text-align:left; padding:4px;}
+.item .categorie_race,
+.item .categorie_don,
+.item .categorie_recherche,
+.item .nom_perso,
+.item .nom_joueur,
+.item .prenom_joueur,
+.item .pseudo_joueur{width:200px; text-align:left; font-weight:bold; padding:4px;}
+.item .formation_comp,
+.item .format_grimoire{width:100px; text-align:left; padding:4px;}
+.item .race_perso{width:120px; text-align:left; padding:4px;}
+.item .organisation{width:200px; text-align:left; padding:4px;}
+.item .nom_sort,
+.item .nom_rencontre {width:250px; text-align:left; font-weight:bold; padding:4px;}
+.item .categorie_om,
+.item .categorie_note,
+.item .scenario{width:280px; text-align:left; padding:4px;}
+.item .chapitre{width:280px; text-align:left; padding:4px;}
+.item .nom_race,
+.item .nom_don,
+.item .nom_monstre,
+.item .nom_note,
+.item .nom_classe,
+.item .nom_grimoire{width:300px; text-align:left; padding:4px; font-weight:bold;}
+.item .fp{width:280px; text-align:center; padding:4px;}
+.item .monstre_type{width:150px; text-align:left; padding:4px;}
+
+@media (max-width: 991px) {.item .nom_don{width:95%;}}
+
+.item .nom_variable{width:275px; text-align:left; font-weight:bold; padding:4px;}
+.item .categorie_variable{width:150px; text-align:left; padding:4px;}
+.item .variable_variable{width:100px; text-align:center; padding:4px;}
+.item .description_variable{text-align:left; padding:4px;}
+
+.item .classe_perso{width:350px; text-align:left; padding:4px;}
+.item .nom_comp,
+.item .email_joueur,
+.item .nom_recherche{width:400px; text-align:left; font-weight:bold; padding:4px;}
+.item .nom_om{width:550px; text-align:left; padding:4px; font-weight:bold;}
+.item .description_courte{width:530px; text-align:left; padding:4px;}
+.item .description_courte_sort{width:505px; text-align:left; padding:4px;}
+.item .armure_comp,
+.item .ls {text-align:left; padding:4px;}
+.item .adversaires,
+.item .abreviation{width:30px; text-align:center; padding:4px; font-weight:normal;}
+
+/* items communs à toutes les listes */
+.item .joueur {width: 120px; text-align:left; padding:4px;}
+.item .icone_select{width:30px; text-align:center; padding:4px; font-weight:bold;}
+.item .icone_suppr,
+.item .icone_modif,
+.item .icone_onglet {width: 30px; text-align:center; padding:4px;}
+.titre-niveausort {font-size: 22px; font-weight: bold; color: black; text-align: center; margin-top:0.625em;}
+
+/*******************************************
+/* grimoire et livre
+/******************************************/
+#grimoire .texte, #grimoire_pp .texte {padding:0; font-size: 18px; text-align: justify;}
+#grimoire > div {margin-bottom:10px;}
+#grimoire .input_nom {text-align: left; font-weight: bold; font-size: 14px; width:500px;}
+
+/**************************************************************************************
+/* Sort
+**************************************************************************************/
+#sort .entete_sort {column-count: 2; gap: 1rem;}
+#sort .entete_sort > div {word-break:normal;}
+#sort .texte, #sort_pp .texte {
+  padding:0;
+  font-size: 16px;
+  text-align: justify;
+  margin-bottom: 20px;
+}
+#sort > div {margin-bottom:5px;}
+#sort_pp .contenu {border:none;}
+#sort_pp .affichage {}
+
+/***************************************************************************************
+/* Don
+/**************************************************************************************/
+#don .description {margin-top: 10px;}
+#don .texte, #don_pp .texte {padding:0; font-size: 18px; text-align: justify;}
+#don > div {margin-bottom:10px;}
+#don .input_nom {text-align: left; font-weight: bold; font-size: 14px; width:500px;}
+#don .input_resume {text-align: left; font-weight: normal; font-size: 14px; width:800px;}
+#don .input_texte {text-align: left; width:550px; min-height: 450px;}
+#don .input_source {text-align: left; width:250px; margin-right:10px}
+#don .input_page {text-align: center; width:40px;}
+#don .input_version {text-align: center; width:40px;}
+
+/***************************************************************************************
+/* Formulaire
+/**************************************************************************************/
+.formulaire{font-size:1rem;}
+.formulaire > div {margin-bottom:10px;}
+.formulaire .label {text-align: left; width:120px; font-size:1rem; font-weight:700;}
+.formulaire .label200 {text-align: left; width:200px; font-size:1rem; font-weight:700;}
+.formulaire .label_long {text-align: left; font-size:1rem; font-weight:700;}
+.formulaire .input_nom {text-align: left; font-weight: bold; font-size: inherit;}
+.formulaire .input_texte {text-align: left; font-size: inherit; width:550px; min-height: 450px;}
+.formulaire .input_source {text-align: left; font-size: inherit; width:250px; margin-right:10px}
+.formulaire .input_mod {text-align: center; font-size: inherit; width:30px; margin-right:10px}
+.formulaire .input_abreviation {text-align: center; font-size: inherit; width:45px; margin-right:10px}
+.formulaire .input_data {text-align: left; font-size: inherit; width:95%;}
+.formulaire select {text-align: left; width:120px; font-size:1rem; font-weight:normal;}
+.formulaire input:focus, .formulaire select:focus, .formulaire textarea:focus, .formulaire checkbox:focus {background-color: #E2DFDF;}
+.formulaire input[type="checkbox"]:focus + label {border: 1px solid darkred; color:darkred;}
+
+/* Modification du sort */
+.formulaire #domaines {display:none;}
+.formulaire .box-data {padding-left: 1rem; border-left: solid black 0.25rem;}  
+.formulaire .line-data{width:100%; display: grid; grid-template-columns: 1fr 40px; gap: 1rem;} 
+.formulaire .line-data2{width:100%; display: grid; grid-template-columns: 120px 1fr; gap: 0; height: auto;}
+.formulaire .line-data-50fr{width:100%; display: grid; grid-template-columns: 50px 1fr; gap: 0; height: auto;}
+.formulaire .data_rm {text-align: left; width:40px;}
+@media (max-width: 991px) {
+  .formulaire .ligne {margin-top:0.6rem;}
+  .formulaire .ligne {display: block; line-height: normal; height: auto; font-size: 1rem; margin:0 0 0.125em 0;}
+  .formulaire .input_nom, .formulaire select{width:95%;}
+}
+@media (min-width: 992px) {
+  .formulaire .ligne {margin-top:0.33rem;}
+  .formulaire .input_nom {width:400px;}
+  .formulaire select{width:300px;}
+  .formulaire .box-data {column-count: 3; gap: 0.66rem;}
+}
+
+/***************************************************************************************
+/* Compétence.
+/**************************************************************************************/
+#competence .texte {padding:0; text-align: justify; margin-bottom: 1.5rem;}
+#competence .texte:nth-child(3) p:first-child {margin-top: 0;}
+#competence .texte p:nth-child(2) {display: inline}
+#modifComp > div {margin-bottom:10px;}
+#modifComp .input_nom {text-align: left; font-weight: bold; font-size: 14px; width:500px;}
+#modifComp .input_texte {text-align: left; width:550px; min-height: 300px;}
+
+/* tableau des competences */
+table.competence,table.competence-l {width:100%; margin:0; max-width: 1100px;}
+table.competence,table.competence-l tbody td {padding: 0 4px;}
+table.competence,table.competence-l tr:first-child {border-bottom:1px black;}
+table.competence th:nth-child(2) {width:150px; text-align: left}
+table.competence-l th:nth-child(2) {width:300px; text-align: left}
+table.competence td {text-align: left; vertical-align: top;}
+
+/***************************************************************************************
+/* Classes.
+/**************************************************************************************/
+
+#liste-classes{
+  width:100%;
+  display: grid;
+  grid-template-columns: 1fr 100px 80px;
+  gap: 0.2em;
+  box-sizing: border-box;
+  margin: none;
+}
+
+/* Classe *********************************************************/ 
+
+#classe {margin:10px;}
+#classe .texte {padding:0; font-size: 16px; text-align: left; margin: 10px 0;}
+#classe #progression {width:100%; display: grid; grid-template-columns: 50px 1fr 50px; gap: 0.2em; box-sizing: border-box; margin: 0.625em 0 0 0;}
+#classe #progression #avant {grid-column: 1; text-align:center;}
+#classe #progression #table_progression {grid-column: 2; text-align:center; background-color: aliceblue;}
+#classe #progression #apres {grid-column: 3; text-align:center;}
+
+#classe .conditions {text-align: justify; margin-left: 30px;}
+#classe .conditions p {margin:1px;}
+#classe .input_nom {width:500px; text-align: left;}
+#classe .input_abreviation {width:40px; text-align: left;}
+#classe .input_alignement {width:250px; text-align: left;}
+#classe .input_conditions {width:1100px; text-align: left;}
+#classe .input_dv, #classe .input_pointsCompetences {width:40px; text-align: center;}
+#classe .input_pouvoir {width:250px; text-align: left;}
+#classe .input_argent {width:80px;text-align: left;}
+
+#classe table.progression {width:100%;}
+#classe .entete_dd5 {width:100%; max-with:600px; border: brown solid 0.33rem; border-radius: 1rem; padding: 1rem;}
+#classe .entete_dd5 .ligne_classe_dd5 {display: grid; grid-template-columns: 250px 1fr; gap: 0.2em; box-sizing: border-box; margin: 0.625em 0 0 0;}
+
+/***************************************************************************************
+/* Races
+/**************************************************************************************/
+#race {margin:0px;}
+#race .texte {padding:0; font-size: 16px; text-align: left; margin: 10px 0;}
+#race .capacites {text-align: justify; margin-left: 0px;}
+#race .capacites p {margin:1px;}
+#race .input_nom {width:500px; text-align: left;}
+#race .input_abreviation {width:40px; text-align: left;}
+#race .input_conditions {width:1100px; text-align: left;}
+#race .input_dv, #race .input_pointsCompetences {width:40px; text-align: center;}
+#race .input_argent {width:80px;text-align: left;}
+
+/* Capacités ********************************/
+
+#capacite > div {margin-bottom:10px;}
+
+#capacite .texte {
+  padding:0;
+  font-size: 16px;
+  text-align: justify;
+  margin-bottom: 20px;
+}
+#capacite .texte :nth-child(1) {margin-top: 0;}
+#capacite #mp_cap_nom {width:300px;text-align: left;}
+#capacite #mp_cap_description {height:300px;}
+
+/***************************************************************************************
+/* Personnage....
+/**************************************************************************************/
+
+#personnage .cartouche {padding: 2px 5px 1px 5px;}
+#personnage .bas_cartouche {border-bottom: thin black solid;}
+#personnage .cartouche div{text-align:left; margin-right: 50px;}
+#personnage .bloc{margin-top:0.625em; padding:0.35em;}
+#personnage .titre {display: flex; font-size: 1.5em; height: 1.5em; line-height: 1.5em; vertical-align: middle; font-weight: bold; margin-top: 0.625em 0;}
+
+.info_personnage {margin-top: 15px;}
+
+.label.classes {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.carac_personnage{display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 0.66rem;}
+.carac_ligne{display: flex; align-items: center; gap: 6px;}
+.carac_ligne .label{width: 50px; font-weight: bold;}
+.input_carac{width: 40px; text-align: center;}
+
+
+/* Liste des classes existantes : une ligne par classe */
+#classes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Ligne de classe + ligne du formulaire d’ajout */
+.classe {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;    /* empêche le retour à la ligne */
+}
+
+/* Colonnes communes pour l’icône de suppression et l’icône d’ajout */
+.info_personnage .suppression {
+  flex: 0 0 24px;       /* largeur fixe */
+  width: 24px;          /* pour que les navigateurs soient d’accord */
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Libellé de classe : même largeur partout */
+.info_personnage .libelle_classe {
+  flex: 0 0 200px;
+  width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Select de niveau : même largeur partout */
+.info_personnage .niveau_classe{
+  flex: 0 0 70px;
+  width: 70px;
+}
+
+/* Bouton "Ajouter une nouvelle classe" juste sous info_personnage */
+.ajout_classe_bouton {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.95rem;   /* cohérent avec info_personnage */
+  cursor: pointer;
+}
+
+.ajout_classe_bouton i {
+  font-size: 1rem;
+}
+
+/* Formulaire d’ajout : tout sur une seule ligne */
+.info_personnage .ajout_classe_form {
+  display: flex;
+  flex-wrap: nowrap;    /* interdit le retour à la ligne */
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  background-color: antiquewhite;
+}
+.ajouter_classe{width:24px;}
+
+
+/***************************************************************************************
+/* Note
+/**************************************************************************************/
+#note .texte, #note_pp .texte {padding:0; font-size: 18px; text-align: justify;}
+#note > div {margin-bottom:10px;}
+#note .input_nom {text-align: left; font-weight: bold; font-size: 14px; width:500px;}
+#note .input_resume {text-align: left; font-weight: normal; font-size: 14px; width:800px;}
+#note .input_texte {text-align: left; width:550px; min-height: 450px;}
+#note .input_source {text-align: left; width:250px; margin-right:10px;}
+#note .input_page {text-align: center; width:40px;}
+#note .input_version {text-align: center; width:40px;}
+/* tableau des armes */
+table.note {width:100%; margin:0; max-width: 1100px;}
+.note td {padding: 0 2px 0 10px; vertical-align:top;}
+.note tbody td.cs {padding: 0 2px 0 2px; font-weight: bold;}
+.note td:first-child {width:22%;} /* Nom */
+.note td:nth-child(2) {width:9%; text-align:center;} /* cat */
+
+/***************************************************************************************
+/* Ajout Equipement /Objets magiques
+/**************************************************************************************/
+#ajout_equipement {
+  width:100%;
+  max-width:500px;
+  height:90%;
+  border: thin black solid;
+  border-radius: 5px;
+  background-color: white;
+  margin: 10px 10px 15px 10px;
+  padding: 5px;
+  overflow:auto;
+}
+#ajout_equipement .input_nom{text-align: left; width:300px;}
+#ajout_equipement .input_cout{text-align: right; width:40px;}
+#ajout_equipement #accordion .data{ /*  pour tous les objets hors baguetes et potions  */
+  display: grid;
+  grid-template-columns: 1fr 30px 30px;
+  gap: 0px;
+  margin: 0px;
+  padding: 2px;
+  vertical-align: center;
+}
+#ajout_equipement #accordion .data2{ /* pour les baguetes et potions */
+  display: grid;
+  grid-template-columns: 100px 1fr 30px;
+  gap: 0px;
+  margin: 0px;
+  padding: 2px;
+  vertical-align: center;
+}
+#ajout_equipement #accordion .catEqt{min-height: 200px;} 
+}
+#ajout_equipement #accordion .nom {grid-column: 1; text-align:left;}
+#ajout_equipement #accordion .modificateur {grid-column: 2; text-align:center;}
+#ajout_equipement #accordion .plus {grid-column: 3; text-align:right;}
+
+/*******************************************
+/* Ressources
+/******************************************/
+
+.liste-ressources{width: 100%; margin: 0px; font-size:16px;}
+.liste-ressources div.ressource:nth-child(even) {background: #CCC;}
+.liste-ressources div.ressource:nth-child(odd) {background: #FFF;}
+.ressource .icone_select{
+  width:30px;
+  text-align:center;
+  padding:4px;
+  font-weight:bold;
+}
+.ressource .id{
+  width:40px;
+  text-align:center;
+  padding:4px;
+  font-weight:bold;
+}
+.ressource .nom{
+  width:400px;
+  text-align:left;
+  font-weight:bold;
+  padding:4px;
+}
+.ressource .sorts{
+  width:150px;
+  text-align:center;
+  padding:4px;	
+}
+.ressource .dons{
+  width:150px;
+  text-align:center;
+  padding:4px;	
+}
+.ressource .classes{
+  width:150px;
+  text-align:center;
+  padding:4px;	
+}
+.ressource .detail{
+  text-align:left;
+  padding:4px;	
+}
+
+/*******************************************
+/* Regles
+/******************************************/
+.liste-regles{width: 100%; margin: 0px; font-size:13px;}
+.uneRegle{display: grid; gap: 0.1em; margin-bottom: 0.2em; cursor:pointer;}
+.regle .nom{width: 30em; text-align:left; font-weight:bold; padding:4px;}
+.regle .categorie{width: 150px; text-align:left; padding:4px;}
+.regle .detail{text-align:left; padding:4px;}
+/* tableau des armes */
+table.armes {width:100%; margin:0; max-width: 1100px;}
+.armes td {padding: 0 2px 0 10px;}
+.armes tbody td.cs {padding: 0 2px 0 2px; font-weight: bold;}
+.armes td:first-child {width:22%;} /* Nom */
+.armes td:nth-child(2) {width:9%;} /* Prix */
+.armes td:nth-child(3) {width:9%;} /* Dgts (P) */
+.armes td:nth-child(4) {width:10%;} /* Dgts (M) */
+.armes td:nth-child(5) {width:13%;} /* Critique */
+.armes td:nth-child(6) {width:7%;} /* FP */
+.armes td:nth-child(7) {width:10%;} /* Poids */
+.armes td:nth-child(8) {width:20%;} /* Type */
+
+/***************************************************************************************
+/* rencontre / monstre
+/**************************************************************************************/
+#rencontre .contenu H2 {margin: 10px 0 5px 0; padding:0 0 0 0; font-size:2em;}
+#rencontre .contenu .text-red, #monstre .contenu .text-red, #rencontre .lien, #monstre .lien {color:brown;}
+#rencontre .contenu_profil .lien {color:green;}
+.ajout_monstre {margin-left: 0.5rem;}
+#detailRencontre {padding: 0 0.5rem;}
+
+/*******************************************
+/* Monstres
+/******************************************/
+.monstres ul, .monstres li {margin:none; padding: none;}
+.monstres .lien {color:red;}
+.monstre {display:none;}
+.monstre.is-active { display: block; }
+/* Formulaire de saisie du monstre */
+.trt {background-color: #EAEAEA; padding:0.5rem; margin: 0.5rem 0}
+.monstre_nom {width: 725px; text-align: left; font-weight: 700;}
+.monstre_description {width: 95%; min-height: 400px; text-align: left;}
+.rencontre_nom {width: 50%; max-width: 800px; text-align: left;}
+.rencontre_effectif {width: 100px; text-align: center;}
+.blocAction{color:#6D0000; margin:6px 0 4px 0; border-bottom:1px solid #6D0000; font-size:1.5rem; font-variant:small-caps}
+.car {display:inline-block; margin:0 1px; padding:0px 2px; font-size:0.6rem; color:#666666; width:10%; max-width:40px; text-align:center; vertical-align:bottom}
+.car1, .car4 {display:inline-block; margin:1px;  padding:2px 4px; width:10%; max-width:40px; text-align:left;   vertical-align:top; font-weight:bold; font-variant:small-caps}
+.car2, .car5 {display:inline-block; margin:1px;  padding:2px 4px; width:10%; max-width:40px; text-align:center; vertical-align:top; font-weight:bold}
+.car3, .car6 {display:inline-block; margin:1px;  padding:2px 4px; width:10%; max-width:40px; text-align:center; vertical-align:top}
+.car1, .car2 {background-color:#e8e6da}
+.car3 {background-color:#dad1ca}
+.car4, .car5 {background-color:#dddad5}
+.car6 {background-color:#cecac9; margin-bottom:8px}
+
+
+
+
+/**** Formulaire de saisie de don ********************************/
+
+#regle > div {margin-bottom:10px;}
+
+#regle .input_nom {
+  text-align: left;
+  font-weight: bold;
+  font-size: 14px;
+  width:500px;
+}
+#regle .input_texte {
+  text-align: left;
+  width:550px;
+  min-height: 450px;
+}
+#regle .input_categorie {
+  text-align: left;
+  width:250px;
+  margin-right:10px
+}
+
+
+/**** formulaire de recherche ****************************/
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.header .search-container {height:50px; line-height: 50px; vertical-align: middle; background-color: aqua;}
+.header .search-form {height:50px; line-height: 50px; vertical-align: middle; background-color: antiquewhite;}
+
+.search-form {display: flex;}
+
+.search-input {
+  flex: 1;
+  padding: 0 1rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-right: none;
+  border-radius: 999px 0 0 999px;
+  outline: none;
+  height: 1.5rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.search-select {
+  flex-shrink: 0;
+  padding: 0 1rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 999px 0 0 999px;
+  border-right: none;
+  outline: none;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  box-sizing: border-box;
+  background-color: white;
+  appearance: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.search-button {
+  padding: 0 1rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-left: none;
+  border-radius: 0 999px 999px 0;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  height: 1.5rem;
+  box-sizing: border-box;
+}
+
+.search-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Placeholder de l'input */
+.search-input::placeholder {
+  color: #000;
+}
+
+@media (max-width: 991px) {  
+  .search-input, .search-select {max-width:280px;}
+}
+@media (min-width: 992px) {  
+  .search-container {flex-direction: row;}
+  .search-form {flex: 0 0 auto;}
+  .search-container > .search-form:not(:last-child) {margin-right: 10px;}
+}
+
+/**** Sommaire des notes *******************************/
+/* Bloc sommaire */
+.toc {
+  margin: 0.5rem 0;             /* marge avant/après */
+  padding: .5rem 0;           /* respiration interne */
+  border-top: thin solid #ccc; /* bordures haut/bas */
+  border-bottom: thin solid #ccc;
+}
+.toc-summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+  outline: none;
+}
+/* Nettoyage / lisibilité des listes */
+.toc-list, .toc-sublist {
+  list-style-type: none;  /* supprime les puces natives */
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.toc-list li, .toc-sublist li { margin: .125rem 0; }
+/* Lien “retour au sommaire” placé avant chaque titre */
+.back-to-toc {
+  display: inline-block;
+  font-size: .85em;
+  margin: .25rem 0 .25rem 0;
+  margin-right: .5rem;
+  text-decoration: none;
+  color: #666;
+}
+.back-to-toc:hover { color: #000; text-decoration: underline; }
+/* Bonus : si tu as un bandeau fixe, évite que l’ancre cache le titre */
+[id] { scroll-margin-top: 60px; } /* adapte à la hauteur de ton header */
+
+
+/**** Bouton Haut de page ********************************/
+#scrollToTopButton {
+  display: block;
+  z-index: 99;
+  transition: background-color 0.3s, opacity 0.5s, visibility 0.5s;
+  opacity: 0;
+  visibility:visible;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  width: 50px;
+  height: 50px;
+  padding: 8px;
+  background-color: #333333bf;
+}
+#scrollToTopButton i {
+  color: white;
+}
+#scrollToTopButton:hover,
+#scrollToTopButton:focus,
+#scrollToTopButton:focus-within {
+  cursor: pointer;
+  background-color: #0078b4;
+}
+
+/**********************************************************************
+// File d'ariane
+/**********************************************************************/
+#ariane {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;          /* évite le retour à la ligne */
+  vertical-align: middle;
+  color: #6F6F6F;
+  white-space: nowrap;        /* tout sur une seule ligne */
+  overflow: hidden;           /* masque le surplus */
+}
+
+#ariane i { font-size: 1em; }
+#ariane span { font-weight: bold; margin: 0 3px; padding-bottom: 2px; }
+#ariane span a { color: #6F6F6F; }
+
+/* Lien maison toujours visible */
+#ariane .home-link {
+  flex: 0 0 auto;
+  margin-right: 0px;
+}
+
+/* Le reste du fil prend la place restante */
+#ariane .ariane-rest {
+  flex: 1 1 auto;
+  min-width: 0;               /* IMPORTANT pour que overflow fonctionne en flex */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;     /* l’ellipse sera visible quand on passera en rtl */
+}
+
+/* Petits écrans : tronquer par la GAUCHE */
+@media (max-width: 991px) {
+  #ariane { margin: 0.4em 0 0.8em 0; height: 1rem; line-height: 1rem; }
+  #ariane span { font-size: 0.9rem; }
+
+  /* magie : on inverse la direction du conteneur pour ellipsis gauche */
+  #ariane .ariane-rest {
+    direction: rtl;
+    text-align: left;          /* garde l’alignement visuel normal */
+    text-overflow: ellipsis;
+  }
+  /* …mais on remet les enfants en LTR pour conserver l’ordre naturel du texte */
+  #ariane .ariane-rest > * {
+    direction: ltr;
+    display: inline;           /* ou inline-block si besoin */
+  }
+}
+
+/* Grands écrans : affichage normal, pas de troncature forcée */
+@media (min-width: 992px) {
+  #ariane { margin: 0.7em 0 1.2em 0; height: 1.3em; line-height: 1.3em; }
+  #ariane span { font-size: 1rem; }
+  #ariane .ariane-rest {direction: ltr; text-overflow: clip;}
+}
+
+/**********************************************************************
+// Menu niveaux de sorts
+/**********************************************************************/
+.menu-chiffres {
+  display: flex;
+  justify-content: space-between;  /* espace égal entre les cercles */
+  align-items: center;
+  width: 100%;
+  max-width: 700px;                /* largeur max optionnelle */
+  margin: 0.5rem auto;
+  padding: 0 1rem;
+}
+.menu-chiffres .item {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;              /* cercle parfait */
+  background-color: #eee;          /* fond gris clair */
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #ccc;
+}
+/* effet au survol */
+.menu-chiffres .item:hover {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+  transform: scale(1.1);
+}
+/* état actif (par exemple, élément sélectionné) */
+.menu-chiffres .item.active {
+  background-color: #007BFF;
+  color: white;
+  border-color: #007BFF;
+}
+/* contenu masqué par défaut */
+.contenuMain {
+  display: none;
+}
+
+/* contenu visible */
+.contenuMain.active {
+  display: block;
+}
+
+/* responsive : réduire la taille des cercles sur mobile */
+@media (max-width: 991px) {
+  .menu-chiffres .item {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}
+
+/**********************************************************
+Autocmpletion
+***********************************************************/
+.ac-wrap { position: relative; max-width: 420px; }
+.ac-panel {
+  position: absolute; top: 100%; left: 0; right: 0;
+  border: 1px solid #ccc; background: #CCF;
+  max-height: 220px; overflow: auto; z-index: 10000;
+  box-shadow: 0 3px 8px rgba(0,0,0,.1);
+}
+.ac-item { padding: .45rem .6rem; cursor: pointer; }
+.ac-item:hover, .ac-item.is-active { background: #f2f2f2; }
+
+.autocomplete {
+  position: relative;
+  max-width: 420px;
+}
+
+.autocomplete input[type="text"] {
+  width: 100%;
+  padding: .5rem .75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  background: #CCC;
+  border: 1px solid #ddd;
+  border-top: none;
+  z-index: 1000;
+  max-height: 240px;
+  overflow-y: auto;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.autocomplete-item {
+  padding: .5rem .75rem;
+  cursor: pointer;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background: #007BFF;
+  color: #fff;
+}
+
+/***********************************************************************
+Bouton on/off pour la gestion des variables (état 0 ou 1)
+/**********************************************************************/
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .3s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #4caf50;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* affichage des variables en lecture seule */
+/* Conteneur principal (aspect du switch) */
+.switch-display {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+  border-radius: 34px;
+  background-color: #ccc;
+  cursor: default;            /* pas cliquable */
+  transition: background-color 0.3s;
+  vertical-align: middle;
+}
+/* Pastille mobile */
+.switch-display .slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: white;
+  transition: transform 0.3s;
+}
+/* État actif */
+.switch-display.on {
+  background-color: #4CAF50; /* vert */
+}
+.switch-display.on .slider {
+  transform: translateX(24px);
+}
+/* État inactif */
+.switch-display.off {
+  background-color: #aaa; /* gris */
+}
+/* Optionnel : effet visuel “désactivé” */
+.switch-display.off .slider {
+  opacity: 0.8;
+}
+/* Pour un alignement plus net dans une ligne de texte */
+.switch-display {
+  margin: 0 5px;
+}
+
+/*****************************************************************************
+ Liste et Pagination
+*****************************************************************************/
+
+/* Conteneur global de la liste */
+.sortable-list {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 0.95rem;
+  background: #fff;
+  margin-bottom: 1rem;
+}
+
+/* En-tête + lignes : tableau en grid */
+.sortable-list .list-header,
+.sortable-list .list-row {
+  display: grid;
+  align-items: stretch;
+  /* 2 colonnes fixes de 30px (suppr / modif), le reste comme avant */
+  grid-template-columns: 30px 30px repeat(auto-fit, minmax(0, 1fr));
+}
+
+/* Cellules */
+.sortable-list .col {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #e2e2e2;
+  box-sizing: border-box;
+}
+
+/* En-tête */
+.sortable-list .list-header {
+  background: #f5f5f5;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+.sortable-list .list-header .col {
+  border-bottom: none;
+}
+
+/* Lignes zébrées */
+.sortable-list .list-body .list-row:nth-child(odd) {
+  background: #fafafa;
+}
+.sortable-list .list-body .list-row:nth-child(even) {
+  background: #ffffff;
+}
+
+/* Survol ligne */
+.sortable-list .list-body .list-row:hover {
+  background: #f0f7ff;
+}
+
+/* En-têtes cliquables */
+.sortable-list .list-header .col[data-sort-field] {
+  cursor: pointer;
+  user-select: none;
+}
+.sortable-list .list-header .col[data-sort-field]:hover {
+  background: #e8e8e8;
+}
+
+/* Flèches de tri (codes hex pour Dreamweaver) */
+.sortable-list .list-header .col.sort-asc::after {
+  content: "\25B2"; /* haut */
+  font-size: 0.8em;
+}
+.sortable-list .list-header .col.sort-desc::after {
+  content: "\25BC"; /* bas */
+  font-size: 0.8em;
+}
+
+/* Colonnes actions : largeur fixe + centrage */
+.sortable-list .action-col {
+  /* la largeur est gérée par grid-template-columns, pas besoin de width ici */
+  text-align: center;
+  padding: 0.3rem;
+}
+
+/* Les icônes cliquables */
+.action-delete i {
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.action-edit i {
+  color: #2980b9;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.action-delete i:hover {
+  color: #e74c3c;
+}
+
+.action-edit i:hover {
+  color: #3498db;
+}
+
+
+
+/* Pagination générique */
+.pagination {
+  margin: 1rem 0;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pagination .page-link {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.pagination .page-link.active {
+  font-weight: bold;
+  background: #eee;
+}
+
+.pagination .page-link.disabled {
+  opacity: 0.4;
+  cursor: default;
+  border-style: dotted;
+}
+
+/*****************************************************************************
+ Formulaire
+*****************************************************************************/
+
+@media (max-width: 991px) {
+  /* On enlève flex, la ligne redevient un bloc normal */
+  .form-group {
+    display: block !important;
+    margin-bottom: 16px;
+  }
+
+  /* Le label passe au-dessus, largeur 100% */
+  .form-group > label {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0px;
+    padding-top: 0;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  /* Les champs restent limités à 600px, mais centrés / alignés à gauche */
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="password"],
+  .form-group select,
+  .form-group textarea {
+    display: block;
+    width: 100%;
+    margin: none;
+  }
+}
+
+@media (min-width: 992px) {
+  /* Une ligne du formulaire */
+  .form-group {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  /* LABEL : 200px fixes, ne rétrécit pas */
+  .form-group > label {
+    flex: 0 0 200px;         /* 0 grow, 0 shrink, base 200px */
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    font-weight: bold;
+    text-align: left;
+    margin-right: 10px;
+    padding-top: 4px;
+  }
+
+  /* TOUS les champs : max 600px */
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="password"],
+  .form-group select,
+  .form-group textarea {
+    flex: 0 1 600px;         /* peut se réduire, max 600px */
+    max-width: 600px;
+    width: 100%;             /* prend toute la place *jusqu’à* 600px */
+    box-sizing: border-box;
+    text-align: left;
+  }
+
+  /* Optionnel : réglage du textarea */
+  .form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+}

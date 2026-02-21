@@ -1,0 +1,50 @@
+/***************************************************************************************
+/* Joueurs....
+/**************************************************************************************/
+
+#listejoueurs {
+	margin: 0px;
+}
+
+#listejoueurs div.alterne {background: #585858;}
+#listejoueurs div.alterne:nth-child(even) {background: #CCC;}
+#listejoueurs div.alterne:nth-child(odd) {background: #FFF;}
+ 
+.joueur {
+  display: grid;
+  grid-template-columns: 30px 30px 200px 200px 200px 1fr;
+	gap: 5px;
+	margin-bottom: 3px;
+  cursor:pointer;
+}
+
+.detail_joueur_ligne {
+  display: grid;
+  grid-template-columns: 175px 1fr;
+	gap: 5px;
+	margin-bottom: 3px;
+}
+.detail_joueur_ligne .label {
+  grid-column: 1;
+  font-weight: bold;
+  text-align: left;
+}
+.detail_joueur_ligne . {
+  grid-column: 2;
+  font-weight:normal; 
+  text-align: left;
+}
+
+#detail_joueur {
+	margin:10px;
+}
+#detail_joueur fieldset {
+	margin-bottom: 10px;
+}
+
+#detail_joueur .input_notes {
+  width:500px;
+  min-height:250px;
+}
+
+

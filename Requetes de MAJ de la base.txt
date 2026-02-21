@@ -1,0 +1,136 @@
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&eacute;", "é");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&acirc;", "ê");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&egrave;", "è");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&rsquo;", "\'");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&ndash;", "-");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&agrave;", "à");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&OElig;", "Oe");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&oelig;", "oe");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&mdash;", "-");
+UPDATE dd_regles SET re_nom=REPLACE(re_nom, "&nbsp;", " ");
+
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&eacute;", "é");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&acirc;", "ê");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&egrave;", "è");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&rsquo;", "\'");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&ndash;", "-");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&agrave;", "à");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&OElig;", "Oe");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&oelig;", "oe");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&mdash;", "-");
+UPDATE dd_regles SET re_texte=REPLACE(re_texte, "&nbsp;", " ");
+
+
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&eacute;", "é");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&acirc;", "ê");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&egrave;", "è");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&rsquo;", "\'");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&ndash;", "-");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&agrave;", "à");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&OElig;", "Oe");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&oelig;", "oe");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&mdash;", "-");
+UPDATE dd_capacites_speciales SET cap_nom=REPLACE(cap_nom, "&nbsp;", " ");
+
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&eacute;", "é");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&acirc;", "ê");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&egrave;", "è");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&rsquo;", "\'");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&ndash;", "-");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&agrave;", "à");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&OElig;", "Oe");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&oelig;", "oe");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&mdash;", "-");
+UPDATE dd_capacites_speciales SET cap_description=REPLACE(cap_description, "&nbsp;", " ");
+
+
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&eacute;", "é");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&acirc;", "ê");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&egrave;", "è");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&rsquo;", "\'");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&ndash;", "-");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&agrave;", "à");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&OElig;", "Oe");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&oelig;", "oe");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&mdash;", "-");
+UPDATE dd_competences SET comp_nom=REPLACE(comp_nom, "&nbsp;", " ");
+
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&eacute;", "é");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&acirc;", "ê");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&egrave;", "è");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&rsquo;", "\'");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&ndash;", "-");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&agrave;", "à");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&OElig;", "Oe");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&oelig;", "oe");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&mdash;", "-");
+UPDATE dd_competences SET comp_description=REPLACE(comp_description, "&nbsp;", " ");
+
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&eacute;", "é");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&acirc;", "ê");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&egrave;", "è");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&rsquo;", "\'");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&ndash;", "-");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&agrave;", "à");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&OElig;", "Oe");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&oelig;", "oe");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&mdash;", "-");
+UPDATE dd_competences SET comp_special=REPLACE(comp_special, "&nbsp;", " ");
+
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&eacute;", "é");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&acirc;", "ê");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&egrave;", "è");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&rsquo;", "\'");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&ndash;", "-");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&agrave;", "à");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&OElig;", "Oe");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&oelig;", "oe");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&mdash;", "-");
+UPDATE dd_competences SET comp_action=REPLACE(comp_action, "&nbsp;", " ");
+
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&eacute;", "é");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&acirc;", "ê");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&egrave;", "è");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&rsquo;", "\'");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&ndash;", "-");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&agrave;", "à");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&OElig;", "Oe");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&oelig;", "oe");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&mdash;", "-");
+UPDATE dd_competences SET comp_test=REPLACE(comp_test, "&nbsp;", " ");
+
+
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&eacute;", "é");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&acirc;", "ê");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&egrave;", "è");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&rsquo;", "\'");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&ndash;", "-");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&agrave;", "à");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&OElig;", "Oe");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&oelig;", "oe");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&mdash;", "-");
+UPDATE dd_dons SET do_nom=REPLACE(do_nom, "&nbsp;", " ");
+
+
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&eacute;", "é");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&acirc;", "ê");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&egrave;", "è");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&rsquo;", "\'");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&ndash;", "-");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&agrave;", "à");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&OElig;", "Oe");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&oelig;", "oe");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&mdash;", "-");
+UPDATE dd_dons SET do_texte=REPLACE(do_texte, "&nbsp;", " ");
+
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&eacute;", "é");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&acirc;", "ê");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&egrave;", "è");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&rsquo;", "\'");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&ndash;", "-");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&agrave;", "à");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&OElig;", "Oe");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&oelig;", "oe");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&mdash;", "-");
+UPDATE dd_dons SET do_resume=REPLACE(do_resume, "&nbsp;", " ");
+

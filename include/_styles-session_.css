@@ -1,0 +1,22 @@
+/***************************************************************************************
+/* Sessions
+/**************************************************************************************/
+
+table.session-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+.session-table th, .session-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  vertical-align: top;
+}
+.session-table th {
+  background-color: #f5f5f5;
+  text-align: left;
+}
+.session-table tr:nth-child(even) {
+  background-color: #fafafa;
+}

@@ -1,0 +1,233 @@
+/* ================================
+   Toolbar
+================================ */
+
+.classe-toolbar {
+  margin-bottom: 12px;
+}
+
+.btn-switch {
+  padding: 6px 12px;
+  border: 1px solid #555;
+  background: #2b2b2b;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-switch:hover {
+  background: #3a3a3a;
+}
+
+
+/* ================================
+   Liste des niveaux
+================================ */
+
+.classe-lignes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* ================================
+   Ligne de niveau
+================================ */
+
+.classe-ligne {
+  /* défini dynamiquement dans classe.php */
+}
+
+/* ================================
+   Blocs génériques
+================================ */
+
+.bloc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bloc .label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.bloc .valeur {
+  font-size: 14px;
+}
+
+/* ================================
+   Entête du tableau de classe
+================================ */
+
+.classe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.66rem 0.66rem 0.1rem 0rem;
+  margin-bottom: 0.66rem;
+  border: none;
+}
+
+.classe-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+
+/* ================================
+   Bouton switch (icône)
+================================ */
+
+.btn-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background: #2b2b2b;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-switch:hover {
+  background: #3a3a3a;
+}
+
+.btn-switch i {
+  font-size: 1rem;
+}
+
+/* ================================
+   Bloc Niveau
+================================ */
+
+.bloc.niveau {
+  align-items: center;
+  justify-content: flex-start;  
+}
+
+.bloc.niveau .valeur {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+/* ================================
+   Bloc Stats
+================================ */
+
+.bloc.stats{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
+  gap: 6px;
+}
+
+.bloc.stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bloc.stats span {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.bloc.stats strong {
+  font-size: 14px;
+}
+
+
+/* ================================
+   Bloc aptitudes
+================================ */
+
+.bloc.aptitudes {
+  justify-content: flex-start;
+}
+
+.cap {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.cap:hover {
+  color: #ffd966;
+}
+
+/* ================================
+   Bloc pouvoirs de classe DD2024
+================================ */
+.bloc.pouvoir {text-align: center;}
+
+/* ================================
+   Bloc Sorts
+================================ */
+
+/* Le bloc sorts reste une grille */
+.bloc.sorts {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
+  gap: 6px;
+  padding-top: 22px;
+}
+
+/* Entête centrée au-dessus de tous les niveaux */
+.bloc.sorts > div:first-child::before {
+  content: "Nombre de sorts par jour";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.bloc.sorts div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bloc.sorts span {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.bloc.sorts strong {
+  font-size: 14px;
+}
+
+/* ================================
+   Classe sans sorts
+================================ */
+
+
+/* ================================
+   Responsive < 992px
+================================ */
+
+@media (max-width: 991px) {
+
+  /* Vue par défaut = combat */
+  .bloc[data-groupe="sorts"] {
+    display: none;
+  }
+
+  /* Vue sorts activée */
+  .classe-niveaux.vue-sorts .bloc[data-groupe="stats"],
+  .classe-niveaux.vue-sorts .bloc[data-groupe="aptitudes"] {
+    display: none;
+  }
+  .classe-niveaux.vue-sorts .bloc[data-groupe="sorts"] {
+    display: block;
+  }
+}
