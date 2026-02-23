@@ -38,11 +38,12 @@ if ($isAdmin) {
   // COUNT total
   $sqlCount = 'SELECT COUNT(*) 
                  FROM dd_campagnes c
-                 WHERE c.camp_ruleset_var_id = :ruleset';
-
+                 WHERE c.camp_ruleset_var_id = :ruleset
+                  AND c.camp_j_id = :user_id';
   $stmtCount = $db->prepare($sqlCount);
   $stmtCount->execute([
     ':ruleset' => $_SESSION['ruleset'],
+    ':user_id' => $_SESSION['user_id']
   ]);
   $totalItems = (int)$stmtCount->fetchColumn();
 
@@ -56,11 +57,13 @@ if ($isAdmin) {
                 FROM dd_campagnes c
                 LEFT JOIN dd_joueurs j ON j.j_id = c.camp_j_id
                 WHERE c.camp_ruleset_var_id = :ruleset
+                  AND c.camp_j_id = :user_id
                 ORDER BY ' . $orderBySql . '
                 LIMIT :limit OFFSET :offset';
 
   $stmt = $db->prepare($requete);
   $stmt->bindValue(':ruleset', $_SESSION['ruleset'], PDO::PARAM_INT);
+  $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
   $stmt->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
   $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
   $stmt->execute();
@@ -69,7 +72,7 @@ if ($isAdmin) {
   $sqlCount = 'SELECT COUNT(*)
                  FROM dd_campagnes
                  WHERE camp_j_id = :user_id
-                   AND camp_ruleset_var_id = :ruleset';
+                  AND camp_ruleset_var_id = :ruleset';
 
   $stmtCount = $db->prepare($sqlCount);
   $stmtCount->execute([
