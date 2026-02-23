@@ -122,8 +122,11 @@ $extraParams = [
     <div class="wrapper">
       <? include('include/ariane.php'); ?>
       <div class="titreAction">
-        <div class="titreA">Campagnes</div>
-        <div><? echo '<a href="campagne-modifier.php?campagne=n" class="ajout_perso lien"><i class="icon fa-solid fa-pen-to-square"></i></a>'; ?></div>
+        <div class="titreA">
+          Campagnes
+          <? echo '<a href="campagne-modifier.php?campagne=n" class="ajout_perso lien"><i class="icon fa-solid fa-circle-plus ml15"></i></a>'; ?>
+        </div>
+        <div></div>
       </div>
 
       <? debug($requete); ?>

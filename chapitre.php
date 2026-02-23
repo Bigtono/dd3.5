@@ -7,31 +7,32 @@ include("include/date.inc.php");
 include("include/pagination.php");
 include("include/list_helpers.inc.php");
 
-$scenario_id = isset($_GET['scenario']) ? (int)$_GET['scenario'] : 0;
+$chapitre_id = isset($_GET['chapitre']) ? (int)$_GET['chapitre'] : 0;
 
 $stmt = $db->prepare("
-  SELECT sc.sc_id, sc.sc_nom, sc.sc_description, c.camp_id, c.camp_nom
-  FROM dd_scenarios sc
+  SELECT ch.scc_id, ch.scc_nom, ch.scc_description, sc.sc_id, sc.sc_nom, c.camp_id, c.camp_nom
+  FROM dd_scenarios_chapitres ch
+  JOIN dd_scenarios sc ON sc.sc_id = ch.scc_sc_id
   JOIN dd_campagnes c ON c.camp_id = sc.sc_camp_id
-  WHERE sc.sc_id = ?
+  WHERE ch.scc_id = ?
 ");
-$stmt->execute([$scenario_id]);
+$stmt->execute([$chapitre_id]);
 
-$scenario = $stmt->fetch(PDO::FETCH_ASSOC);
+$chapitre = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$scenario):
-  die('Scénario introuvable');
+if (!$chapitre):
+  die('Chapitre introuvable');
 endif;
 
-// chapitres
-$stmtChap = $db->prepare("
-  SELECT scc_id, scc_nom
-  FROM dd_scenarios_chapitres
-  WHERE scc_sc_id = ?
-  ORDER BY scc_nom
+// rencontres
+$stmtR = $db->prepare("
+  SELECT re_id, re_nom
+  FROM dd_rencontres
+  WHERE re_scc_id = ?
+  ORDER BY re_nom
 ");
-$stmtChap->execute([$scenario_id]);
-$chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
+$stmtR->execute([$chapitre_id]);
+$rencontres = $stmtR->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <head>
@@ -48,65 +49,65 @@ $chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
 
       <div class="titreAction">
         <div class="titreA">
-          <?= htmlspecialchars($scenario['sc_nom']); ?>
-          <a href="scenario-modifier.php?scenario=<?= (int)$scenario['sc_id']; ?>"><i class="fa-solid fa-pen-to-square ml15"></i></a>
+          <?= htmlspecialchars($chapitre['scc_nom']); ?>
+          <a href="scenario-modifier.php?scenario=<?= (int)$chapitre['scx_id']; ?>"><i class="fa-solid fa-pen-to-square ml15"></i></a>
         </div>
         <div>
         </div>
       </div>
 
-      <? if (!empty($scenario['sc_description'])): ?>
+      <? if (!empty($chapitre['scc_description'])): ?>
         <div class="description">
-          <?= nl2br(htmlspecialchars($scenario['sc_description'])) ?>
+          <?= nl2br(htmlspecialchars($chapitre['scc_description'])) ?>
         </div>
       <? endif ?>
 
+      <!-- Bloc rencontres -->
 
-      <!-- Bloc chapitres -->
       <div class="titreAction">
-        <div class="titreB">Chapitres</div>
+        <div class="titreB">Rencontres</div>
         <div>
           <button
             class="btNoir"
-            id="btn-add-chapitre"
-            data-scenario-id="<?= $scenario_id ?>">
-            Nouveau chapitre
+            id="btn-add-rencontre"
+            data-chapitre-id="<?= $chapitre_id ?>">
+            Nouvelle rencontre
           </button>
         </div>
       </div>
 
-      <div id="liste-chapitres" class="sortable-list">
+      <div id="liste-rencontres" class="sortable-list">
 
         <div class="list-header">
           <div class="col action-col"></div>
           <div class="col action-col"></div>
-          <div class="col">Nom du chapitre</div>
+          <div class="col">Nom de la rencontre</div>
         </div>
 
         <div class="list-body">
 
-          <? if (empty($chapitres)): ?>
+          <? if (empty($rencontres)): ?>
             <div class="list-row">
-              <div class="col">Aucun chapitre</div>
+              <div class="col">Aucune rencontre</div>
             </div>
           <? else: ?>
 
-            <? foreach ($chapitres as $ch): ?>
+            <? foreach ($rencontres as $re): ?>
               <div class="list-row">
 
                 <div class="col action-col action-delete">
-                  <i class="fa fa-trash btn-delete-chapitre" data-ch-id="<?= $ch['scc_id'] ?>"></i>
+                  <i class="fa fa-trash btn-delete-rencontre" data-re-id="<?= $re['re_id'] ?>"></i>
                 </div>
 
                 <div class="col action-col action-edit">
-                  <a href="chapitre-modifier.php?chapitre=<?= $ch['scc_id'] ?>">
+                  <a href="rencontre-modifier.php?rencontre=<?= $re['re_id'] ?>">
                     <i class="fa fa-edit"></i>
                   </a>
                 </div>
 
                 <div class="col">
-                  <a href="chapitre.php?chapitre=<?= $ch['scc_id'] ?>">
-                    <?= htmlspecialchars($ch['scc_nom']) ?>
+                  <a href="rencontre.php?rencontre=<?= $re['re_id'] ?>">
+                    <?= htmlspecialchars($re['re_nom']) ?>
                   </a>
                 </div>
 
@@ -122,32 +123,32 @@ $chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
       <p class="mb50">&nbsp;</p>
       <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
     </div> <!-- wrapper --->
+
     <div id="modification"></div>
     <div id="detail-pp"></div>
     <? include('include/footer.php'); ?>
   </div><!-- page --->
 </body>
 <script>
-  // refresh chapitres
-  function refreshChapitres() {
+  function refreshRencontres() {
 
-    const scenarioId = document.getElementById('btn-add-chapitre').dataset.scenarioId
+    const chapitreId = document.getElementById('btn-add-rencontre').dataset.chapitreId
 
-    fetch('ajax/chapitre_list.php?scenario=' + scenarioId)
+    fetch('ajax/rencontre_list.php?chapitre=' + chapitreId)
       .then(r => r.text())
       .then(html => {
-        document.querySelector('#liste-chapitres .list-body').innerHTML = html
+        document.querySelector('#liste-rencontres .list-body').innerHTML = html
       })
   }
 
-  // ouverture création
+  // ouverture popup
   document.addEventListener('click', function(e) {
 
-    if (e.target.id === 'btn-add-chapitre') {
+    if (e.target.id === 'btn-add-rencontre') {
 
-      const scenarioId = e.target.dataset.scenarioId
+      const chapitreId = e.target.dataset.chapitreId
 
-      fetch('ajax/chapitre_create_form.php?scenario=' + scenarioId)
+      fetch('ajax/rencontre_create_form.php?chapitre=' + chapitreId)
         .then(r => r.text())
         .then(html => {
           document.getElementById('detail-pp').innerHTML = html
@@ -155,11 +156,11 @@ $chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
         })
     }
 
-    if (e.target.classList.contains('btn-delete-chapitre')) {
+    if (e.target.classList.contains('btn-delete-rencontre')) {
 
-      const chId = e.target.dataset.chId
+      const reId = e.target.dataset.reId
 
-      fetch('ajax/chapitre_delete_form.php?chapitre=' + chId)
+      fetch('ajax/rencontre_delete_form.php?rencontre=' + reId)
         .then(r => r.text())
         .then(html => {
           document.getElementById('detail-pp').innerHTML = html
@@ -169,14 +170,14 @@ $chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
 
   })
 
-  // submit création
+  // submit
   document.addEventListener('submit', function(e) {
 
-    if (e.target.id === 'form-create-chapitre') {
+    if (e.target.id === 'form-create-rencontre') {
 
       e.preventDefault()
 
-      fetch('ajax/chapitre_create.php', {
+      fetch('ajax/rencontre_create.php', {
           method: 'POST',
           body: new FormData(e.target)
         })
@@ -184,28 +185,26 @@ $chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
         .then(data => {
           if (data.success) {
             document.getElementById('detail-pp').style.display = 'none'
-            refreshChapitres()
+            refreshRencontres()
           }
         })
-
     }
 
-    if (e.target.id === 'form-delete-chapitre') {
+    if (e.target.id === 'form-delete-rencontre') {
 
       e.preventDefault()
 
-      fetch('ajax/chapitre_delete.php', {
+      fetch('ajax/rencontre_delete.php', {
           method: 'POST',
           body: new FormData(e.target)
         })
-        .then(r => r.json())
+        .then(data => data.json())
         .then(data => {
           if (data.success) {
             document.getElementById('detail-pp').style.display = 'none'
-            refreshChapitres()
+            refreshRencontres()
           }
         })
-
     }
 
   })

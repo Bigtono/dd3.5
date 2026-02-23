@@ -7,16 +7,34 @@ include("include/date.inc.php");
 
 ?>
 <!doctype html>
+
 <HEAD>
-<? include("include/head.php"); ?>
-<script type='text/javascript' src='js/moncode-sorts.js'></script>
-<script type='text/javascript' src='js/moncode-dons.js'></script>
-<script type='text/javascript' src='js/moncode-competences.js'></script>  
+  <? include("include/head.php"); ?>
+  <script type='text/javascript' src='js/moncode-sorts.js'></script>
+  <script type='text/javascript' src='js/moncode-dons.js'></script>
+  <script type='text/javascript' src='js/moncode-competences.js'></script>
 </HEAD>
 
 <body>
-<? include("include/affichageSelectionSources.php"); ?>  
-<?php
+  <? include("include/affichageSelectionSources.php"); ?>
+  <?php
+  $id = 61;
+  $sql = 'SELECT re_nom, re_code, scc_abreviation FROM dd_rencontres JOIN dd_scenarios_chapitres ON re_scc_id=scc_id WHERE re_id= :id';
+  $stmt = $db->prepare($sql);
+  $stmt->execute([':id' => $id]);
+  $rencontre = $stmt->fetch(PDO::FETCH_ASSOC);
+  if ($rencontre):
+    if ($rencontre['scc_abreviation'] != "" && $rencontre['re_code'] != ""):
+      $text = stripslashes($rencontre['scc_abreviation']) . stripslashes($rencontre['re_code']) . " : ";
+    else:
+      $text = "";
+    endif;
+    $text .= stripslashes($rencontre['re_nom']);
+  else:
+    $text = "erreur : " . $sql;
+  endif;
+  echo $text;
+  /*
   $var="### ";
   $ligne='### D2 :Essai de chapitre';
   echo '<h1>'.substr($ligne,strlen($var)).'</h1>';
@@ -24,8 +42,8 @@ include("include/date.inc.php");
   $chapitre=explode(":",trim(substr($ligne,4)));
   echo '<span class="fondrouge">'.trim($chapitre[0]).'</span>';
   echo '<span class="fondrouge">'.trim($chapitre[1]).'</span>';
-  /*
-  // recherche des références de livres sélectionnées
+  
+  // recherche des rï¿½fï¿½rences de livres sï¿½lectionnï¿½es
 $requete='SELECT res_id, res_nom, res_editeur, res_selection FROM dd_ressources WHERE res_selection="1" ORDER BY res_nom';
 $result=queryPDO($requete);
 $num_rows=$result->rowCount();
@@ -75,7 +93,7 @@ echo '<div>'.$liste.'</div>';
   $i=1;
   while(!feof($fp)):
   
-    $add=1; // par défaut, on ajoute la ligne au texte à l'étape de compilation à la fin du script
+    $add=1; // par dï¿½faut, on ajoute la ligne au texte ï¿½ l'ï¿½tape de compilation ï¿½ la fin du script
   
     $ligne=fgets($fp);
 
@@ -96,7 +114,7 @@ echo '<div>'.$liste.'</div>';
     endif;
   
     //*******************************************************************************************************************  
-    // début des pouvoirs spéciaux
+    // dï¿½but des pouvoirs spï¿½ciaux
     $var=utf8_encode("...");
     if (substr($ligne,0,strlen($var))==$var):
       $pouvoirs=1;
@@ -108,7 +126,7 @@ echo '<div>'.$liste.'</div>';
         $ligne='<span class="gras">'.substr($ligne,0,$pos).'. </span>'.substr($ligne,$pos+1); 
       endif;
     endif;
-    // fin des pouvoirs spéciaux et du bloc de stats du monstre/pnj
+    // fin des pouvoirs spï¿½ciaux et du bloc de stats du monstre/pnj
     $var=utf8_encode("$$");
     if (substr($ligne,0,strlen($var))==$var):
       $debut=2;
@@ -120,7 +138,7 @@ echo '<div>'.$liste.'</div>';
     // sorts
     $var=utf8_encode("Sorts de");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$ligne.' </span>';
-    $criteres= array('9ème', '8ème', '7ème', '6ème', '5ème', '4ème', '3ème', '2ème', '1er', '0 - ');
+    $criteres= array('9ï¿½me', '8ï¿½me', '7ï¿½me', '6ï¿½me', '5ï¿½me', '4ï¿½me', '3ï¿½me', '2ï¿½me', '1er', '0 - ');
     include('include/insert/'.$_SESSION['rulesetRep'].'/trt_sort.php');
   
     $avant=array('Attaque de base +');
@@ -143,8 +161,8 @@ echo '<div>'.$liste.'</div>';
     $substitution=str_replace($avant, $apres, $ligne);
     $ligne=$substitution;
 
-    $avant=array('Réf +');
-    $apres=array('<span class="gras">Réf</span> +');
+    $avant=array('Rï¿½f +');
+    $apres=array('<span class="gras">Rï¿½f</span> +');
     $substitution=str_replace($avant, $apres, $ligne);
     $ligne=$substitution;
 
@@ -168,20 +186,20 @@ echo '<div>'.$liste.'</div>';
     $substitution=str_replace($avant, $apres, $ligne);
     $ligne=$substitution;
   
-    $avant=array(', pris au dépourvu ');
-    $apres=array(', <span class="gras">, pris au dépourvu </span> ');
+    $avant=array(', pris au dï¿½pourvu ');
+    $apres=array(', <span class="gras">, pris au dï¿½pourvu </span> ');
     $substitution=str_replace($avant, $apres, $ligne);
     $ligne=$substitution;
     
-    $var=utf8_encode("Mêlée ");
+    $var=utf8_encode("Mï¿½lï¿½e ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
     $var=utf8_encode("Distance ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
-    $var=utf8_encode("Vulnérabilité ");
+    $var=utf8_encode("Vulnï¿½rabilitï¿½ ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
     $var=utf8_encode("RM ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
-    $var=utf8_encode("Immunité ");
+    $var=utf8_encode("Immunitï¿½ ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
     $var=utf8_encode("Langues ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
@@ -191,31 +209,31 @@ echo '<div>'.$liste.'</div>';
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
     $var=utf8_encode("Possessions ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
-    $var=utf8_encode("Caractéristiques");
+    $var=utf8_encode("Caractï¿½ristiques");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
     $var=utf8_encode("Options d'attaque");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
     $var=utf8_encode("Carac.");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">Caract&eacute;ristiques </span>'.substr($ligne,strlen($var));
-    $var=utf8_encode("Actions spéciales");
+    $var=utf8_encode("Actions spï¿½ciales");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
-    $var=utf8_encode("Équipement de combat");
+    $var=utf8_encode("ï¿½quipement de combat");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
     $var=utf8_encode("Options de combat");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$var.' </span>'.substr($ligne,strlen($var));
 
   
     //*******************************************************************************************************************
-    // Capacités de type sort
-    $var=utf8_encode("Capacités de type sort ");
+    // Capacitï¿½s de type sort
+    $var=utf8_encode("Capacitï¿½s de type sort ");
     if (substr($ligne,0,strlen($var))==$var) $ligne='<span class="gras">'.$ligne.' </span>';
-    $criteres= array('A volonté', '1/jour', '2/jour', '3/jour', '1/10 minutes', '1/round', '1/2 rounds', '1/3 rounds');
+    $criteres= array('A volontï¿½', '1/jour', '2/jour', '3/jour', '1/10 minutes', '1/round', '1/2 rounds', '1/3 rounds');
     include('include/insert/'.$_SESSION['rulesetRep'].'/trt_sort.php');
 
   
     //*******************************************************************************************************************
-    // Particularités
-    $var=utf8_encode("Particularités");
+    // Particularitï¿½s
+    $var=utf8_encode("Particularitï¿½s");
     if (substr($ligne,0,strlen($var))==$var):
       $ligne='<span class="gras">'.$var.'. </span>'.strtolower(substr($ligne,strlen($var)));
       $requete="SELECT * FROM dd_dons";
@@ -274,7 +292,7 @@ echo '<div>'.$liste.'</div>';
       $avant=array('*');
       $apres=array('');
       $texte2=str_replace($avant, $apres, $texte2);  
-      // recherche et suppression des textes entre parenthèses
+      // recherche et suppression des textes entre parenthï¿½ses
       $p1=strpos($texte2,"(");    
       while($p1>0):
         $p2=strpos($texte2,")");
@@ -332,8 +350,8 @@ echo '<div>'.$liste.'</div>';
     endif;
 
     //*******************************************************************************************************************
-    // Compétences  
-    $var=utf8_encode("Compétences");
+    // Compï¿½tences  
+    $var=utf8_encode("Compï¿½tences");
     if (substr($ligne,0,strlen($var))==$var):
       if ($debug==3) echo '<div class="fondbeige"><b>Ligne :</b> '.$ligne.'</div>';  
       $texte=$ligne;
@@ -374,7 +392,7 @@ echo '<div>'.$liste.'</div>';
       $avant=array('*');
       $apres=array('');
       $texte2=str_replace($avant, $apres, $texte2);  
-      // recherche et suppression des textes entre parenthèses
+      // recherche et suppression des textes entre parenthï¿½ses
       $p1=strpos($texte2,"(");    
       while($p1>0):
         $p2=strpos($texte2,")");
@@ -471,7 +489,7 @@ echo '<div>'.$liste.'</div>';
     $substitution=str_replace($avant, $apres, $ligne);
     $ligne=$substitution;  
   
-    // cas particulier des obèles
+    // cas particulier des obï¿½les
     $tempo=htmlentities($ligne);
     $avant=array('&dagger;');
     $apres=array('<sup>&dagger;</sup>');
@@ -498,7 +516,7 @@ echo '<div>'.$liste.'</div>';
     $substitution=str_replace($avant, $apres, $ligne);
     $ligne=$substitution;
     
-    // compilation du résultat
+    // compilation du rï¿½sultat
     if ($debut==1) $monstre.='<div>'.$ligne.'</div>';
     if ($debut==2 && $enregistrement==1):
       $requete='INSERT INTO dd_monstres (mo_nom, mo_stats, mo_chapitre) VALUES ("'.addslashes($titre).'","'.addslashes($monstre).'","'.addslashes($chapitre).'")';
@@ -516,9 +534,10 @@ echo '<div>'.$liste.'</div>';
   
   echo '<div class="monstres ml30">'.$sortie.'</div>';
 */
-?>
-  
+  ?>
+
 </body>
-<div id="detail-pp"></div>  
+<div id="detail-pp"></div>
 <div id="modification"></div>
+
 </html>

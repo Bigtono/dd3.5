@@ -67,9 +67,7 @@ endif;
         <div class="titreAction">
           <div class="titreA">
             <? echo htmlspecialchars($campagne['camp_nom']); ?>
-            <a href="campagne-modifier.php?campagne=<? echo (int)$campagne['camp_id']; ?>">
-              <i class="fa-solid fa-pen-to-square ml15"></i>
-            </a>
+            <a href="campagne-modifier.php?campagne=<? echo (int)$campagne['camp_id']; ?>"><i class="fa-solid fa-pen-to-square ml15"></i></a>
           </div>
           <div>
           </div>
@@ -111,7 +109,7 @@ endif;
         // Gestion des personnages
         ?>
         <div class="titreAction">
-          <div class="titreA">Personnages</div>
+          <div class="titreB">Personnages</div>
           <div>
             <button
               class="btNoir"
@@ -137,7 +135,7 @@ endif;
         ?>
 
         <div class="titreAction">
-          <div class="titreA">Scénarios</div>
+          <div class="titreB">Scénarios</div>
           <div>
             <button
               class="btNoir"
@@ -173,13 +171,13 @@ endif;
                   </div>
 
                   <div class="col action-col action-edit">
-                    <a href="scenario.php?sc_id=<?= $sc['sc_id'] ?>">
+                    <a href="scenario-modifier.php?scenario=<?= $sc['sc_id'] ?>">
                       <i class="fa fa-edit"></i>
                     </a>
                   </div>
 
                   <div class="col">
-                    <?= htmlspecialchars($sc['sc_nom']) ?>
+                    <a href="scenario.php?scenario=<?= $sc['sc_id'] ?>"><?= htmlspecialchars($sc['sc_nom']) ?></a>
                   </div>
 
                 </div>
