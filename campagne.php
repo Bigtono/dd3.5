@@ -66,7 +66,7 @@ endif;
 
         <div class="titreAction">
           <div class="titreA">
-            <? echo htmlspecialchars($campagne['camp_nom']); ?>
+            *** <? echo htmlspecialchars($campagne['camp_nom']); ?>
             <a href="campagne-modifier.php?campagne=<? echo (int)$campagne['camp_id']; ?>"><i class="fa-solid fa-pen-to-square ml15"></i></a>
           </div>
           <div>
