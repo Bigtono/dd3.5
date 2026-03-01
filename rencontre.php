@@ -6,22 +6,10 @@ include("connexion-mj.php");
 include("include/diverslib.inc.php");
 include("include/date.inc.php");
 
-if (isset($_GET['rencontre'])):
-  $re = $_GET['rencontre'];
-endif;
-if (strlen($_GET['critere']) > 0):
-  $critere = $_GET['critere'];
-else:
-  $critere = '';
-endif;
-if (strlen($_GET['critere_sc']) > 0):
-  $critere_sc = $_GET['critere_sc'];
-else:
-  $critere_sc = '';
-endif;
-$requete = "SELECT * FROM dd_rencontres WHERE re_id='" . $re . "'";
-$resultat = queryPDO($requete);
-$dn = $resultat->fetch(PDO::FETCH_ASSOC);
+$re = isset($_GET['rencontre']) ? (int)$_GET['rencontre'] : 0;
+$critere = isset($_GET['critere']) ? (int)$_GET['critere'] : "";
+$critere_sc = isset($_GET['critere_sc']) ? (int)$_GET['critere_sc'] : "";
+
 // On récupère la rencontre
 $sql = "
   SELECT r.*,

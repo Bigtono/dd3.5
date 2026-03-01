@@ -29,7 +29,7 @@
         echo '<span>/</span>';
         echo '<span><a href="scenario.php?scenario=' . $chapitre['sc_id'] . '">' . $chapitre['sc_nom'] . '</a></span>';
         echo '<span>/</span>';
-        echo '<span><a href="chapitre.php?chapitre=' . $chapitre['ch_id'] . '">' . $chapitre['ch_nom'] . '</a></span>';
+        echo '<span><a href="chapitre.php?chapitre=' . $chapitre['scc_id'] . '">' . $chapitre['scc_nom'] . '</a></span>';
         break;
       case ("/dd3.5/rencontre.php"):
       case ("/dd3.5/rencontre-modifier.php"):
@@ -41,7 +41,7 @@
         echo '<span>/</span>';
         echo '<span><a href="chapitre.php?chapitre=' . $rencontre['scc_id'] . '">' . $rencontre['scc_nom'] . '</a></span>';
         echo '<span>/</span>';
-        echo '<span><a href="rencontre.php?rencontre=' . $re . '">' . libelle_rencontre($re) . '</a></span>';
+        echo '<span><a href="rencontre.php?rencontre=' . $re . '">' .  $rencontre['re_nom'] . '</a></span>';
         break;
       case ("/dd3.5/personnages.php"):
         echo '<span><a href="personnages.php">personnages</a></span>';
@@ -139,31 +139,41 @@
       case ("/dd3.5/grimoires.php"):
         echo '<span><a href="grimoires.php">Grimoires</a></span>';
         break;
+
       case ("/dd3.5/monstres.php"):
         echo '<span><a href="monstres.php">monstres</a></span>';
         break;
+
       case ("/dd3.5/insertion-monstres.php"):
         echo '<span><a href="insertion-monstres.php">Insertion de monstres</a></span>';
         break;
+
       case ("/dd3.5/monstre.php"):
       case ("/dd3.5/monstre-modifier.php"):
-        if ($mo === "n"):
+        if ($mo > 0):
+          $libelle = $monstre['mo_nom'];
+          $titre = "Modifier le monstre";
+        else:
           $libelle = "Ajouter un monstre";
           $titre = "Ajouter un monstre";
-        else:
-          $libelle = libelle("dd_monstres", "mo", "nom", $mo);
-          $titre = "Modifier le monstre";
         endif;
-        if ($re == 0):
-          echo '<span><a href="monstres.php">monstres</a></span>';
-        else:
-          echo '<span><a href="rencontres.php">rencontres</a></span>';
+        if ($re > 0):
+          echo '<span><a href="campagnes.php">campagnes</a></span>';
           echo '<span>/</span>';
-          echo '<span><a href="rencontre.php?re=' . $re . '">' . libelle_rencontre($re) . '</a></span>';
+          echo '<span><a href="campagne.php?campagne=' . $rencontre['camp_id'] . '">' . $rencontre['camp_nom'] . '</a></span>';
+          echo '<span>/</span>';
+          echo '<span><a href="scenario.php?scenario=' . $rencontre['sc_id'] . '">' . $rencontre['sc_nom'] . '</a></span>';
+          echo '<span>/</span>';
+          echo '<span><a href="chapitre.php?chapitre=' . $rencontre['scc_id'] . '">' . $rencontre['scc_nom'] . '</a></span>';
+          echo '<span>/</span>';
+          echo '<span><a href="rencontre.php?rencontre=' . $re . '">' .  $rencontre['re_nom'] . '</a></span>';
+        else:
+          echo '<span><a href="monstres.php">monstres</a></span>';
         endif;
         echo '<span>/</span>';
         echo '<span><a href="monstre.php?mo="' . $mo . '">' . $libelle . '</a></span>';
         break;
+
       case ("/dd3.5/profil.php"):
       case ("/dd3.5/profil-modifier.php"):
         echo '<span><a href="profil.php">Mon profil</a></span>';

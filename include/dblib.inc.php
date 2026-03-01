@@ -4,17 +4,41 @@
 //******************************************************************************************/
 // connexion à la base de données : 
 global $db;
-if ($_SERVER['SERVER_NAME'] == "maikastel.fr"):
-  $user = 'maikasteiymaika';
-  $pass = 'Mai150222290858';
-  $dsn = 'mysql:host=maikasteiymaika.mysql.db;dbname=maikasteiymaika';
-  $site = "maikastel.fr";
-else:
-  $user = 'maikasteiymaika';
-  $pass = 'Mai15022228';
-  $dsn = 'mysql:host=maikasteiymaika.mysql.db;dbname=maikasteiymaika';
-  $site = "maikastel.fr";
-endif;
+
+// Chargement config externe (non versionnée)
+$dbConfigFile = __DIR__ . '/../config/db.local.php';
+if (is_file($dbConfigFile)) {
+  $dbConfig = require $dbConfigFile;
+} else {
+  // Fallback variables d'environnement
+  $dbConfig = [
+    'prod' => [
+      'user' => getenv('DD_DB_USER') ?: '',
+      'pass' => getenv('DD_DB_PASS') ?: '',
+      'dsn'  => getenv('DD_DB_DSN') ?: '',
+      'site' => getenv('DD_SITE') ?: 'maikastel.fr',
+    ],
+    'dev' => [
+      'user' => getenv('DD_DB_USER') ?: '',
+      'pass' => getenv('DD_DB_PASS') ?: '',
+      'dsn'  => getenv('DD_DB_DSN') ?: '',
+      'site' => getenv('DD_SITE') ?: 'maikastel.fr',
+    ],
+  ];
+}
+
+$env = (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] === 'maikastel.fr') ? 'prod' : 'dev';
+
+$user = $dbConfig[$env]['user'] ?? '';
+$pass = $dbConfig[$env]['pass'] ?? '';
+$dsn  = $dbConfig[$env]['dsn'] ?? '';
+$site = $dbConfig[$env]['site'] ?? 'maikastel.fr';
+
+if ($user === '' || $pass === '' || $dsn === '') {
+  die('Configuration DB manquante.');
+}
+
+
 try {
   $db = new PDO(
     $dsn,

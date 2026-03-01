@@ -10,8 +10,8 @@ $colonnes = ['niveau', 'stats', 'aptitudes'];
 
 /* pouvoirs spécifiques à la classe */
 for ($i = 1; $i <= 4; $i++) {
-  if (!empty($dn['cla_pouvoir'.$i])) {
-    $colonnes[] = 'pouvoir'.$i;
+  if (!empty($dn['cla_pouvoir' . $i])) {
+    $colonnes[] = 'pouvoir' . $i;
   }
 }
 
@@ -19,7 +19,7 @@ for ($i = 1; $i <= 4; $i++) {
 if ($isLanceurSorts) {
   $colonnes[] = 'sorts_mineurs';
   $colonnes[] = 'sorts_prepares';
-  $colonnes[] = 'sorts';  
+  $colonnes[] = 'sorts';
 }
 
 /* -------------------------------------------------
@@ -39,28 +39,28 @@ foreach ($colonnes as $col) {
     case 'stats':
       $gridColumns[] = '70px';
       break;
-    
+
     case 'pouvoir1':
     case 'pouvoir2':
     case 'pouvoir3':
     case 'pouvoir4':
       $gridColumns[] = '100px';
       break;
-      
+
     case 'sorts_mineurs':
     case 'sorts_prepares':
       $gridColumns[] = '80px';
       break;
-      
-    case 'sorts':      
+
+    case 'sorts':
       $gridColumns[] = '280px';
-      break;      
+      break;
 
     case 'aptitudes':
       $gridColumns[] = '1fr';
-      break; 
-      
-    default: 
+      break;
+
+    default:
       //
   }
 }
@@ -68,30 +68,51 @@ foreach ($colonnes as $col) {
 $gridTemplate = implode(' ', $gridColumns);
 
 ?>
-  <style>
+<style>
   .classe-ligne {
     display: grid;
     grid-template-columns: <?= $gridTemplate ?>;
     gap: 8px;
     align-items: start;
   }
-  </style> 
+</style>
 
 
-  <div class="contenu">
-    <div class="ligne_classe_dd5"><div class="label">Caractéristique(s) principale(s)</div><div><? echo stripslashes($dn['cla_caracteristiques']); ?></div></div>
-    <div class="ligne_classe_dd5"><div class="label">D&eacute; de vie : </div><div><? echo stripslashes($dn['cla_dV']); ?></div></div>
-    <div class="ligne_classe_dd5"><div class="label">Maîtrise des jets de sauvegarde</div><div><? echo stripslashes($dn['cla_sauvegardes']); ?></div></div>
-    <div class="ligne_classe_dd5"><div class="label">Maîtrise des compétences</div><div><? echo stripslashes($dn['cla_competences']); ?></div></div>
-    <div class="ligne_classe_dd5"><div class="label">Maîtrise d'armes</div><div><? echo stripslashes($dn['cla_armes']); ?></div></div>
-    <div class="ligne_classe_dd5"><div class="label">Formation aux armures</div><div><? echo stripslashes($dn['cla_armures']); ?></div></div>
-    <div class="ligne_classe_dd5"></div><div class="label">Équipement de départ</div><div><? echo stripslashes($dn['cla_equipement']); ?></div></div>
+<div class="contenu">
+  <div class="ligne_classe_dd5">
+    <div class="label">Caractéristique(s) principale(s)</div>
+    <div><? echo stripslashes($dn['cla_caracteristiques']); ?></div>
   </div>
+  <div class="ligne_classe_dd5">
+    <div class="label">D&eacute; de vie : </div>
+    <div><? echo stripslashes($dn['cla_dV']); ?></div>
+  </div>
+  <div class="ligne_classe_dd5">
+    <div class="label">Maîtrise des jets de sauvegarde</div>
+    <div><? echo stripslashes($dn['cla_sauvegardes']); ?></div>
+  </div>
+  <div class="ligne_classe_dd5">
+    <div class="label">Maîtrise des compétences</div>
+    <div><? echo stripslashes($dn['cla_competences']); ?></div>
+  </div>
+  <div class="ligne_classe_dd5">
+    <div class="label">Maîtrise d'armes</div>
+    <div><? echo stripslashes($dn['cla_armes']); ?></div>
+  </div>
+  <div class="ligne_classe_dd5">
+    <div class="label">Formation aux armures</div>
+    <div><? echo stripslashes($dn['cla_armures']); ?></div>
+  </div>
+  <div class="ligne_classe_dd5"></div>
+  <div class="label">Équipement de départ</div>
+  <div><? echo stripslashes($dn['cla_equipement']); ?></div>
+</div>
 
 
-    <!--- Tableau de la classe --->
-  <?
-  $sql = "
+
+<!--- Tableau de la classe --->
+<?
+$sql = "
   SELECT
     cn.cn_niveau,
     cn.cn_bba,
@@ -133,73 +154,72 @@ $gridTemplate = implode(' ', $gridColumns);
   ORDER BY cn.cn_niveau
   ";
 
-  $stmt = $db->prepare($sql);
-  $stmt->execute([$c]);
-  $niveaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  ?>
+$stmt = $db->prepare($sql);
+$stmt->execute([$c]);
+$niveaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-  <div class="classe-niveaux <?= !$isLanceurSorts ? 'no-sorts' : '' ?>">
+<div class="classe-niveaux <?= !$isLanceurSorts ? 'no-sorts' : '' ?>">
 
-    <div class="classe-header">
-      <div class="classe-title">
-        Table : <?= htmlspecialchars($dn['cla_nom']) ?>
-      </div>
+  <div class="classe-header">
+    <div class="classe-title">
+      Table : <?= htmlspecialchars($dn['cla_nom']) ?>
+    </div>
 
     <? if ($isLanceurSorts): ?>
       <button
         class="btn-switch"
         onclick="switchVueClasse()"
         title="Afficher les sorts / les caractéristiques"
-        aria-label="Basculer affichage"
-      >
+        aria-label="Basculer affichage">
         <i class="fas fa-exchange-alt"></i>
       </button>
     <? endif; ?>
-    </div>
+  </div>
 
-    <div class="list-body classe-lignes">
+  <div class="list-body classe-lignes">
 
-  <? foreach ($niveaux as $n): ?>
+    <? foreach ($niveaux as $n): ?>
       <div class="classe-ligne contenu">
 
         <div class="bloc niveau" data-groupe="niveau">
           <span class="label">Niveau</span>
           <span class="valeur"><?= $n['cn_niveau'] ?></span>
         </div>
-      
+
         <div class="bloc stats" data-groupe="stats">
           <div>
             <span class="label">Bonus de maîtrise</span>
             <span class="valeur"><?= $n['cn_bba'] ?></span>
           </div>
-        </div>        
+        </div>
 
         <div class="bloc aptitudes" data-groupe="aptitudes">
           <span class="label">Aptitude de classe</span>
           <span class="valeur"><?= $n['capacites'] ?: '—' ?></span>
         </div>
-      
+
         <!-- Pouvoirs spécifiques -->
         <? for ($i = 1; $i <= 4; $i++): ?>
-          <? if (!empty($dn['cla_pouvoir'.$i])): ?>
+          <? if (!empty($dn['cla_pouvoir' . $i])): ?>
             <div class="bloc pouvoir" id="pouvoir<?= $i ?>" data-groupe="aptitudes">
-              <span class="label"><?= $dn['cla_pouvoir'.$i] ?></span>
-              <span class="valeur"><?= $n['cn_pouvoir'.$i] ?></span>         
+              <span class="label"><?= $dn['cla_pouvoir' . $i] ?></span>
+              <span class="valeur"><?= $n['cn_pouvoir' . $i] ?></span>
             </div>
           <? endif; ?>
-        <? endfor; ?>        
-            
-        <? if ($isLanceurSorts): ?>        
+        <? endfor; ?>
+
+        <? if ($isLanceurSorts): ?>
           <div class="bloc sort_mineurs" data-groupe="sorts">
             <span class="label">Sorts mineurs</span>
             <span class="valeur"><?= $n['cn_sort_n0'] ?: '—' ?></span>
           </div>
-        
+
           <div class="bloc sorts_prepares" data-groupe="sorts">
             <span class="label">Sorts préparés</span>
             <span class="valeur"><?= $n['cn_sortPrepare'] ?: '—' ?></span>
-          </div>              
-        
+          </div>
+
           <div class="bloc sorts" data-groupe="sorts">
             <div><span>1</span><strong><?= $n['cn_sort_n1'] ?: '—' ?></strong></div>
             <div><span>2</span><strong><?= $n['cn_sort_n2'] ?: '—' ?></strong></div>
@@ -213,7 +233,7 @@ $gridTemplate = implode(' ', $gridColumns);
           </div>
         <? endif; ?>
       </div>
-  <? endforeach; ?>
+    <? endforeach; ?>
 
-    </div>
   </div>
+</div>
