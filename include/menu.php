@@ -13,9 +13,11 @@
           <li class="sub_menu--item">
             <a href="personnages.php" class="sub_menu--link">Personnages</a>
           </li>
+          <li class="sub_menu--item">
+            <a href="notes.php" class="sub_menu--link">Notes</a>
+          </li>
           <?
           if ($_SESSION['mj'] == 1):
-            echo '<li class="sub_menu--item"><a href="notes.php" class="sub_menu--link">Notes</a></li>';
             echo '<li class="sub_menu--item"><a href="grimoires.php" class="sub_menu--link">Grimoires</a></li>';
           endif;
           ?>

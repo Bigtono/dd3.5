@@ -110,4 +110,4 @@ Le code du header de la page est chargé par include("include/header.php")  et s
 	  </button>
 </nav>
 
-l'Annotation [...] das la structure indique des emplacement où du code spécifique à la page peut être inséré. Ce code n'est pas constitutif de la structure des page.
+l'Annotation [...] dans la structure indique des emplacement où du code spécifique à la page peut être inséré. Ce code n'est pas constitutif de la structure des page.

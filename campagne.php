@@ -78,6 +78,11 @@ endif;
           </div>
         </div>
 
+        <div class="titreAction">
+          <div class="titreB">Notes de campagne</div>
+          <div><a class="btNoir lien" href="notes.php?campagne=<? echo (int)$c; ?>">Voir les notes</a></div>
+        </div>
+
         <div id="campagne">
           <div class="campagne-meta">
             <? if (!empty($campagne['ruleset_nom'])): ?>

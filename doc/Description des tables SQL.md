@@ -180,3 +180,20 @@ dd_monstres (liste des monstres)
 - mo_mogr_id (id du groupe auquel appatient le monstre. Issu de la table dd_montres_groupes
 - mo_j_id (id du joueur ayan saisi le monstre. Issu de la table dd_joueurs Valeur optionelle. Si la valeur est renseignée, seul ce joueur voit le monstre dans la liste des monstres et le menu permettant d'affecter un mnstre à une rencontre. Un joueur disposant des droits d'admin voit tout)
 
+dd_notes (notes de jeu)
+- no_id (id, index de la table)
+- no_nom (nom de la note)
+- no_cumulatif	tinyint(1)
+- no_nom	varchar(100)
+- no_texte_basique
+- no_texte_intermediaire
+- no_texte_avance
+- no_texte_expert
+- no_date
+- no_j_id
+commentaire sur le fonctionnement de la table : une note de jeu propose une information selon quatre niveaux d'information accessible au personnage (basiquen intermédiaire, avancé, expert). La table propose quatre champs texte pour stocker les données de ces quatres niveaux d'information (no_texte_basique, no_texte_intermediaire, no_texte_avance, no_texte_exper). Le champ no_cumulatif indique comment ces quatres champs interagissent. Si no_cumulatif est égal à 0, chaque champ se suffit à lui même (ex : toutes les Informations de niveau intermédiaire sont dans le  champ no_texte_intermediaire). Si no_cumulatif est à égal à 1, lee contenu des champs se cumulent pour former un niveau d'information (exemple : les informations de niveau intermédiaire sont constituées des champs no_texte_basique et du champ no_texte_intermediaire).
+
+dd_campagnes_notes (attribution d'une note de jeu à une campagne)
+- cpno_id (id, index de la table)
+- cpno_no_id (id de la note)
+- cpno_camp_id (id de la campagne)
