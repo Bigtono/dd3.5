@@ -1822,6 +1822,111 @@ img {
   font-size: 1.2rem
 }
 
+
+/* Campagne **********************************************************************/
+#campagne {
+  margin-bottom: 1rem;
+}
+
+.campagne-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.campagne-meta-left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.campagne-meta-right {
+  flex: 0 0 auto;
+}
+
+.campagne-meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #ddd;
+  border-radius: 0.4rem;
+  background: #f8f8f8;
+}
+
+.campagne-meta-item+.campagne-meta-item {
+  margin-top: 0.5rem;
+}
+
+.campagne-meta-icon {
+  color: #4e342e;
+  margin-top: 0.2rem;
+}
+
+.campagne-meta-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.campagne-meta-value {
+  font-size: 1rem;
+  color: #222;
+}
+
+.campagne-description {
+  margin-top: 0.7rem;
+}
+
+.campagne-description-header {
+  margin-top: 0.8rem;
+}
+
+.campagne-toggle-description {
+  min-width: 110px;
+}
+
+.campagne-description.is-collapsed {
+  display: none;
+}
+
+.campagne-description-empty {
+  margin-top: 0.7rem;
+}
+
+@media (max-width: 991px) {
+  .campagne-meta-row {
+    flex-wrap: wrap;
+  }
+
+  .campagne-meta-right {
+    width: 100%;
+  }
+
+  .campagne-meta-right .btNoir {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (min-width: 992px) {
+  .campagne-meta-row {
+    flex-wrap: nowrap;
+  }
+
+  .campagne-meta-right .btNoir,
+  .campagne-toggle-description {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.2rem;
+  }
+}
+
 /* Ariane ************************************************************************/
 #ariane {
   display: flex;
@@ -4057,6 +4162,19 @@ input:checked+.slider:before {
   box-sizing: border-box;
 }
 
+/* Multiplicateurs de largeur pour les colonnes de contenu */
+.sortable-list .col2:not(.action-col) {
+  grid-column: span 2;
+}
+
+.sortable-list .col3:not(.action-col) {
+  grid-column: span 3;
+}
+
+.sortable-list .col4:not(.action-col) {
+  grid-column: span 4;
+}
+
 /* En-t�te */
 .sortable-list .list-header {
   background: #f5f5f5;
@@ -4107,6 +4225,10 @@ input:checked+.slider:before {
 
 /* Colonnes actions : largeur fixe + centrage */
 .sortable-list .action-col {
+  grid-column: auto !important;
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
   /* la largeur est g�r�e par grid-template-columns, pas besoin de width ici */
   text-align: center;
   padding: 0.3rem;

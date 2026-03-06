@@ -52,7 +52,7 @@ if ($isAdmin) {
                     c.camp_id,
                     c.camp_nom,
                     c.camp_j_id,
-                    c.camp_description,
+                    c.camp_resume,
                     j.j_nom AS joueur_nom
                 FROM dd_campagnes c
                 LEFT JOIN dd_joueurs j ON j.j_id = c.camp_j_id
@@ -85,7 +85,7 @@ if ($isAdmin) {
   $requete = 'SELECT 
                     camp_id,
                     camp_nom,
-                    camp_description
+                    camp_resume
                 FROM dd_campagnes
                 WHERE camp_j_id = :user_id
                   AND camp_ruleset_var_id = :ruleset
@@ -160,13 +160,7 @@ $extraParams = [
             Campagne
           </div>
 
-          <?php if ($isAdmin): ?>
-            <div class="<?= $joueurClass ?>" data-sort-field="joueur">
-              Joueur
-            </div>
-          <?php endif; ?>
-
-          <div class="col">
+          <div class="col3">
             Description
           </div>
         </div>
@@ -199,13 +193,8 @@ $extraParams = [
                 </a>
               </div>
 
-              <?php if ($isAdmin): ?>
-                <div class="col">
-                  <?= htmlspecialchars($camp['joueur_nom']) ?>
-                </div>
-              <?php endif; ?>
 
-              <div class="col">
+              <div class="col3">
                 <?= htmlspecialchars($camp['camp_resume']) ?>
               </div>
             </div>

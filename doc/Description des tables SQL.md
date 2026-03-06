@@ -177,7 +177,7 @@ dd_monstres (liste des monstres)
 - mo_stats (bloc de texte exposant les spécificités du monstre)
 - mo_ruleset_var_id (id de la version des règles, stocké dans la table dd_variables)
 - mo_fp_id (facteur de puissance du monstre, valeur alphanumérique)
-- mo_mogr_id (id du groupe auquel appatient le monstre. Issu de la table dd_montres_groupes
+- mo_mogr_id (id du groupe auquel appatient le monstre. Issu de la table dd_montres_groupes)
 - mo_j_id (id du joueur ayan saisi le monstre. Issu de la table dd_joueurs Valeur optionelle. Si la valeur est renseignée, seul ce joueur voit le monstre dans la liste des monstres et le menu permettant d'affecter un mnstre à une rencontre. Un joueur disposant des droits d'admin voit tout)
 
 dd_notes (notes de jeu)
