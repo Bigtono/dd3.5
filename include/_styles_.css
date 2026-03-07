@@ -4389,9 +4389,144 @@ input:checked+.slider:before {
     text-align: left;
   }
 
-  /* Optionnel : r�glage du textarea */
+  /* Optionnel : réglage du textarea */
   .form-group textarea {
     min-height: 120px;
     resize: vertical;
+  }
+}
+
+/*****************************************************************************
+ Fil d'Ariane (source de verite)
+*****************************************************************************/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#ariane {
+  margin: 0.6rem 0 1rem 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #ddd;
+  border-radius: 0.45rem;
+  background: #fafafa;
+  color: #5f5f5f;
+}
+
+#ariane-mobile-select {
+  display: none;
+}
+
+#ariane-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#ariane .ariane-item {
+  font-weight: 700;
+}
+
+#ariane .ariane-item a {
+  color: #4f4f4f;
+  text-decoration: none;
+}
+
+#ariane .ariane-item a:hover {
+  text-decoration: underline;
+}
+
+#ariane .ariane-item.is-current {
+  color: #2f2f2f;
+}
+
+#ariane .ariane-ellipsis {
+  display: none;
+}
+
+#ariane .ariane-ellipsis.is-visible {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 991px) {
+  #ariane {
+    display: block;
+    margin: 0.4rem 0 0.8rem 0;
+    padding: 0.45rem;
+    height: auto;
+    line-height: normal;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  #ariane-mobile-select {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 2rem;
+    margin: 0;
+    border-right: 2px solid #ccc;
+    border-radius: 999px;
+  }
+
+  #ariane-list {
+    display: none;
+    overflow: visible;
+  }
+}
+
+@media (min-width: 992px) {
+  #ariane {
+    display: flex;
+    align-items: center;
+  }
+
+  #ariane-mobile-select {
+    display: none;
+  }
+
+  #ariane-list {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: nowrap;
+    min-width: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  #ariane .ariane-item {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    white-space: nowrap;
+    font-size: 0.97rem;
+  }
+
+  #ariane .ariane-item+.ariane-item::before {
+    content: "/";
+    margin: 0 0.45rem;
+    color: #9a9a9a;
+    font-weight: 600;
+  }
+
+  #ariane.is-desktop-compact .ariane-item.is-hidden-compact {
+    display: none;
+  }
+}
+
+@media (min-width: 1200px) {
+
+  #ariane .ariane-ellipsis,
+  #ariane .ariane-ellipsis.is-visible {
+    display: none !important;
   }
 }

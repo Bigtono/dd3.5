@@ -724,30 +724,33 @@ $format : 'T' texte, 'I' integer
 function getBreadcrumb($re_id)
 {
   global $db;
+  $re_id = (int)$re_id;
   $breadcrumb = [];
-  while ($re_id):
+  $visited = [];
+  $depth = 0;
+  $maxDepth = 200;
+
+  while ($re_id > 0):
+    if (isset($visited[$re_id])) break; // garde anti-boucle
+    $visited[$re_id] = true;
+    $depth++;
+    if ($depth > $maxDepth) break;
+
     $stmt = $db->prepare("SELECT re_id, re_nom, re_re_id FROM dd_regles WHERE re_id = ?");
     $stmt->execute([$re_id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row) break;
+
+    $ruleId = (int)$row['re_id'];
     $breadcrumb[] = [
-      'id' => $row['re_id'],
-      'nom' => $row['re_nom']
+      'id' => $ruleId,
+      'label' => (string)$row['re_nom'],
+      'href' => 'regle.php?regle=' . $ruleId
     ];
-    $re_id = $row['re_re_id'];
+    $re_id = (int)$row['re_re_id'];
   endwhile;
-  // On renverse le tableau pour aller de la racine vers la feuille
-  $breadcrumb = array_reverse($breadcrumb);
-  // Génération du HTML du fil d’Ariane
-  $html = '';
-  foreach ($breadcrumb as $i => $item):
-    if ($i < count($breadcrumb) - 1) {
-      $html .= '<span><a href="regle.php?regle=' . $item['id'] . '">' . htmlspecialchars($item['nom']) . '</a></span> <span> / </span>';
-    } else {
-      $html .= '<span>' . htmlspecialchars($item['nom']) . '</span>';
-    }
-  endforeach;
-  return $html;
+
+  return array_reverse($breadcrumb);
 }
 
 function nettoyerTexteTextarea($texte)
