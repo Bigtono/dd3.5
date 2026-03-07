@@ -11,9 +11,22 @@ if (isset($_GET['personnage'])):
   $resultat = queryPDO($requete);
   $dn=$resultat->fetch(PDO::FETCH_ASSOC);
   $nls=nls($p);
+  $campagnePerso = null;
+  if ((int)$dn['pe_camp_id'] > 0):
+    $sqlCampagnePerso = "
+      SELECT camp_id, camp_nom
+      FROM dd_campagnes
+      WHERE camp_id = :camp_id
+      LIMIT 1
+    ";
+    $stmtCampagnePerso = $db->prepare($sqlCampagnePerso);
+    $stmtCampagnePerso->execute([':camp_id' => (int)$dn['pe_camp_id']]);
+    $campagnePerso = $stmtCampagnePerso->fetch(PDO::FETCH_ASSOC);
+  endif;
   else:
   $p="";
   $_SESSION['perso']="";
+  $campagnePerso = null;
 endif;
 // initialisation des onglets
 $classe_fiche="contenuMainV";
@@ -127,7 +140,22 @@ endif;
                 echo '<br><span class="label">Joueur : </span>'.libelle_joueur($dn['pe_j_id']);
               endif;
               ?>
-            </div>           
+            </div>
+            <div id="campagne-personnage-bloc" data-personnage-id="<? echo (int)$p; ?>">
+              <? if ($campagnePerso): ?>
+                <div class="personnage-campagne">
+                  <div class="personnage-campagne-label">Campagne :</div>
+                  <div class="personnage-campagne-value">
+                    <a href="campagne.php?campagne=<? echo (int)$campagnePerso['camp_id']; ?>"><? echo htmlspecialchars($campagnePerso['camp_nom']); ?></a>
+                  </div>
+                  <? if (isset($_SESSION['mj']) && (int)$_SESSION['mj'] === 1): ?>
+                    <button type="button" class="btRouge" id="btn-detach-personnage" data-personnage="<? echo (int)$p; ?>">Detacher de la campagne</button>
+                  <? endif; ?>
+                </div>
+              <? else: ?>
+                <div class="personnage-campagne-empty">Aucune campagne en cours pour ce personnage.</div>
+              <? endif; ?>
+            </div>
             <div>
               <div class="titre">Caract&eacute;ristiques</div>
               <div class="cellMainSort">
@@ -358,6 +386,74 @@ endif;
   <div id="modification"></div>
   <div id="detail-pp"></div>  
 </div><!-- page --->
+<script>
+(function(){
+  function getPersonnageId(){
+    const bloc = document.getElementById('campagne-personnage-bloc');
+    if (bloc && bloc.dataset.personnageId) return bloc.dataset.personnageId;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('personnage');
+  }
+
+  function closeDetailPanel(){
+    const detail = document.getElementById('detail-pp');
+    if (!detail) return;
+    detail.innerHTML = '';
+    detail.style.display = 'none';
+  }
+
+  window.refreshCampagnePersonnage = function(){
+    const bloc = document.getElementById('campagne-personnage-bloc');
+    const personnageId = getPersonnageId();
+    if (!bloc || !personnageId) return;
+    fetch('ajax/personnage_campaign_status.php?personnage=' + encodeURIComponent(personnageId))
+      .then(res => res.text())
+      .then(html => {
+        bloc.innerHTML = html;
+      })
+      .catch(() => {
+        bloc.innerHTML = '<div class="personnage-campagne-empty">Erreur lors du rafraichissement de la campagne.</div>';
+      });
+  };
+
+  document.addEventListener('click', function(e){
+    const btnDetach = e.target.closest('#btn-detach-personnage');
+    if (!btnDetach) return;
+    const personnageId = btnDetach.dataset.personnage || getPersonnageId();
+    if (!personnageId) return;
+    fetch('ajax/personnage_detach_form.php?personnage=' + encodeURIComponent(personnageId))
+      .then(res => res.text())
+      .then(html => {
+        const detail = document.getElementById('detail-pp');
+        if (!detail) return;
+        detail.innerHTML = html;
+        detail.style.display = 'block';
+      });
+  });
+
+  document.addEventListener('submit', function(e){
+    if (e.target.id !== 'form-detach-personnage') return;
+    e.preventDefault();
+    const form = e.target;
+    fetch('ajax/personnage_detach.php', {
+      method: 'POST',
+      body: new FormData(form)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.success) {
+          closeDetailPanel();
+          window.refreshCampagnePersonnage();
+          return;
+        }
+        alert((data && data.message) ? data.message : 'Une erreur est survenue.');
+      })
+      .catch(() => {
+        alert('Erreur reseau.');
+      });
+  });
+})();
+</script>
 <script>
 (function(){
   // Ajuste ce chemin à ton arborescence :

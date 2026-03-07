@@ -236,7 +236,7 @@ endif;
 
               id="btn-add-perso"
 
-              data-camp-id="<?= $camp_id ?>">
+              data-camp-id="<?= $c ?>">
 
               Nouveau personnage
 
@@ -248,7 +248,9 @@ endif;
 
         <?
 
+        $listDomId = 'liste-personnages';
         include('include/insert/' . $_SESSION['rulesetRep'] . '/listePersonnages.php');
+        unset($listDomId);
 
         renderPagination($currentPage, $totalItems, $itemsPerPage, $extraParams);
 
@@ -405,6 +407,22 @@ endif;
   </div><!-- page --->
 
   <script>
+    function refreshPersonnages() {
+
+      const campId = document.getElementById('btn-add-perso').dataset.campId
+
+      fetch('ajax/personnage_list.php?camp_id=' + campId)
+
+        .then(r => r.text())
+
+        .then(html => {
+
+          document.querySelector('#liste-personnages .list-body').innerHTML = html
+
+        })
+
+    }
+
     function refreshScenarios() {
 
       const campId = document.getElementById('btn-add-scenario').dataset.campId
@@ -436,6 +454,19 @@ endif;
     // crÃ©ation
 
     document.addEventListener('click', function(e) {
+
+      if (e.target.id === 'btn-add-perso') {
+
+        const campId = e.target.dataset.campId
+
+        fetch('ajax/personnage_attach_form.php?camp_id=' + campId)
+          .then(r => r.text())
+          .then(html => {
+            document.getElementById('detail-pp').innerHTML = html
+            document.getElementById('detail-pp').style.display = 'block'
+          })
+
+      }
 
       if (e.target.id === 'btn-add-scenario') {
 
@@ -488,6 +519,27 @@ endif;
     document.addEventListener('submit', function(e) {
 
 
+
+      if (e.target.id === 'form-attach-personnage') {
+
+        e.preventDefault()
+
+        fetch('ajax/personnage_attach.php', {
+            method: 'POST',
+            body: new FormData(e.target)
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              document.getElementById('detail-pp').innerHTML = ''
+              document.getElementById('detail-pp').style.display = 'none'
+              refreshPersonnages()
+            } else {
+              alert(data.message || 'Impossible d\'affecter ce personnage à la campagne.')
+            }
+          })
+
+      }
 
       if (e.target.id === 'form-create-scenario') {
 

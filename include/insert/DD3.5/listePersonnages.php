@@ -1,6 +1,6 @@
     <!--- Liste des personnages DD3.5 --->
 
-    <div class="sortable-list" data-list-id="<?= htmlspecialchars($listId) ?>" data-global-sort="1">
+    <div<?= isset($listDomId) && $listDomId !== '' ? ' id="' . htmlspecialchars($listDomId) . '"' : '' ?> class="sortable-list" data-list-id="<?= htmlspecialchars($listId) ?>" data-global-sort="1">
       <div class="list-header">
         <?
         // classes pour flèches

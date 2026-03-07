@@ -117,10 +117,16 @@
       case ("/dd3.5/joueur-modifier.php"):
         echo '<span><a href="joueurs.php">joueurs</a></span>';
         echo '<span>/</span>';
-        echo '<span><a href="joueur.php?joueur=' . $j . '">' . libelle("joueurs", "j", "prenom", $j) . ' ' . libelle("joueurs", "j", "nom", $j) . '</a></span>';
+        echo '<span><a href="joueur.php?joueur=' . $j . '">' . libelle("dd_joueurs", "j", "prenom", $j) . ' ' . libelle("joueurs", "j", "nom", $j) . '</a></span>';
         break;
       case ("/dd3.5/notes.php"):
-        echo '<span><a href="notes.php">notes</a></span>';
+        if ($_GET['campagne'] > 0):
+          echo '<span><a href="campagnes.php">campagnes</a></span>';
+          echo '<span>/</span>';
+          echo '<span><a href="campagne.php?campagne=' . $_GET['campagne'] . '">' . libelle("dd_campagnes", "camp", "nom", $_GET['campagne']) . '</a></span>';
+          echo '<span>/</span>';
+        endif;
+        echo '<span><a href="notes.php">notes de campagne</a></span>';
         break;
       case ("/dd3.5/sorts.php"):
         echo '<span><a href="sorts.php">sorts</a></span>';
