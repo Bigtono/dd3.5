@@ -29,9 +29,8 @@ include('include/sql/listePersonnages.php');
       <div class="titreAction">
         <div class="titreA">
           Personnages
-          <? echo '<a href="personnage-modifier.php?personnage=n" class="ajout_perso lien"><i class="fa-solid fa-pen-to-square ml15"></i></a>'; ?>
         </div>
-        <div></div>
+        <div><? echo '<a href="personnage-modifier.php?personnage=n" class="ajout_perso lien"><i class="icon fa-solid fa-circle-plus"></i></a>'; ?></div>
       </div>
 
       <?

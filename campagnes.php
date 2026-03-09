@@ -124,9 +124,8 @@ $extraParams = [
       <div class="titreAction">
         <div class="titreA">
           Campagnes
-          <? echo '<a href="campagne-modifier.php?campagne=n" class="ajout_perso lien"><i class="icon fa-solid fa-circle-plus ml15"></i></a>'; ?>
         </div>
-        <div></div>
+        <div><? echo '<a href="campagne-modifier.php?campagne=n" class="ajout_perso lien"><i class="icon fa-solid fa-circle-plus"></i></a>'; ?></div>
       </div>
 
       <? debug($requete); ?>

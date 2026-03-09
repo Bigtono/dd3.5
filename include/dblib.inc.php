@@ -358,25 +358,6 @@ function optionListVar(int $selected_id = 0, string $cat = ''): string
   return $options_html;
 }
 
-/*
-function OptionListeClassesLS($id=0,$tout="")
-{
-global $db;	
-$requete="SELECT cla_id, cla_nom FROM dd_classes WHERE cla_ruleset_var_id='".$_SESSION['ruleset']."' AND (cla_mag_id >0) ORDER BY cla_nom";
-$result=queryPDO($requete);
-$num_rows=$result->rowCount();
-$liste='<option value="">'.$tout.'</option>';
-if ($num_rows > 0):
-	while($dn = $result->fetch(PDO::FETCH_ASSOC)):
-		$liste.='<option value="'.$dn['cla_id'].'"';
-    if ($id == $dn['cla_id']) $liste.=' selected="SELECTED"';
-    $liste.='>'.$dn['cla_nom'].'</option>';	
-	endwhile;
-endif;
-return $liste;
-}
-*/
-
 function OptionListeClassesLS($id = 0, $tout = "")
 {
   global $db;
@@ -440,7 +421,7 @@ function OptionListeRessources($id = 0, $tout = "")
 function OptionListeJoueurs($id = 0)
 {
   global $db;
-  $requete = "SELECT j_id, j_nom, j_prenom FROM joueurs ORDER BY j_prenom, j_nom";
+  $requete = "SELECT j_id, j_nom, j_prenom FROM dd_joueurs ORDER BY j_prenom, j_nom";
   $result = queryPDO($requete);
   $num_rows = $result->rowCount();
   $liste = '<option value=""></option>';
@@ -490,16 +471,18 @@ function OptionListeRencontre($id = 0, $tout = "")
   return $liste;
 }
 
+/*
 function niveaux_classe($id)
 {
   global $db;
-  $requete = "SELECT pc_niveau, cla_niveauMax FROM dd_personnages_classes JOIN dd_classes ON pc_cla_id=cla_id WHERE pc_id='" . $id . "'";
+  $requete = "SELECT pc_pe_id, pc_niveau, cla_niveauMax FROM dd_personnages_classes JOIN dd_classes ON pc_cla_id=cla_id WHERE pc_pe_id='" . $id . "'";
   $result = queryPDO($requete);
   $num_rows = $result->rowCount();
   $dn = $result->fetch(PDO::FETCH_ASSOC);
   $liste = optionListInt(1, $dn['cla_niveauMax'], $dn['pc_niveau'], "T");
   return $liste;
 }
+  */
 
 // Affiche les règles en cascade
 function regles($id, $iteration, $retour = "regles")
@@ -1146,3 +1129,6 @@ $chargement = parametres();
 
 $isAdmin = !empty($_SESSION['mj']) && $_SESSION['mj'] == 1;
 $isDebug = !empty($_SESSION['debug']) && $_SESSION['debug'] == 1;
+$campagneActive = (!empty($_SESSION['campagne']) && $_SESSION['campagne'] > 0)
+  ? (int) $_SESSION['campagne']
+  : 0;

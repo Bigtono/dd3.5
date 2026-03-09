@@ -202,6 +202,36 @@ function afficherNote(note, accreditation) {
 	}); 
 }
 
+function toggleAttributionNoteCampagne(noteId, checkboxEl, event) {
+  if (event) event.stopPropagation();
+  if (!checkboxEl) return;
+
+  var checked = checkboxEl.checked ? 1 : 0;
+  checkboxEl.disabled = true;
+
+  $.ajax({
+    type: 'POST',
+    url: 'ajax/note_campagne_toggle.php',
+    data: "note_id=" + noteId + "&checked=" + checked,
+    dataType: 'json',
+    success: function(reponse) {
+      if (reponse && reponse.success) {
+        checkboxEl.checked = parseInt(reponse.checked, 10) === 1;
+      } else {
+        checkboxEl.checked = (checked === 1) ? false : true;
+        alert((reponse && reponse.message) ? reponse.message : 'Erreur attribution note/campagne.');
+      }
+    },
+    error: function() {
+      checkboxEl.checked = (checked === 1) ? false : true;
+      alert('Erreur toggleAttributionNoteCampagne()');
+    },
+    complete: function() {
+      checkboxEl.disabled = false;
+    }
+  });
+}
+
 function modifierNote(note,perso) {
   console.log('Ajouter Note #'+note);
 	$.ajax({

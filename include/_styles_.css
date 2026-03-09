@@ -2726,6 +2726,14 @@ img {
   height: auto;
 }
 
+.formulaire .line-data-fr100 {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  gap: 0;
+  height: auto;
+}
+
 .formulaire .data_rm {
   text-align: left;
   width: 40px;
@@ -4414,8 +4422,7 @@ input:checked+.slider:before {
 #ariane {
   margin: 0.6rem 0 1rem 0;
   padding: 0.45rem 0.65rem;
-  border: 1px solid #ddd;
-  border-radius: 0.45rem;
+  border: none;
   background: #fafafa;
   color: #5f5f5f;
 }
@@ -4528,5 +4535,111 @@ input:checked+.slider:before {
   #ariane .ariane-ellipsis,
   #ariane .ariane-ellipsis.is-visible {
     display: none !important;
+  }
+}
+
+/*****************************************************************************
+ Header context (campagne/scenario/chapitre)
+*****************************************************************************/
+#header-context {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+#header-context-links {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+#header-context-links>div {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#header-context-select {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  header .dflex {
+    align-items: center;
+  }
+
+  header h1 {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0 8px;
+    margin-right: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #ruleset {
+    margin-right: 0.2rem;
+  }
+
+  #header-context {
+    flex: 0 1 45%;
+    min-width: 120px;
+    margin-right: 52px;
+  }
+
+  #header-context-links {
+    display: none;
+  }
+
+  #header-context-select {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 1.6rem;
+    line-height: 1.6rem;
+    padding: 0 0.75rem;
+    border: 2px solid #ccc;
+    border-radius: 999px;
+    background-color: #fff;
+    box-sizing: border-box;
+    font-size: 0.82rem;
+    text-overflow: ellipsis;
+  }
+
+  #menu_recherche2 {
+    padding: 0.55rem 0.35rem;
+  }
+
+  #recherche2 {
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+  }
+
+  #recherche2.search-form {
+    display: flex;
+    width: 100%;
+  }
+
+  #recherche2 .search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #bouton_recherche {
+    right: 0;
+    z-index: 1001;
+  }
+}
+
+@media (min-width: 992px) {
+  #header-context-select {
+    display: none !important;
+  }
+
+  #header-context-links {
+    display: flex;
   }
 }

@@ -21,7 +21,7 @@ $join = '';
 // detection du champ auteur de note selon le schema
 $champAuteur = 'no_j_id';
 $testChampNoJ = queryPDO("SHOW COLUMNS FROM dd_notes LIKE 'no_j_id'");
-if ($testChampNoJ->rowCount() === 0) $champAuteur = 'no_redacteur';
+if ($testChampNoJ->rowCount() === 0) $champAuteur = 'no_j_id';
 
 // Cas 1 : filtre campagne depuis campagne.php
 if ($campagne > 0):
@@ -110,77 +110,76 @@ $typeFormValue = ($type === 'Tout') ? 'Tout' : (string)$type;
 ?>
 <!doctype html>
 <html>
+
 <head>
-<? include("include/head.php"); ?>
-<script type='text/javascript' src='js/moncode-personnages.js'></script>
+  <? include("include/head.php"); ?>
+  <script type='text/javascript' src='js/moncode-personnages.js'></script>
 </head>
 
 <body>
   <DIV id="page">
-  <? include("include/header.php"); ?>
-  <? include("include/menu.php"); ?>
-  <div class="wrapper">
-    <? include('include/ariane.php'); ?>
-    <div class="titreAction">
-      <div class="titreA"><? echo $titreNotes; ?></div>
-      <div><? if ($_SESSION['mj']==1) echo '<i class="icon lien fa-solid fa-pen-to-square" onClick="modifierNote(\'n\', \''.$typeFormValue.'\')"></i>'; ?></div>
-    </div>
+    <? include("include/header.php"); ?>
+    <? include("include/menu.php"); ?>
+    <div class="wrapper">
+      <? include('include/ariane.php'); ?>
+      <div class="titreAction">
+        <div class="titreA"><? echo $titreNotes; ?></div>
+        <div><? if ($_SESSION['mj'] == 1) echo '<i class="icon lien fa-solid fa-pen-to-square" onClick="modifierNote(\'n\', \'' . $typeFormValue . '\')"></i>'; ?></div>
+      </div>
 
-    <!--- Menu secondaire --->
-    <div class="search-container">
-      <form action="notes.php" method="get" name="search-no" id="search-no" class="search-form">
-        <? if ($campagne > 0) echo '<input type="hidden" name="campagne" value="'.$campagne.'">'; ?>
-        <input type="hidden" name="type" value="<? echo htmlspecialchars($typeFormValue); ?>">
-        <input type="text" class="search-input" name="critere" value="<? echo htmlspecialchars($critere); ?>" size="20" placeholder="Titre de la note" onClick="myFocus(this)"/>
-        <button type="submit" class="search-button" id="search"><i class="fa-solid fa-magnifying-glass"></i></button>
-      </form>
-      <form action="notes.php" method="get" class="search-form">
-        <? if ($campagne > 0) echo '<input type="hidden" name="campagne" value="'.$campagne.'">'; ?>
-        <input type="hidden" name="critere" value="<? echo htmlspecialchars($critere); ?>">
-        <select name="type"  class="search-select">
-          <? echo OptionList("dd_types_notes", "tyno", "nom", $typeFormValue, "", 0, "Tout"); ?>
-        </select>
-        <button type="submit" class="search-button" id="search_note"><i class="fa-solid fa-magnifying-glass"></i></button>
-      </form>
-    </div>
+      <!--- Menu secondaire --->
+      <div class="search-container">
+        <form action="notes.php" method="get" name="search-no" id="search-no" class="search-form">
+          <? if ($campagne > 0) echo '<input type="hidden" name="campagne" value="' . $campagne . '">'; ?>
+          <input type="hidden" name="type" value="<? echo htmlspecialchars($typeFormValue); ?>">
+          <input type="text" class="search-input" name="critere" value="<? echo htmlspecialchars($critere); ?>" size="20" placeholder="Titre de la note" onClick="myFocus(this)" />
+          <button type="submit" class="search-button" id="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+        <form action="notes.php" method="get" class="search-form">
+          <? if ($campagne > 0) echo '<input type="hidden" name="campagne" value="' . $campagne . '">'; ?>
+          <input type="hidden" name="critere" value="<? echo htmlspecialchars($critere); ?>">
+          <select name="type" class="search-select">
+            <? echo OptionList("dd_types_notes", "tyno", "nom", $typeFormValue, "", 0, "Tout"); ?>
+          </select>
+          <button type="submit" class="search-button" id="search_note"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+      </div>
 
-    <?
-    if ($_SESSION['debug']==1 && $_SESSION['mj']==1):
-      echo '<div class="mt10 mb20">(count) '.htmlspecialchars($totalSql).'</div>';
-      echo '<div class="mt10 mb20">(data) '.htmlspecialchars($dataSql).'</div>';
-    endif;
+      <?
+      debug($dataSql);
 
-    if ($num_rows_no > 0):
-      echo $pagination;
-      echo '<div class="item entete">';
-      if ($_SESSION['mj']==1) echo '  <div class="icone_suppr"><i class="fa fa-trash"></i></div>';
-      if ($_SESSION['mj']==1) echo '  <div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
-      echo '  <div class="nom_note">Nom</div>';
-      echo '  <div class="categorie_note">Type</div>';
-      echo '  <div class="niveau_note">Niveau</div>';
-      echo '</div>';
-      echo '<div class="liste-items">';
-      foreach ($rowsNo as $dnno):
-        echo '<div id ="no'.$dnno['no_id'].'" class="item data">';
-        include('include/insert/'.$_SESSION['rulesetRep'].'/ligneNote.php');
-        echo $ligne;
+      if ($num_rows_no > 0):
+        echo $pagination;
+        echo '<div class="item entete">';
+        if ($_SESSION['mj'] == 1) echo '  <div class="icone_suppr"><i class="fa fa-trash"></i></div>';
+        if ($_SESSION['mj'] == 1) echo '  <div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
+        echo '  <div class="nom_note">Nom</div>';
+        echo '  <div class="categorie_note">Type</div>';
+        if ($campagneActive > 0) echo '  <div class="niveau_note">Campagne</div>';
         echo '</div>';
-      endforeach;
-      echo '</div>';
-    else:
-      if ($type !== "Tout"):
-        echo '<div class="nodata">Aucune note dans la cat&eacute;gorie '.libelle("dd_types_notes","tyno","nom",$type).' !</div>';
+        echo '<div class="liste-items">';
+        foreach ($rowsNo as $dnno):
+          echo '<div id ="no' . $dnno['no_id'] . '" class="item data">';
+          include('include/insert/ligneNote.php');
+          echo $ligne;
+          echo '</div>';
+        endforeach;
+        echo '</div>';
       else:
-        echo '<div class="nodata">Aucune note disponible !</div>';
+        if ($type !== "Tout"):
+          echo '<div class="nodata">Aucune note dans la cat&eacute;gorie ' . libelle("dd_types_notes", "tyno", "nom", $type) . ' !</div>';
+        else:
+          echo '<div class="nodata">Aucune note disponible !</div>';
+        endif;
       endif;
-    endif;
-    ?>
+      ?>
 
-    <p class="mb50">&nbsp;</p>
-    <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
+      <p class="mb50">&nbsp;</p>
+      <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
+    </div>
   </div>
-</div>
 </body>
 <div id="detail-pp"></div>
 <div id="modification"></div>
+
 </html>
