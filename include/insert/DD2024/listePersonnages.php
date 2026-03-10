@@ -30,16 +30,16 @@
     </div>
 
     <?php if ($isAdmin || $listId === 'campagne'): ?>
-      <div class="<?= $joueurClass ?>" data-sort-field="joueur">
+      <div class="<?= $joueurClass ?> personnage-col-joueur" data-sort-field="joueur">
         Joueur
       </div>
     <?php endif; ?>
 
-    <div class="col">
+    <div class="col personnage-col-race">
       Race
     </div>
 
-    <div class="col3">
+    <div class="col3 personnage-col-classes">
       classes
     </div>
   </div>
@@ -71,26 +71,38 @@
           </a>
         </div>
 
-        <div class="col">
+        <?php
+        $raceLabel = libelle("dd_races", "ra", "nom", $dn['pe_ra_id']);
+        $classesLabel = classesPersonnage($dn['pe_id']);
+        $metaParts = array();
+        if ($isAdmin || $listId === 'campagne') {
+          $metaParts[] = htmlspecialchars($dn['joueur_nom']);
+        }
+        $metaParts[] = htmlspecialchars(strip_tags($raceLabel));
+        $metaParts[] = htmlspecialchars(strip_tags($classesLabel));
+        $metaLine = implode(' &bull; ', $metaParts);
+        ?>
+        <div class="col personnage-col-nom">
           <? if ($c && $c > 0): ?>
             <a href="personnage.php?personnage=<? echo $dn['pe_id']; ?>&campagne=<? echo $c; ?>"><?= htmlspecialchars($dn['pe_nom']) ?></a>
           <? else: ?>
             <a href="personnage.php?personnage=<? echo $dn['pe_id']; ?>"><?= htmlspecialchars($dn['pe_nom']) ?></a>
           <? endif; ?>
+          <div class="personnage-meta"><?= $metaLine ?></div>
         </div>
 
         <?php if ($isAdmin || $listId === 'campagne'): ?>
-          <div class="col">
+          <div class="col personnage-col-joueur">
             <?= htmlspecialchars($dn['joueur_nom']) ?>
           </div>
         <?php endif; ?>
 
-        <div class="col">
-          <?= libelle("dd_races", "ra", "nom", $dn['pe_ra_id']) ?>
+        <div class="col personnage-col-race">
+          <?= $raceLabel ?>
         </div>
 
-        <div class="col3">
-          <?= classesPersonnage($dn['pe_id']) ?>
+        <div class="col3 personnage-col-classes">
+          <?= $classesLabel ?>
         </div>
 
       </div>

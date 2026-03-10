@@ -59,8 +59,7 @@ header {
   transition: .4s all .1s;
 }
 
-.detail,
-.detailX {
+.detail {
   max-height: 90%;
   margin: 10px auto;
   overflow-y: auto;
@@ -427,9 +426,11 @@ h3 {
     display: none;
   }
 
+  /*
   .visu {
     display: none;
   }
+*/
 
   .recherche_sort,
   .recherche_don,
@@ -690,11 +691,13 @@ h3 {
     margin: 0 0 2px 0;
   }
 
+  /*
   .uneLigne {
     height: 1.2em;
     ligne-height: 1.2em;
     vertical-align: center;
   }
+    */
 
   .uneRegle {
     font-size: 1rem;
@@ -765,17 +768,6 @@ tbody tr.centre td {
 }
 
 /* tous les colonnes égales */
-.cellMain {
-  flex: 1 1 auto;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cellMain>div {
-  width: 100%;
-}
 
 .cellMainSort {
   flex: 0 1 10%;
@@ -789,7 +781,22 @@ tbody tr.centre td {
   width: 100%;
 }
 
+/*
+.cellMain {
+  flex: 1 1 auto;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cellMain>div {
+  width: 100%;
+}
+*/
+
 /* tableau des armes */
+/*
 .cellMainCarac {
   flex: 1 1 7%;
   text-align: center;
@@ -810,8 +817,10 @@ tbody tr.centre td {
 .cellMainCarac>div {
   width: 100%;
 }
+*/
 
 /* contenu des cellules */
+/*
 .cellEntete {
   border-bottom: thin solid black;
 }
@@ -826,6 +835,7 @@ tbody tr.centre td {
 
 .cellEntete,
 .cellEnteteLeft {}
+*/
 
 /* border-bottom: thin solid #480f0d*/
 .cellValue {
@@ -841,12 +851,14 @@ tbody tr.centre td {
   text-align: left;
 }
 
+/*
 .cellValueLeft {
   font-weight: normal;
   color: black;
   text-align: left;
   height: 1.2em;
 }
+*/
 
 .cellLeft {
   border-left: thin solid #480f0d
@@ -1493,6 +1505,7 @@ header h1 a:hover {
   padding-bottom: 25px
 }
 
+/*
 .decalage2 {
   margin-left: 20px
 }
@@ -1508,6 +1521,7 @@ header h1 a:hover {
 .decalage5 {
   margin-left: 80px
 }
+  */
 
 input {
   text-align: center;
@@ -1720,6 +1734,7 @@ img {
   color: black;
 }
 
+/*
 .btIcone {
   font-size: 1em;
   text-align: center;
@@ -1751,13 +1766,16 @@ img {
   padding: 2px;
   cursor: pointer;
 }
+  */
 
 /* Affichage de données sour la forme de bloc aux bords arrondis (pastilles). Ex : sorts dans un grimoire de la page personnage */
+/*
 .lignePastille {
   width: 100%;
   text-align: right;
   margin-top: 0.1em;
 }
+  */
 
 .pastille {
   float: right;
@@ -1791,14 +1809,6 @@ img {
   color: black;
   padding: 0.2rem 0.4rem;
   white-space: nowrap;
-}
-
-.pastilleR24 {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid #aaa;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 /* affichage niveau de sort dans la page grimoire */
@@ -2257,9 +2267,11 @@ img {
   border-radius: 0.33em;
 }
 
+/*
 .login .forgotpwd {
   margin-top: 15px;
 }
+  */
 
 .login #password,
 .login #email {
@@ -2333,11 +2345,13 @@ img {
   padding: 4px;
 }
 
+/*
 .item .race_perso {
   width: 120px;
   text-align: left;
   padding: 4px;
 }
+  */
 
 .item .organisation {
   width: 200px;
@@ -2703,6 +2717,7 @@ img {
   border-left: solid black 0.25rem;
 }
 
+
 .formulaire .line-data {
   width: 100%;
   display: grid;
@@ -2944,6 +2959,7 @@ table.competence td {
   width: 100%;
 }
 
+/*
 #classe .entete_dd5 {
   width: 100%;
   max-with: 600px;
@@ -2959,6 +2975,7 @@ table.competence td {
   box-sizing: border-box;
   margin: 0.625em 0 0 0;
 }
+  */
 
 /***************************************************************************************
 /* Races
@@ -2993,10 +3010,12 @@ table.competence td {
   text-align: left;
 }
 
+/*
 #race .input_conditions {
   width: 1100px;
   text-align: left;
 }
+  */
 
 #race .input_dv,
 #race .input_pointsCompetences {
@@ -3038,19 +3057,22 @@ table.competence td {
 /***************************************************************************************
 /* Personnage....
 /**************************************************************************************/
-
+/*
 #personnage .cartouche {
   padding: 2px 5px 1px 5px;
 }
+
 
 #personnage .bas_cartouche {
   border-bottom: thin black solid;
 }
 
+
 #personnage .cartouche div {
   text-align: left;
   margin-right: 50px;
 }
+  */
 
 #personnage .bloc {
   margin-top: 0.625em;
@@ -3271,10 +3293,12 @@ table.note {
   width: 300px;
 }
 
+/*
 #ajout_equipement .input_cout {
   text-align: right;
   width: 40px;
 }
+  */
 
 #ajout_equipement #accordion .data {
   /*  pour tous les objets hors baguetes et potions  */
@@ -3645,11 +3669,13 @@ table.armes {
   min-height: 450px;
 }
 
+/*
 #regle .input_categorie {
   text-align: left;
   width: 250px;
   margin-right: 10px
 }
+  */
 
 
 /**** formulaire de recherche ****************************/
@@ -3877,16 +3903,15 @@ table.armes {
   margin-right: 0px;
 }
 
-/* Le reste du fil prend la place restante */
+/* Le reste du fil prend la place restante 
 #ariane .ariane-rest {
   flex: 1 1 auto;
   min-width: 0;
-  /* IMPORTANT pour que overflow fonctionne en flex */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  /* l�ellipse sera visible quand on passera en rtl */
 }
+*/
 
 /* Petits �crans : tronquer par la GAUCHE */
 @media (max-width: 991px) {
@@ -4293,6 +4318,43 @@ input:checked+.slider:before {
 
 .action-edit i:hover {
   color: #3498db;
+}
+
+.personnage-meta {
+  display: none;
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.25;
+  margin-top: 0.15rem;
+  color: #555;
+}
+
+@media (max-width: 991px) {
+  .sortable-list .personnage-col-joueur,
+  .sortable-list .personnage-col-race,
+  .sortable-list .personnage-col-classes {
+    display: none;
+  }
+
+  .sortable-list .personnage-meta {
+    display: block;
+  }
+
+  .sortable-list .action-col {
+    align-self: start;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 0.35rem;
+  }
+
+  .sortable-list .personnage-col-nom {
+    min-width: 0;
+  }
+
+  .sortable-list .personnage-col-nom a {
+    word-break: break-word;
+  }
 }
 
 
