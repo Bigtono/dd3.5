@@ -19,11 +19,31 @@ if (isset($p) && $p != "n"): // il s'agit d'une modification
   $dn = $result->fetch(PDO::FETCH_ASSOC);
   $titre = "Modification de " . stripslashes($dn['pe_nom']);
   $j = $dn['pe_j_id'];
+  $personnageCampagneId = isset($dn['pe_camp_id']) ? (int)$dn['pe_camp_id'] : 0;
+  $campaignOwnerId = 0;
+  if ($personnageCampagneId > 0):
+    $stmtCampOwner = $db->prepare("SELECT camp_j_id FROM dd_campagnes WHERE camp_id = :cid LIMIT 1");
+    $stmtCampOwner->execute([':cid' => $personnageCampagneId]);
+    $campOwner = $stmtCampOwner->fetch(PDO::FETCH_ASSOC);
+    if ($campOwner) $campaignOwnerId = (int)$campOwner['camp_j_id'];
+  endif;
+  $isPersonnageOwner = isset($_SESSION['user_id']) && (int)$dn['pe_j_id'] === (int)$_SESSION['user_id'];
+  $isCampaignOwner = $personnageCampagneId > 0 && isset($_SESSION['user_id']) && $campaignOwnerId === (int)$_SESSION['user_id'];
+  $canEditPersonnage = $isPersonnageOwner || $isCampaignOwner;
+  if (!$canEditPersonnage):
+    $retour = 'personnage.php?personnage=' . (int)$p;
+    if (!empty($_GET['campagne'])) $retour .= '&campagne=' . (int)$_GET['campagne'];
+    header('Location: ' . $retour);
+    exit;
+  endif;
+  $canEditNotesMj = $isCampaignOwner;
 else: // il s'agit d'un ajout
   $num_rows = 1;
   $a = "n";
   $titre = "Cr&eacute;ation d'un personnage";
   $j = $_SESSION['user_id'];
+  $personnageCampagneId = 0;
+  $canEditNotesMj = false;
 endif;
 ?>
 <!doctype html>
@@ -222,7 +242,7 @@ endif;
                 </script>
               </div>
 
-              <? if ($isAdmin): ?>
+              <? if ($canEditNotesMj): ?>
                 <div class="mt10">
                   <div class="label">Notes MJ</div>
                   <textarea id="mp_pe_notes_mj" name="mp_pe_notes_mj" class="ckeditor input_notes" rows="10" cols="100"><? echo $dn['pe_notes_mj']; ?></textarea>
@@ -235,6 +255,8 @@ endif;
                     });
                   </script>
                 </div>
+              <? else: ?>
+                <input type="hidden" id="mp_pe_notes_mj" name="mp_pe_notes_mj" value="<? echo isset($dn['pe_notes_mj']) ? htmlspecialchars($dn['pe_notes_mj']) : ''; ?>" />
               <? endif; ?>
               <!-- affichage des boutons --->
               <div class="ligneBouton">

@@ -32,7 +32,9 @@ if (isset($_POST['ok']) && !empty($g)):
   else:
 endif;
 if ($_POST['retour']=="personnage"):
-  header("location: personnage.php?personnage=".$_POST['mp_gr_pe_id']."&onglet=grimoire&retour=personnage");
+  $c = isset($_POST['campagne']) ? (int)$_POST['campagne'] : 0;
+  $complement = $c > 0 ? "&campagne=".$c : "";
+  header("location: personnage-magie.php?personnage=".$_POST['mp_gr_pe_id'].$complement."&retour=personnage");
   else:
   header("location: grimoire.php?grimoire=".$g."&retour=grimoires");
 endif;

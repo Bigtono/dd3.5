@@ -74,8 +74,60 @@ switch ($_SERVER['PHP_SELF']):
       $addCrumb('personnages', 'personnages.php');
     endif;
     if (!empty($p)):
-      $addCrumb($dn['pe_nom'], 'personnage.php?personnage=' . (int)$p . '&campagne=' . $campagneId);
+      $hrefPersonnage = 'personnage.php?personnage=' . (int)$p;
+      if ($campagneId > 0) $hrefPersonnage .= '&campagne=' . $campagneId;
+      $addCrumb($dn['pe_nom'], $hrefPersonnage);
     endif;
+    break;
+  case ("/dd3.5/personnage-background.php"):
+  case ("/dd3.5/personnage-possessions.php"):
+  case ("/dd3.5/personnage-magie.php"):
+  case ("/dd3.5/personnage-connaissances.php"):
+  case ("/dd3.5/personnage-notes-mj.php"):
+  case ("/personnage-background.php"):
+  case ("/personnage-possessions.php"):
+  case ("/personnage-magie.php"):
+  case ("/personnage-connaissances.php"):
+  case ("/personnage-notes-mj.php"):
+    $personnageId = !empty($p) ? (int)$p : (!empty($_GET['personnage']) ? (int)$_GET['personnage'] : 0);
+    if ($campagneId > 0):
+      $addCrumb('campagnes', 'campagnes.php');
+      $addCrumb(libelle('dd_campagnes', 'camp', 'nom', $campagneId), 'campagne.php?campagne=' . $campagneId);
+    else:
+      $addCrumb('personnages', 'personnages.php');
+    endif;
+    if ($personnageId > 0):
+      $hrefPersonnage = 'personnage.php?personnage=' . $personnageId;
+      if ($campagneId > 0) $hrefPersonnage .= '&campagne=' . $campagneId;
+      $addCrumb(libelle('dd_personnages', 'pe', 'nom', $personnageId), $hrefPersonnage);
+    endif;
+    $sectionUrl = '';
+    if ($personnageId > 0):
+      $sectionUrl = '?personnage=' . $personnageId;
+      if ($campagneId > 0) $sectionUrl .= '&campagne=' . $campagneId;
+    endif;
+    switch ($_SERVER['PHP_SELF']):
+      case ("/dd3.5/personnage-background.php"):
+      case ("/personnage-background.php"):
+        $addCrumb('Background', 'personnage-background.php' . $sectionUrl);
+        break;
+      case ("/dd3.5/personnage-possessions.php"):
+      case ("/personnage-possessions.php"):
+        $addCrumb('Possessions', 'personnage-possessions.php' . $sectionUrl);
+        break;
+      case ("/dd3.5/personnage-magie.php"):
+      case ("/personnage-magie.php"):
+        $addCrumb('Magie', 'personnage-magie.php' . $sectionUrl);
+        break;
+      case ("/dd3.5/personnage-connaissances.php"):
+      case ("/personnage-connaissances.php"):
+        $addCrumb('Connaissances', 'personnage-connaissances.php' . $sectionUrl);
+        break;
+      case ("/dd3.5/personnage-notes-mj.php"):
+      case ("/personnage-notes-mj.php"):
+        $addCrumb('Notes MJ', 'personnage-notes-mj.php' . $sectionUrl);
+        break;
+    endswitch;
     break;
   case ("/dd3.5/grimoire.php"):
   case ("/dd3.5/grimoire_gestion.php"):

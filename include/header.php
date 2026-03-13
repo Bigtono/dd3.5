@@ -66,6 +66,25 @@
           ];
         endif;
       endif;
+
+      if ($campagne_id === 0):
+        $personnage_id = 0;
+        if (isset($_SESSION['personnage']) && (int)$_SESSION['personnage'] > 0):
+          $personnage_id = (int)$_SESSION['personnage'];
+        elseif (isset($_SESSION['perso']) && (int)$_SESSION['perso'] > 0):
+          $personnage_id = (int)$_SESSION['perso'];
+        endif;
+        if ($personnage_id > 0):
+          $personnage_nom = libelle("dd_personnages", "pe", "nom", $personnage_id);
+          if ($personnage_nom != ''):
+            $header_context_items[] = [
+              'type' => 'Personnage',
+              'label' => $personnage_nom,
+              'url' => 'personnage.php?personnage=' . $personnage_id
+            ];
+          endif;
+        endif;
+      endif;
       ?>
 
       <div id="header-context">

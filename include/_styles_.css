@@ -934,8 +934,8 @@ header h1 a:hover {
   margin-top: 0.66rem;
   font-size: inherit;
   text-align: justify;
-  witdh: 100%;
-  max-witdh: var(--largeur);
+  width: 100%;
+  max-width: var(--largeur);
 }
 
 .description:nth-child(1) {
@@ -1614,6 +1614,70 @@ img {
   cursor: pointer;
 }
 
+.personnage-nav {
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  border: none;
+}
+
+.personnage-nav .btMain {
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 0.35rem;
+  padding: 0.4rem 0.5rem;
+  min-height: 2.2rem;
+}
+
+.personnage-nav .btMain.is-active {
+  font-weight: 700;
+  border-color: #4e342e;
+  background-color: #f7f2ef;
+}
+
+.personnage-nav .btMain.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.personnage-retour {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #fff;
+}
+
+@media (max-width: 991px) {
+  .personnage-nav {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+    gap: 0.3rem;
+  }
+
+  .personnage-nav .btMain {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    padding: 0.35rem;
+    justify-content: center;
+  }
+
+  #personnage .personnage-nav .titre_menu {
+    display: none;
+  }
+
+  .personnage-retour {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 0.9rem;
+  }
+}
+
 .btTools {
   flex: 1 1 0%;
   padding: 0 0.1rem;
@@ -2145,7 +2209,7 @@ img {
   flex-wrap: wrap;
   vertical-align: middle;
   font-size: 1em;
-  margin-botton: 3px;
+  margin-bottom: 3px;
   margin: 10px auto;
 }
 
@@ -2189,7 +2253,6 @@ img {
   background-color: #D3CFBF;
 }
 
-.ui-corner-all {}
 
 .ui-widget {
   font-family: Arial, Helvetica, sans-serif;
@@ -2209,11 +2272,12 @@ img {
   border: none;
 }
 
+/* pas encore utilisé 
 .ui-corner-all {}
-
+.ui-corner-all {}
 .ui-helper-reset {}
-
 .ui-helper-clearfix {}
+*/
 
 .ui-widget-header {
   border-bottom: solid thin black;
@@ -2227,17 +2291,15 @@ img {
 }
 
 /* li */
+/* pas encore utilisé 
 .ui-tabs-tab {}
-
 .ui-corner-top {}
-
 .ui-state-default {}
-
 .ui-tab {}
-
 .ui-tabs-active {}
-
 .ui-state-active {}
+.ui-corner-bottom {}
+*/
 
 /* div */
 .ui-tabs-panel {
@@ -2253,8 +2315,6 @@ img {
   font-weight: normal;
   color: #ffffff;
 }
-
-.ui-corner-bottom {}
 
 /* Login ***************************************************/
 
@@ -3323,7 +3383,7 @@ table.note {
 #ajout_equipement #accordion .catEqt {
   min-height: 200px;
 }
-}
+
 
 #ajout_equipement #accordion .nom {
   grid-column: 1;
@@ -4330,6 +4390,7 @@ input:checked+.slider:before {
 }
 
 @media (max-width: 991px) {
+
   .sortable-list .personnage-col-joueur,
   .sortable-list .personnage-col-race,
   .sortable-list .personnage-col-classes {

@@ -64,7 +64,7 @@ try {
 function queryPDO($requete)
 {
   global $db;
-  $resultat = $db->query($requete) or die(print_r($bdd->errorInfo()));
+  $resultat = $db->query($requete) or die(print_r($db->errorInfo()));
   return $resultat;
 }
 
@@ -512,7 +512,7 @@ function regles($id, $iteration, $retour = "regles")
         $classe = '';
       endif;
       echo '<div><a href="regle.php?regle=' . $dn['re_id'] . '">' . f_nom($dn['re_nom']) . '</a></div></div>';
-      echo '<div id="regles' . $dn['re_id'] . '" class="regles' . $classe . ' decalage2"' . $action . '>';
+      echo '<div id="regles' . $dn['re_id'] . '" class="regles' . $classe . ' decalage2">';
       regles($dn['re_id'], $iteration, $retour);
       echo '</div>';
     endwhile;

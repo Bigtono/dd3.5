@@ -60,6 +60,7 @@ $g=$_GET['grimoire'];
       <form action="grimoire-enregistrement.php" method="post" name="grimoire" id="grimoire">
         <input type="hidden" name="idgrimoire" value="<? echo $g; ?>" />
         <input type="hidden" name="retour" value="<? echo $_GET['retour']; ?>" />
+        <input type="hidden" name="campagne" value="<? echo isset($_GET['campagne']) ? (int)$_GET['campagne'] : 0; ?>" />
         <!-- Présentation du grimoire -->
         <div>
           <div class="ligne"><div class="label w200">Nom</div><input type="text" class="input_nom" id="mp_gr_nom" name="mp_gr_nom" value="<? echo $dn['gr_nom']; ?>"></div>        
