@@ -99,6 +99,12 @@ dd_personnages_sorts (contient la liste des sorts possédés par le personnage. 
 - pes_lance (valeur de 0 à 10 indiquant combien de fois le personnage a lancé le sort)
 Note : un personnage peut avoir plusieurs sorts mais une seule fois le même sort
 
+dd_personnages_nls (ventilation des niveaux de lanceur de sort des classes de prestige, préfixe penl) (spécifique au ruleset DD3.5)
+- penl_id (id, index de la table)
+- penl_pc_id (id de l'enregistrement de la classe de personnage possédé la personnage, table dd_personnages_classes)
+- penl_cla_id (id de la classe de prestige dont le niveau de lanceur de sort doit être attribué, table dd_classes, cla_clt_id=2)
+- penl_niveau (niveau de la classe prestige. Permet de ventiler les choix du joueur pour chaque niveau possédé dnas la classe de prestige)
+
 dd_ressources (livres de règles, aussi appelés ressources, dont sont issus les sorts. Préfixe res)
 - res_id (id, index de la table)
 - res_nom (nom du livre)
@@ -183,17 +189,28 @@ dd_monstres (liste des monstres)
 dd_notes (notes de jeu)
 - no_id (id, index de la table)
 - no_nom (nom de la note)
-- no_cumulatif	tinyint(1)
-- no_nom	varchar(100)
-- no_texte_basique
-- no_texte_intermediaire
-- no_texte_avance
-- no_texte_expert
-- no_date
-- no_j_id
-commentaire sur le fonctionnement de la table : une note de jeu propose une information selon quatre niveaux d'information accessible au personnage (basiquen intermédiaire, avancé, expert). La table propose quatre champs texte pour stocker les données de ces quatres niveaux d'information (no_texte_basique, no_texte_intermediaire, no_texte_avance, no_texte_exper). Le champ no_cumulatif indique comment ces quatres champs interagissent. Si no_cumulatif est égal à 0, chaque champ se suffit à lui même (ex : toutes les Informations de niveau intermédiaire sont dans le  champ no_texte_intermediaire). Si no_cumulatif est à égal à 1, lee contenu des champs se cumulent pour former un niveau d'information (exemple : les informations de niveau intermédiaire sont constituées des champs no_texte_basique et du champ no_texte_intermediaire).
+- no_tyno_id (type de la note. Issu de la table dd_types_notes)
+- no_tag (tags de la nom, séparés par des points-virgules)
+- no_date (date de création de la note)
+- no_j_id (rédacteur de la note)
+
+dd_notes_contenus (contenu des notes de jeu)
+- noc_id (id, index de la table)
+- noc_no_id (id de la note, issu de la table dd_notes)
+- noc_dd (degré de difficulté pour accéder à ce contenu.)
+- noc_texte
+
+ dd_personnages_notes (attribution d'une note à un perosnnage)
+- pno_id (id, index de la table)
+- pno_pe_id (id du personnage, issu de la table dd_personnages)
+- pno_no_id (id du note, issu de la table dd_notes)
+- pno_dd (niveau de connaissance du personnage sur cette note. Renvoit à noc_dd de la table dd_notes_contenus)
+- pno_actif
 
 dd_campagnes_notes (attribution d'une note de jeu à une campagne)
 - cpno_id (id, index de la table)
 - cpno_no_id (id de la note)
 - cpno_camp_id (id de la campagne)
+
+commentaire sur le fonctionnement des notes. Une note est constituées de plusieurs contenus correspondant chacun à un enregistrement dans la table dd_notes_contenus. Chaque contenu a un degré de difficulté associé (champ noc_dd). Un personnage a accès à une note si un enregistrement existe avecson id (pno_pe_id) dans la table dd_personnages_notes. Il voit tous les contenus de la notes dont noc_dd est inférieur ou égal à pno_dd.
+Une note peut aussi être rattaché à une campagne (table dd_campagnes_notes).
