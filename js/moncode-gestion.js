@@ -18,9 +18,9 @@ function afficherContenu(content) {
 }
 
 function togglePlus(panneau) {
-  $('.accordion-content').not($(this).next()).slideUp();
+  $('.accordion-content').not('#'+panneau).slideUp();
   // Toggle le contenu correspondant
-  $('#'+panneau).toggle();
+  $('#'+panneau).stop(true, true).slideToggle();
 }
 
 /******************************************************************************************/
@@ -158,4 +158,3 @@ function validerModifVariable() {
     error: function() {alert('Erreur validerModifVariable()');}
 	});		
 }
-

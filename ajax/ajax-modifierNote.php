@@ -99,7 +99,7 @@ if (!empty($_SESSION['campagne']) && (int)$_SESSION['campagne'] > 0):
       if ($dnpno) $valdif = (int)$dnpno['pno_dd'];
     endif;
 
-    $perso .= '<div class="line-data-fr100"><label for="pe' . (int)$dnpe['pe_id'] . '" class="gras mr10">' . htmlspecialchars($dnpe['pe_nom'], ENT_QUOTES, 'UTF-8') . '</label><select id="pe' . (int)$dnpe['pe_id'] . '" name="pe' . (int)$dnpe['pe_id'] . '" class="diffusion">' . optionListDdLocal($valdif) . '</select></div>';
+    $perso .= '<div class="line-data-fr100"><label for="pe' . (int)$dnpe['pe_id'] . '" class="gras mr10">' . htmlspecialchars($dnpe['pe_nom'], ENT_QUOTES, 'UTF-8') . '</label><select id="pe' . (int)$dnpe['pe_id'] . '" name="pe' . (int)$dnpe['pe_id'] . '" class="diffusion">' . optionListDdLocal($valdif, 35) . '</select></div>';
   endwhile;
 endif;
 

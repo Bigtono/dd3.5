@@ -161,51 +161,6 @@ endif;
 <head>
   <? include("include/head.php"); ?>
   <script type='text/javascript' src='js/moncode-personnages.js'></script>
-  <style>
-    .notes-filter-form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: stretch;
-      margin-bottom: 10px;
-    }
-
-    .notes-filters-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .notes-filter-group {
-      display: flex;
-      align-items: center;
-      min-width: 220px;
-    }
-
-    .notes-filter-group .search-input,
-    .notes-filter-group .search-select {
-      min-width: 180px;
-      flex: 1 1 auto;
-      border-right: 2px solid #ccc;
-      border-radius: 999px;
-    }
-
-    .notes-tags-panel {
-      width: 100%;
-      margin-top: 5px;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: #fafafa;
-    }
-
-    .notes-tags-panel label {
-      display: inline-block;
-      margin-right: 12px;
-      margin-bottom: 6px;
-    }
-  </style>
 </head>
 
 <body>

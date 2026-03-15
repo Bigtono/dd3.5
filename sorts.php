@@ -5,36 +5,33 @@ include("connexion.php");
 include("include/diverslib.inc.php");
 include("include/date.inc.php");
 
-if (isset($_GET['search_ls'])):
-  if (isset($_GET['critere_ls'])):
-    if ($_GET['critere_ls'] === "all"):
-      $_SESSION['critere_ls'] = "all";
-    elseif ($_GET['critere_ls'] != ""):
-      $_SESSION['critere_ls'] = intval($_GET['critere_ls']);
-    else:
-      $_SESSION['critere_ls'] = "all";
-    endif;
+$critere = isset($_GET['critere']) ? trim((string)$_GET['critere']) : '';
+$critereRes = isset($_GET['critere_res']) ? trim((string)$_GET['critere_res']) : '';
+$critereLsGet = isset($_GET['critere_ls']) ? trim((string)$_GET['critere_ls']) : null;
+
+if ($critereLsGet !== null):
+  if ($critereLsGet === '' || $critereLsGet === 'all'):
+    $_SESSION['critere_ls'] = 'all';
+  elseif (ctype_digit($critereLsGet)):
+    $_SESSION['critere_ls'] = (int)$critereLsGet;
+  else:
+    $_SESSION['critere_ls'] = 'all';
   endif;
+elseif (!isset($_SESSION['critere_ls']) || $_SESSION['critere_ls'] === ''):
+  $_SESSION['critere_ls'] = 'all';
 endif;
 
-if ($_GET['critere_ls']): // saisie d'une classe de lanceur
-  if ($_GET['critere_ls']===""):
-    unset($_SESSION["critere_ls"]);
-    else:
-    $_SESSION["critere_ls"]=$_GET['critere_ls'];
-  endif;
-  elseif(strlen($_GET['critere'])>0): // saisie d'un nom de sort
-    $critere=$_GET['critere'];
-    $critere_sql=' AND so_nom LIKE "%'.trim($_GET['critere']).'%"';
-    $cas=1;
-    elseif(strlen($_GET['critere_res'])>0): // saisie d'une ressource
-      $critere='';
-      $critere_sql=' AND so_res_id="'.trim($_GET['critere_res']).'"';
-      $cas=2;
-      else:
-      $critere='';
-      $critere_sql='';
+$critere_sql = '';
+if ($critere !== ''):
+  $critere_sql .= ' AND so_nom LIKE "%' . addslashes($critere) . '%"';
 endif;
+if ($critereRes !== '' && ctype_digit($critereRes)):
+  $critere_sql .= ' AND so_res_id="' . (int)$critereRes . '"';
+endif;
+
+// Compatibilite avec les include de rendu des sorts
+$_GET['critere_ls'] = (string)$_SESSION['critere_ls'];
+$_GET['critere_res'] = $critereRes;
 
 ?>
 <!doctype html>
@@ -55,29 +52,31 @@ endif;
       <div class="titreA">Sorts</div>
       <div class="titreA"><? if ($_SESSION['mj']>0) echo '<span onClick="modifierSort(\'n\')" class="lien"><i class="icon fa-solid fa-circle-plus"></i></span>'; ?></div>
     </div>
-    <!--- Menu secondaire --->
-    <div class="search-container">      
-      <form action="sorts.php" method="get" name="search-sort" id="search-sort" class="search-form">
-        <input type="text" class="search-input" name="critere" value="<? echo $critere; ?>" placeholder="Nom du sort" onClick="myFocus(this)"/>
-        <button type="submit" class="search-button" id="search" name="search"/><i class="fa-solid fa-magnifying-glass"></i></button> 
+
+    <div class="search-container">
+      <form action="sorts.php" method="get" name="search-sort" id="search-sort" class="notes-filter-form">
+        <div class="notes-filters-row">
+          <div class="notes-filter-group">
+            <input type="text" class="search-input" name="critere" value="<? echo htmlspecialchars($critere, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Nom du sort" onClick="myFocus(this)"/>
+          </div>
+          <div class="notes-filter-group">
+            <select name="critere_ls" class="search-select">
+              <? echo OptionListeClassesLS($_SESSION['critere_ls'], "Toutes"); ?>
+            </select>
+          </div>
+          <div class="notes-filter-group">
+            <select name="critere_res" class="search-select">
+              <option value="">Toutes les sources</option>
+              <? echo OptionListeRessources($critereRes); ?>
+            </select>
+          </div>
+          <div class="notes-filter-group" style="min-width:auto;">
+            <button type="submit" class="search-button" id="search" name="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+        </div>
       </form>
-      <form action="sorts.php" method="get" class="search-form">
-        <select name="critere_ls" class="search-select">
-          <option value="" disabled hidden selected>Lanceur de sort</option>
-          <? echo OptionListeClassesLS($_SESSION['critere_ls'],"Toutes"); ?>
-        </select>
-        <button type="submit" class="search-button" id="search_ls" name="search_ls"/><i class="fa-solid fa-magnifying-glass"></i></button> 
-      </form>
-      <form action="sorts.php" method="get" class="search-form">
-        <select name="critere_res" class="search-select">
-          <option value="" disabled hidden selected>Source</option>
-          <?
-          echo OptionListeRessources($_GET['critere_res']);
-          ?>
-        </select>
-        <button type="submit" class="search-button" id="search_res" name="search_res"/><i class="fa-solid fa-magnifying-glass"></i></button>         
-      </form>      
-    </div>  
+    </div>
+
     <?
       if ($isDebug && $isAdmin) echo '<div>ID Lanceur '.$_GET['critere_ls'].'</div>';
       if ($isDebug && $isAdmin) echo '<div>Sources : '.$selection.'</div>';
@@ -85,11 +84,11 @@ endif;
 
       include('include/insert/'.$_SESSION['rulesetRep'].'/sorts.php');
     ?>	
-    <p class="mb50">&nbsp;</p> <!--- marge pour éviter le chevauchement du texte et du bouton de retour en haut de page --->
-    <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>    
-  </div> <!-- #wrapper --->
-</div> <!-- #page --->
-<div id="detail-pp"></div>  
+    <p class="mb50">&nbsp;</p>
+    <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
+  </div>
+</div>
+<div id="detail-pp"></div>
 <div id="modification"></div>
 </body>
 </html>

@@ -5,35 +5,25 @@ include("connexion.php");
 include("include/diverslib.inc.php");
 include("include/date.inc.php");
 
+$critere = isset($_GET['critere']) ? trim((string)$_GET['critere']) : '';
+$typeDon = isset($_GET['type']) ? trim((string)$_GET['type']) : '';
+$incomplet = isset($_GET['incomplet']) && (int)$_GET['incomplet'] === 1;
 
-// réception du critère (nom du sort)
-if (strlen($_GET['critere'])>0):
-	$critere=$_GET['critere'];
-	$critere_sql=' AND do_nom LIKE "%'.trim($_GET['critere']).'%"';
-	$cas=1;
-	else:
-	$critere=''; 
-	$critere_sql='';
+$critere_sql = '';
+if ($critere !== ''):
+  $critere_sql = ' AND do_nom LIKE "%' . addslashes($critere) . '%"';
 endif;
 
-// critère de sélection des objets dont la description est nulle
-if ($_GET['incomplet']==1):
-  $complement=" AND (do_texte IS NULL OR do_texte='')";
-  $descriptionCheck=" CHECKED";
-  else:
-  $descriptionCheck="";
-  $complement='';
+$filtre = '';
+if ($typeDon !== '' && ctype_digit($typeDon)):
+  $filtre = ' AND do_dado_id=' . (int)$typeDon;
 endif;
 
-// filtre
-if(!empty($_GET["type"])):
-  $filtre=' do_dado_id='.trim($_GET["type"]).' AND';
-  else:
-  $filtre="";
-endif;
+$descriptionCheck = $incomplet ? ' CHECKED' : '';
+$complement = $incomplet ? " AND (do_texte IS NULL OR do_texte='')" : '';
 
-// Préparation de la pagination
-$page_source=$_SESSION['page_dons'];
+// Preparation de la pagination
+$page_source = $_SESSION['page_dons'];
 include('include/pagination/prepa_pagination.php');
 
 ?>
@@ -58,75 +48,71 @@ include('include/pagination/prepa_pagination.php');
       </div>
       <div></div>
     </div>
-    <!--- Menu secondaire --->
+
     <div class="search-container">
-      <form action="dons.php" method="get" name="search-don" id="search-don" class="search-form">
-        <input type="text" class="search-input" name="critere" value="<? echo $critere; ?>" size="20" placeholder="Nom du don" onClick="myFocus(this)"/>
-        <button type="submit" class="search-button" id="search" name="search"/><i class="fa-solid fa-magnifying-glass"></i></button>
+      <form action="dons.php" method="get" name="search-don" id="search-don" class="notes-filter-form">
+        <div class="notes-filters-row">
+          <div class="notes-filter-group">
+            <input type="text" class="search-input" name="critere" value="<? echo htmlspecialchars($critere, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Nom du don" onClick="myFocus(this)"/>
+          </div>
+          <div class="notes-filter-group">
+            <select name="type" class="search-select">
+              <? echo OptionList("dd_data_don", "dado", "nom", ($typeDon !== '' ? (int)$typeDon : ''), "", 0, "Tout"); ?>
+            </select>
+          </div>
+          <div class="notes-filter-group" style="min-width:auto;">
+            <input type="checkbox" id="incomplet" name="incomplet" value="1"<? echo $descriptionCheck; ?> />
+            <label for="incomplet" class="ml10">Description a completer</label>
+          </div>
+          <div class="notes-filter-group" style="min-width:auto;">
+            <button type="submit" class="search-button" id="search" name="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+        </div>
       </form>
-      <form action="dons.php" method="get" class="search-form">
-        <select name="type" class="search-select">
-          <? echo OptionList("dd_data_don", "dado", "nom",$_GET['type'],"",0,""); ?>
-        </select>
-        <button type="submit" class="search-button" id="search_cdom" name="search_cdon"/><i class="fa-solid fa-magnifying-glass"></i></button> 
-        <div class="incomplet"><input type="checkbox" class="search-input ml30" id="incomplet" name="incomplet" value="1"<? echo $descriptionCheck; ?>/><label for="incomplet" class="ml10"><? echo utf8_encode('Description à compléter'); ?></label></div>
-      </form>      
     </div>
     <?
-    //******************************************************************************************************************************
-    // gestion de la pagination
-    if ($critere_sql==''): // liste de dons globale ou par catégorie
-      $requete='SELECT * FROM dd_dons LEFT JOIN dd_ressources ON do_res_id=res_id WHERE do_ruleset_var_id="'.$_SESSION['ruleset'].'" AND '.$filtre.' do_res_id IN '.$selection.' ORDER BY do_nom'.$limit;
-      else: // recherche d'un don par son nom
-      $requete='SELECT * FROM dd_dons LEFT JOIN dd_ressources ON do_res_id=res_id WHERE do_ruleset_var_id="'.$_SESSION['ruleset'].'" AND do_res_id IN '.$selection.$critere_sql.' ORDER BY do_nom'.$limit;
-    endif;
+    $requete='SELECT * FROM dd_dons LEFT JOIN dd_ressources ON do_res_id=res_id WHERE do_ruleset_var_id="'.$_SESSION['ruleset'].'" AND do_res_id IN '.$selection.$critere_sql.$filtre.$complement.' ORDER BY do_nom'.$limit;
     debug('pagination : '.$requete);
     include('include/pagination/pagination.php');
-    //******************************************************************************************************************************    
-    
-    if ($critere_sql==''): // liste de dons globale ou par catégorie
-      $requete='SELECT * FROM dd_dons LEFT JOIN dd_ressources ON do_res_id=res_id WHERE do_ruleset_var_id="'.$_SESSION['ruleset'].'" AND '.$filtre.' do_res_id IN '.$selection.' ORDER BY do_nom'.$limit;
-      else: // recherche d'un don par son nom
-      $requete='SELECT * FROM dd_dons LEFT JOIN dd_ressources ON do_res_id=res_id WHERE do_ruleset_var_id="'.$_SESSION['ruleset'].'" AND do_res_id IN '.$selection.$critere_sql.' ORDER BY do_nom'.$limit;
-    endif;
-    debug('Sélection : '.$requete);
+
+    debug('Selection : '.$requete);
     $result=queryPDO($requete);
     $num_rows=$result->rowCount();
     if ($num_rows > 0):
       echo $pagination;
-      echo '<div class="item entete">';      
+      echo '<div class="item entete">';
       if ($_SESSION['mj']==1) echo '  <div class="icone_suppr"><i class="fa fa-trash"></i></div>';
-      if ($_SESSION['mj']==1) echo '	<div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
+      if ($_SESSION['mj']==1) echo '\t<div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
       echo '  <div class="nom_don">Nom</div>';
       echo '  <div class="categorie_don">Type</div>';
-      echo '  <div class="description_courte">R&eacute;sum&eacute;</div>';
+      echo '  <div class="description_courte">Resume</div>';
       echo '  <div class="source">Source</div>';
-      echo '</div><!-- item entête --->';
+      echo '</div><!-- item entete --->';
       while($don = $result->fetch(PDO::FETCH_ASSOC)):
         $click='afficherDon('.$don['do_id'].')';
-        if ($_SESSION['debug']==1 && $_SESSION['mj']==1) $iddon=' ('.$don['do_id'].')';
+        if ($_SESSION['debug']==1 && $_SESSION['mj']==1) $iddon=' ('.$don['do_id'].')'; else $iddon='';
         echo '<div class="item data">';
         if ($_SESSION['mj']==1) echo '  <div class="icone_suppr"><span onClick="suppression(\'dd_dons\',\'do\','.$don['do_id'].')"><i class="fa fa-trash"></i></span></div>';
-        if ($_SESSION['mj']==1) echo '  <div class="icone_modif"><span onclick="modifierDon('.$don['do_id'].')"><i class="fa-solid fa-pen-to-square"></i></span></div>';    
+        if ($_SESSION['mj']==1) echo '  <div class="icone_modif"><span onclick="modifierDon('.$don['do_id'].')"><i class="fa-solid fa-pen-to-square"></i></span></div>';
         echo '  <div class="nom_don" onclick="'.$click.'">'.stripslashes(ucfirst($don['do_nom'])).$iddon.'</div>';
         echo '  <div class="categorie_don" onclick="'.$click.'">'.libelle("dd_data_don","dado","nom",$don['do_dado_id']).'</div>';
         echo '  <div class="description_courte" onclick="'.$click.'">'.stripslashes($don['do_resume']).'</div>';
         echo '  <div class="source" title="'.$don['res_nom'].'" onclick="'.$click.'">'.stripslashes($don['res_abreviation']).'</div>';
         echo '</div>';
       endwhile;
+    else:
+      if($typeDon !== '' && ctype_digit($typeDon)):
+        echo '<div class="nodata">Aucun don disponible dans la categorie '.libelle("dd_data_don","dado","nom",$typeDon).' !</div>';
       else:
-      if(isset($_GET["type"])):
-        echo '<div class="nodata">Aucun don disponible dans la cat&eacute;gorie '.libelle("dd_data_don","dado","nom",$_GET["type"]).' !</div>';
-        else:
         echo '<div class="nodata">Aucun don disponible !</div>';
       endif;
     endif;
     ?>
-    <p class="mb50">&nbsp;</p> <!--- marge pour éviter le chevauchement du texte et du bouton de retour en haut de page --->
+    <p class="mb50">&nbsp;</p>
     <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
-  </div> <!-- wrapper --->
+  </div>
 </div>
 </body>
-<div id="detail-pp"></div>  
+<div id="detail-pp"></div>
 <div id="modification"></div>
 </html>

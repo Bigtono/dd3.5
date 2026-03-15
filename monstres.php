@@ -6,18 +6,27 @@ include("connexion-mj.php");
 include("include/diverslib.inc.php");
 include("include/date.inc.php");
 
+// reception des criteres de recherche
+$critere = isset($_GET['critere']) ? trim((string)$_GET['critere']) : '';
+$typeMonstre = isset($_GET['type']) ? trim((string)$_GET['type']) : 'Tout';
+$fpMonstre = isset($_GET['fp']) ? trim((string)$_GET['fp']) : 'Tout';
 
-// réception du critère (nom du sort)
-if (strlen($_GET['critere']) > 0):
-  $critere = $_GET['critere'];
-  $critere_sql = ' AND mo_nom LIKE "%' . $_GET['critere'] . '%"';
-  $cas = 1;
-else:
-  $critere = '';
-  $critere_sql = '';
+$critere_sql = '';
+if ($critere !== ''):
+  $critere_sql = ' AND mo_nom LIKE "%' . addslashes($critere) . '%"';
 endif;
 
-// Préparation de la pagination
+$type_sql = '';
+if ($typeMonstre !== '' && $typeMonstre !== 'Tout' && ctype_digit($typeMonstre)):
+  $type_sql = ' AND mo_mocat_id="' . (int)$typeMonstre . '"';
+endif;
+
+$fp_sql = '';
+if ($fpMonstre !== '' && $fpMonstre !== 'Tout' && ctype_digit($fpMonstre)):
+  $fp_sql = ' AND mo_fp_id="' . (int)$fpMonstre . '"';
+endif;
+
+// Preparation de la pagination
 $page_source = $_SESSION['page_monstres'];
 include('include/pagination/prepa_pagination.php');
 
@@ -42,22 +51,34 @@ include('include/pagination/prepa_pagination.php');
           Monstres
           <? if ($_SESSION['mj'] == 1) echo '<a href="monstre-modifier.php?mo=n&retour=monstre"><i class="icon fa-solid fa-circle-plus"></i></a>'; ?>
         </div>
-        <div class="TitreA">
-
-        </div>
+        <div class="TitreA"></div>
       </div>
-      <!--- Menu secondaire --->
+
       <div class="search-container">
-        <form action="monstres.php" method="get" name="search-monstres" id="search-monstres" class="search-form">
-          <input type="text" class="search-input" name="critere" value="<? echo $critere; ?>" size="20" placeholder="Nom du monstre" onClick="myFocus(this)" />
-          <button type="submit" class="search-button" id="search" name="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <form action="monstres.php" method="get" name="search-monstres" id="search-monstres" class="notes-filter-form">
+          <div class="notes-filters-row">
+            <div class="notes-filter-group">
+              <input type="text" class="search-input" name="critere" value="<? echo htmlspecialchars($critere, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Nom du monstre" onClick="myFocus(this)" />
+            </div>
+            <div class="notes-filter-group">
+              <select name="type" class="search-select">
+                <? echo OptionList("dd_monstres_categories", "mocat", "nom", ($typeMonstre === 'Tout' ? 'Tout' : (int)$typeMonstre), "", 0, "Tout"); ?>
+              </select>
+            </div>
+            <div class="notes-filter-group">
+              <select name="fp" class="search-select">
+                <? echo OptionList("dd_fp", "fp", "nom", ($fpMonstre === 'Tout' ? 'Tout' : (int)$fpMonstre), "", 0, "Tout"); ?>
+              </select>
+            </div>
+            <div class="notes-filter-group" style="min-width:auto;">
+              <button type="submit" class="search-button" id="search" name="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+          </div>
         </form>
       </div>
+
       <?
-      //if ($isDebug && $isAdmin) echo '<div>Page #'.$page.'</div>';
-      //******************************************************************************************************************************
-      // gestion de la pagination
-      $requete = 'SELECT * FROM dd_monstres WHERE mo_ruleset_var_id="' . $_SESSION['ruleset'] . '"' . $critere_sql . ' ORDER BY mo_nom' . $limit;
+      $requete = 'SELECT * FROM dd_monstres WHERE mo_ruleset_var_id="' . $_SESSION['ruleset'] . '"' . $critere_sql . $type_sql . $fp_sql . ' ORDER BY mo_nom' . $limit;
       debug($requete);
       include('include/pagination/pagination.php');
       $result = queryPDO($requete);
@@ -66,11 +87,11 @@ include('include/pagination/prepa_pagination.php');
         echo $pagination;
         echo '<div class="item entete">';
         echo '  <div class="icone_suppr"><i class="fa fa-trash"></i></div>';
-        echo '	<div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
+        echo '\t<div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
         echo '  <div class="nom_monstre">Nom</div>';
         echo '  <div class="fp">FP</div>';
         echo '  <div class="monstre_type">Type</div>';
-        echo '</div><!-- item entête --->';
+        echo '</div><!-- item entete --->';
         while ($monstre = $result->fetch(PDO::FETCH_ASSOC)):
           echo '<div class="item data">';
           echo '  <div class="icone_suppr"><span onClick="suppression(\'dd_monstres\',\'mo\',' . $monstre['mo_id'] . ')"><i class="fa fa-trash"></i></span></div>';
@@ -84,9 +105,9 @@ include('include/pagination/prepa_pagination.php');
         echo '<div class="nodata">Aucun monstre disponible !</div>';
       endif;
       ?>
-      <p class="mb50">&nbsp;</p> <!--- marge pour éviter le chevauchement du texte et du bouton de retour en haut de page --->
+      <p class="mb50">&nbsp;</p>
       <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
-    </div> <!-- wrapper --->
+    </div>
   </div>
 </body>
 <div id="detail-pp"></div>

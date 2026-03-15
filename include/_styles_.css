@@ -3770,8 +3770,8 @@ table.armes {
   padding: 0 1rem;
   font-size: 1rem;
   border: 2px solid #ccc;
-  border-right: none;
-  border-radius: 999px 0 0 999px;
+  border-right: 2px solid #ccc;
+  border-radius: 999px;
   outline: none;
   height: 1.5rem;
   box-sizing: border-box;
@@ -3783,8 +3783,8 @@ table.armes {
   padding: 0 1rem;
   font-size: 1rem;
   border: 2px solid #ccc;
-  border-radius: 999px 0 0 999px;
-  border-right: none;
+  border-radius: 999px;
+  border-right: 2px solid #ccc;
   outline: none;
   height: 1.5rem;
   line-height: 1.5rem;
@@ -3801,8 +3801,8 @@ table.armes {
   padding: 0 1rem;
   font-size: 1rem;
   border: 2px solid #ccc;
-  border-left: none;
-  border-radius: 0 999px 999px 0;
+  border-left: 2px solid #ccc;
+  border-radius: 999px;
   background-color: #f0f0f0;
   cursor: pointer;
   height: 1.5rem;
@@ -3816,6 +3816,48 @@ table.armes {
 /* Placeholder de l'input */
 .search-input::placeholder {
   color: #000;
+}
+
+.notes-filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 10px;
+}
+
+.notes-filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.notes-filter-group {
+  display: flex;
+  align-items: center;
+  min-width: 220px;
+}
+
+.notes-filter-group .search-input,
+.notes-filter-group .search-select {
+  min-width: 180px;
+  flex: 1 1 auto;
+}
+
+.notes-tags-panel {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.notes-tags-panel label {
+  display: inline-block;
+  margin-right: 12px;
+  margin-bottom: 6px;
 }
 
 @media (max-width: 991px) {

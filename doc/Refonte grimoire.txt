@@ -1,4 +1,5 @@
 Je veux refondre entièrement le fonctionnement métier de la page personnage-grimoire.php.
+
 Cette page gère les sorts accessibles et utilisables par  un personnage lanceurs de sorts. Les règles métier sont spécifiques à chaque ruleset.
 
 Concernant la base de données, les tables impactées sont dd_sorts, dd_sortclasse, dd_classes, dd_classe_niveau, dd_personnages, dd_personnages_classes
@@ -20,7 +21,7 @@ Règles métiers générales concernant la magie (communes à tous les ruleset)
 - la combinaison cla_sort_connu / cla_sort_compris / cla_sort_prepare est propre à chaque classe
 - la table dd_personnages_sorts
 - le niveau de lanceur de sort (NLS) correspond au niveau d'un personnage dans une classe de lanceur de sort. Exemple : si le personnage est niveau 6 dans la classe de magicien, il a un NLS de 6 quand il lance un sort de magicien. Si le même personnage est aussi Druide de niveau 2, son NLS de druide de de 2. Un personnage a autant de NLS que de classe de base de lanceur de sort.
-- le nombre de sorts qu'un personnage peut préparer et lancer par niveau et jour est déterminé par le niveau de lanceur de sort (NLS) dans chaque classe de base de lanceur de sort. Les champs cn_sort_n0 à cn_sort_n9 indiquent combien de sorts le personnage peut lancer par jour et par niveau de sort. L'enregistrment à prendre en compte est celui dont le champ cn_niveau est égal au NLS du personnage pour cette classe.
+- le nombre de sorts qu'un personnage peut préparer et lancer par niveau et jour est déterminé par le niveau de lanceur de sort (NLS) dans chaque classe de base de lanceur de sort. Les champs cn_sort_n0 à cn_sort_n9 indiquent combien de sorts le personnage peut lancer par jour et par niveau de sort. L'enregistrement à prendre en compte est celui dont le champ cn_niveau est égal au NLS du personnage pour cette classe.
 
 
 règles métiers spécifiques au ruleset dd3.5
