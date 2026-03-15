@@ -2,99 +2,160 @@
 include_once("../include/dblib.inc.php");
 include_once("../include/session.php");
 include_once("../include/diverslib.inc.php");
+include_once("../include/noteslib.inc.php");
 
-$n = $_POST['note'];
-$p = $_POST['perso'];
-$c = $_POST['campagne'];
+function optionListDdLocal($selected, $max = 99)
+{
+  $selected = (int)$selected;
+  $options = '';
+  for ($i = 1; $i <= $max; $i++):
+    $sel = ($i === $selected) ? ' selected="selected"' : '';
+    $options .= '<option value="' . $i . '"' . $sel . '>DD ' . $i . '</option>';
+  endfor;
+  return $options;
+}
 
+function renderContenuRow($idx, $dd, $texte)
+{
+  $idx = (int)$idx;
+  $dd = (int)$dd;
+  if ($dd <= 0) $dd = 10;
 
-if (!empty($n)):
-  if ($n != "n"):
-    $requete = 'SELECT * FROM dd_notes JOIN dd_types_notes ON no_tyno_id=tyno_id WHERE no_id="' . $n . '"';
-    $resultat = queryPDO($requete);
-    $dn = $resultat->fetch(PDO::FETCH_ASSOC);
-    $no_id = $dn['no_id'];
-    $no_nom = $dn['no_nom'];
-    $no_categorie = $dn['no_tyno_id'];
-    $no_cumulatif = $dn['no_cumulatif'];
-    $no_texte_basique = $dn['no_texte_basique'];
-    $no_texte_intermediaire = $dn['no_texte_intermediaire'];
-    $no_texte_avance = $dn['no_texte_avance'];
-    $no_texte_expert = $dn['no_texte_expert'];
-  endif;
+  $html = '';
+  $html .= '<div class="note-contenu-row line-data-fr100 mb10" data-row="' . $idx . '">';
+  $html .= '  <div class="ligne mb5">';
+  $html .= '    <div class="label w90">DD</div>';
+  $html .= '    <select class="note-contenu-dd">' . optionListDdLocal($dd) . '</select>';
+  $html .= '    <button type="button" class="bouton ml15" onclick="NoteActions.removeContenuRow(this)">Supprimer</button>';
+  $html .= '  </div>';
+  $html .= '  <textarea id="mp_noc_' . $idx . '" class="input_texte note-contenu-texte">' . stripslashes((string)$texte) . '</textarea>';
+  $html .= '  <script>if(window.CKEDITOR){ CKEDITOR.replace("mp_noc_' . $idx . '"); }</script>';
+  $html .= '</div>';
+  return $html;
+}
 
-  //********************************************************
-  // mise en forme du contenu
-  if ($n == 'n'):
-    $libelle = 'Ajouter';
-    $titre = "Ajouter une nouvelle note";
-  else:
-    $libelle = 'Modifier';
-    $titre = "Modifier la note";
-  endif;
-  // gestion des personnages
-  if ($_SESSION['campagne'] && $_SESSION['campagne'] > 0):
-    $requete_pe = 'SELECT * FROM dd_personnages WHERE pe_camp_id="' . $_SESSION['campagne'] . '" ORDER BY pe_nom';
-    $resultat_pe = queryPDO($requete_pe);
-    $num_rows_pe = $resultat_pe->rowCount();
-    $perso = '';
-    if ($num_rows_pe > 0):
-      $i = 0;
-      while ($dnpe = $resultat_pe->fetch(PDO::FETCH_ASSOC)):
-        // recherche de la diffusion de la note auprès du personnage
-        $requete_pno = 'SELECT * FROM dd_personnages_notes WHERE pno_no_id="' . $n . '" AND pno_pe_id="' . $dnpe['pe_id'] . '"';
-        $resultat_pno = queryPDO($requete_pno);
-        $num_rows_pno = $resultat_pno->rowCount();
-        if ($num_rows_pno > 0):
-          $i++;
-          $dnpno = $resultat_pno->fetch(PDO::FETCH_ASSOC);
-          $valdif = $dnpno['pno_niveau'];
-        else:
-          $valdif = 0;
-        endif;
-        $perso .= '';
-        $perso .= '<div class="line-data-fr100"><label for="personnages[' . $dnpe['pe_id'] . ']" class="gras mr10">' . $dnpe['pe_nom'] . '</label><select id="pe' . $dnpe['pe_id'] . '" name="pe' . $dnpe['pe_id'] . '" class="diffusion">' . optionListNiveauNote($valdif) . ' (' . $valdif . ')</select></div>';
-      endwhile;
-    /*
-      if ($_SESSION['mj'] == 1 && $_SESSION['debug'] == 1):
-        $perso .= ' (' . $i . ')';
-      endif;
-      */
-    endif;
-  else:
-    $perso = "";
-  endif;
+$n = isset($_POST['note']) ? (string)$_POST['note'] : '';
+$p = isset($_POST['perso']) ? (int)$_POST['perso'] : 0;
+$tagTablesReady = notes_table_exists('dd_tags') && notes_table_exists('dd_notes_tags');
 
-
-  // catégories
-  $categorie = '<select id="mp_no_tyno_id">' . optionList("dd_types_notes", "tyno", "nom", $no_categorie) . '</select>';
-  $cumulatif = '<select id="mp_no_cumulatif">' . optionListOuiNon($no_cumulatif) . '</select>';
-
-  //**********************************************************************
-  // affichage du contenu
-  $result = '<div id="note" class="affichage">';
-  $result .= '  <div class="nom_objet">' . $titre . '</div>';
-  $result .= '  <input  type="hidden" id="mp_no_id" value="' . $n . '">';
-  $result .= '  <div><input id="mp_no_nom" class="input_nom" value="' . stripslashes($no_nom) . '"> (' . $n . ')</div>';
-  $result .= '  <div class="ligne mt10"><div class="label w90">Catégorie</div>' . $categorie . '</div>';
-
-  $result .= '  <div class="gras mr10" onCLick="togglePlus(\'diffusion\')">Diffusion <span id="toggle-diffusion"><i class="fa-solid fa-bars"></i></span></div>';
-  $result .= '  <div id="diffusion" class="box-data accordion-content noDisplay">' . $perso . '</div>';
-
-  $result .= '  <div class="ligne mt10"><div class="label w90">Cumulatif</div>' . $cumulatif . '</div>';
-  $result .= '  <div class="label">Basique</div><div><textarea id="mp_no_texte_basique" name="mp_no_texte_basique" class="input_texte">' . stripslashes($no_texte_basique) . '</textarea></div>';
-  $result .= "  <script>CKEDITOR.replace('mp_no_texte_basique');</script>";
-  $result .= '  <div class="label">Intermédiaire</div><div><textarea id="mp_no_texte_intermediaire" name="mp_no_texte_intermediaire" class="input_texte">' . stripslashes($no_texte_intermediaire) . '</textarea></div>';
-  $result .= "  <script>CKEDITOR.replace('mp_no_texte_intermediaire');</script>";
-  $result .= '  <div class="label">Avancé</div><div><textarea id="mp_no_texte_avance" name="mp_no_texte_avance" class="input_texte">' . stripslashes($no_texte_avance) . '</textarea></div>';
-  $result .= "  <script>CKEDITOR.replace('mp_no_texte_avance');</script>";
-  $result .= '  <div class="label">Expert</div><div><textarea id="mp_no_texte_expert" name="mp_no_texte_expert" class="input_texte">' . stripslashes($no_texte_expert) . '</textarea></div>';
-  $result .= "  <script>CKEDITOR.replace('mp_no_texte_expert');</script>";
-  $result .= '  <input class="bouton" type="button" name="validModifNote" id="validModifNote" value="' . $libelle . '" onClick="validerModifNote(' . $p . ')">';
-  $result .= '  <input class="bouton ml15" type="button" name="annuleModifNote" id="annuleModifNote" value="Annuler" onClick="annulerPageModif()"></div>';
-  $result .= '</div>';
-  // On ajoute les donnnées dans un tableau
-  echo $dn['no_id'] . "@" . $result;
-else:
+if ($n === ''):
   echo "0@Erreur";
+  exit;
 endif;
+
+$no_nom = '';
+$no_categorie = 0;
+$no_id = 'n';
+$contenusRows = [];
+
+if ($n !== 'n'):
+  $stmt = $db->prepare('SELECT no_id, no_nom, no_tyno_id FROM dd_notes WHERE no_id=:id LIMIT 1');
+  $stmt->execute([':id' => (int)$n]);
+  $dn = $stmt->fetch(PDO::FETCH_ASSOC);
+  if (!$dn):
+    echo "0@Erreur";
+    exit;
+  endif;
+
+  $no_id = (int)$dn['no_id'];
+  $no_nom = (string)$dn['no_nom'];
+  $no_categorie = (int)$dn['no_tyno_id'];
+
+  $stmtContenu = $db->prepare('SELECT noc_dd, noc_texte FROM dd_notes_contenus WHERE noc_no_id=:id ORDER BY noc_dd ASC, noc_id ASC');
+  $stmtContenu->execute([':id' => (int)$n]);
+  while ($bloc = $stmtContenu->fetch(PDO::FETCH_ASSOC)):
+    $contenusRows[] = [
+      'dd' => (int)$bloc['noc_dd'],
+      'texte' => (string)$bloc['noc_texte'],
+    ];
+  endwhile;
+endif;
+
+if (empty($contenusRows)):
+  $contenusRows[] = ['dd' => 10, 'texte' => ''];
+endif;
+
+if ($n === 'n'):
+  $libelle = 'Ajouter';
+  $titre = 'Ajouter une nouvelle note';
+else:
+  $libelle = 'Modifier';
+  $titre = 'Modifier la note';
+endif;
+
+$perso = '';
+if (!empty($_SESSION['campagne']) && (int)$_SESSION['campagne'] > 0):
+  $stmtPerso = $db->prepare('SELECT pe_id, pe_nom FROM dd_personnages WHERE pe_camp_id=:camp ORDER BY pe_nom');
+  $stmtPerso->execute([':camp' => (int)$_SESSION['campagne']]);
+  while ($dnpe = $stmtPerso->fetch(PDO::FETCH_ASSOC)):
+    $valdif = 0;
+    if ($n !== 'n'):
+      $stmtPno = $db->prepare('SELECT pno_dd FROM dd_personnages_notes WHERE pno_no_id=:no_id AND pno_pe_id=:pe_id LIMIT 1');
+      $stmtPno->execute([
+        ':no_id' => (int)$n,
+        ':pe_id' => (int)$dnpe['pe_id'],
+      ]);
+      $dnpno = $stmtPno->fetch(PDO::FETCH_ASSOC);
+      if ($dnpno) $valdif = (int)$dnpno['pno_dd'];
+    endif;
+
+    $perso .= '<div class="line-data-fr100"><label for="pe' . (int)$dnpe['pe_id'] . '" class="gras mr10">' . htmlspecialchars($dnpe['pe_nom'], ENT_QUOTES, 'UTF-8') . '</label><select id="pe' . (int)$dnpe['pe_id'] . '" name="pe' . (int)$dnpe['pe_id'] . '" class="diffusion">' . optionListDdLocal($valdif) . '</select></div>';
+  endwhile;
+endif;
+
+$categorie = '<select id="mp_no_tyno_id">' . optionList("dd_types_notes", "tyno", "nom", $no_categorie) . '</select>';
+$tagsHtml = '<div class="nodata">La gestion des tags sera active apres creation des tables dd_tags et dd_notes_tags.</div>';
+
+if ($tagTablesReady):
+  $selectedTagIds = [];
+  if ($n !== 'n'):
+    $stmtSelectedTags = $db->prepare('SELECT notag_tag_id FROM dd_notes_tags WHERE notag_no_id=:note_id');
+    $stmtSelectedTags->execute([':note_id' => (int)$n]);
+    while ($rowTag = $stmtSelectedTags->fetch(PDO::FETCH_ASSOC)):
+      $selectedTagIds[(int)$rowTag['notag_tag_id']] = true;
+    endwhile;
+  endif;
+
+  $stmtTags = $db->prepare('SELECT tag_id, tag_nom FROM dd_tags WHERE tag_j_id=:user_id ORDER BY tag_nom ASC');
+  $stmtTags->execute([':user_id' => (int)$_SESSION['user_id']]);
+  $allTags = $stmtTags->fetchAll(PDO::FETCH_ASSOC);
+
+  $tagsHtml = '';
+  if (!empty($allTags)):
+    foreach ($allTags as $tag):
+      $tagId = (int)$tag['tag_id'];
+      $checked = isset($selectedTagIds[$tagId]) ? ' checked="checked"' : '';
+      $tagsHtml .= '<label class="mr10"><input type="checkbox" class="note-tag-checkbox" value="' . $tagId . '"' . $checked . '> ' . htmlspecialchars((string)$tag['tag_nom'], ENT_QUOTES, 'UTF-8') . '</label>';
+    endforeach;
+  else:
+    $tagsHtml .= '<div class="nodata">Aucun tag existant pour cet utilisateur.</div>';
+  endif;
+endif;
+
+$rowsHtml = '';
+$idx = 0;
+foreach ($contenusRows as $row):
+  $idx++;
+  $rowsHtml .= renderContenuRow($idx, $row['dd'], $row['texte']);
+endforeach;
+
+$result = '<div id="note" class="affichage">';
+$result .= '  <div class="nom_objet">' . $titre . '</div>';
+$result .= '  <input type="hidden" id="mp_no_id" value="' . htmlspecialchars((string)$no_id, ENT_QUOTES, 'UTF-8') . '">';
+$result .= '  <div><input id="mp_no_nom" class="input_nom" value="' . htmlspecialchars(stripslashes($no_nom), ENT_QUOTES, 'UTF-8') . '"></div>';
+$result .= '  <div class="ligne mt10"><div class="label w90">Categorie</div>' . $categorie . '</div>';
+
+$result .= '  <div class="gras mr10" onCLick="togglePlus(\'diffusion\')">Diffusion <span id="toggle-diffusion"><i class="fa-solid fa-bars"></i></span></div>';
+$result .= '  <div id="diffusion" class="box-data accordion-content noDisplay">' . $perso . '</div>';
+$result .= '  <div class="gras mr10 mt10" onCLick="togglePlus(\'tags\')">Tags <span id="toggle-tags"><i class="fa-solid fa-bars"></i></span></div>';
+$result .= '  <div id="tags" class="box-data accordion-content noDisplay">' . $tagsHtml . '<div class="mt10"><input id="mp_new_tags" class="input_nom" placeholder="Nouveaux tags (separes par virgule)"></div></div>';
+
+$result .= '  <div class="gras mr10 mt10">Contenus</div>';
+$result .= '  <div id="note-contenus-list">' . $rowsHtml . '</div>';
+$result .= '  <button type="button" class="bouton mt10" onclick="NoteActions.addContenuRow()">Ajouter un contenu</button>';
+$result .= '  <input class="bouton ml15" type="button" name="validModifNote" id="validModifNote" value="' . $libelle . '" onClick="validerModifNote(' . (int)$p . ')">';
+$result .= '  <input class="bouton ml15" type="button" name="annuleModifNote" id="annuleModifNote" value="Annuler" onClick="annulerPageModif()"></div>';
+$result .= '</div>';
+
+echo (string)$no_id . '@' . $result;
+?>

@@ -16,7 +16,7 @@
     while($dnno = $result_no->fetch(PDO::FETCH_ASSOC)):
       echo '<div class="item data">';
       // on vérifie les droits de lecture
-      $accreditation=$dnno['pno_niveau'];
+      $accreditation = isset($dnno['pno_dd']) ? (int)$dnno['pno_dd'] : (isset($dnno['pno_niveau']) ? (int)$dnno['pno_niveau'] : 0);
       // Préparation du contenu
       $nom=stripslashes(ucfirst($dnno['no_nom']));
       if ($_SESSION['debug']==1 && $_SESSION['mj']==1) $idno=' ('.$dnno['no_id'].')';

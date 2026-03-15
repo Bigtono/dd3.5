@@ -190,15 +190,15 @@ dd_notes (notes de jeu)
 - no_id (id, index de la table)
 - no_nom (nom de la note)
 - no_tyno_id (type de la note. Issu de la table dd_types_notes)
-- no_tag (tags de la nom, séparés par des points-virgules)
 - no_date (date de création de la note)
 - no_j_id (rédacteur de la note)
+- Note: les anciens champs no_texte_* sont legacy et seront supprimés ultérieurement.
 
 dd_notes_contenus (contenu des notes de jeu)
 - noc_id (id, index de la table)
 - noc_no_id (id de la note, issu de la table dd_notes)
 - noc_dd (degré de difficulté pour accéder à ce contenu.)
-- noc_texte
+- noc_texte (contenu texte du bloc)
 
  dd_personnages_notes (attribution d'une note à un perosnnage)
 - pno_id (id, index de la table)
@@ -206,11 +206,26 @@ dd_notes_contenus (contenu des notes de jeu)
 - pno_no_id (id du note, issu de la table dd_notes)
 - pno_dd (niveau de connaissance du personnage sur cette note. Renvoit à noc_dd de la table dd_notes_contenus)
 - pno_actif
+- Note: le champ pno_niveau est obsolète (remplacé par pno_dd).
 
 dd_campagnes_notes (attribution d'une note de jeu à une campagne)
 - cpno_id (id, index de la table)
 - cpno_no_id (id de la note)
 - cpno_camp_id (id de la campagne)
 
+dd_tags (liste des tags de notes)
+- tag_id (id, index de la table)
+- tag_nom (libellé du tag)
+- tag_slug (version normalisée du tag, utilisée pour l'unicité)
+- tag_j_id (id du joueur propriétaire du tag)
+- tag_date (date de création)
+
+dd_notes_tags (association n-n entre notes et tags)
+- notag_id (id, index de la table)
+- notag_no_id (id de la note, issu de dd_notes)
+- notag_tag_id (id du tag, issu de dd_tags)
+
 commentaire sur le fonctionnement des notes. Une note est constituées de plusieurs contenus correspondant chacun à un enregistrement dans la table dd_notes_contenus. Chaque contenu a un degré de difficulté associé (champ noc_dd). Un personnage a accès à une note si un enregistrement existe avecson id (pno_pe_id) dans la table dd_personnages_notes. Il voit tous les contenus de la notes dont noc_dd est inférieur ou égal à pno_dd.
 Une note peut aussi être rattaché à une campagne (table dd_campagnes_notes).
+Les tags sont gérés sans limite via la relation n-n dd_notes_tags.
+La table dd_niveaux_notes est obsolète et doit être supprimée après migration applicative.

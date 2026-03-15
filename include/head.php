@@ -28,6 +28,7 @@
   <script type='text/javascript' src='js/moncode.js'></script>
   <script type='text/javascript' src="ckeditor/ckeditor.js"></script>
   <script type='text/javascript' src="js/moncode-gestion.js"></script>
+  <script type='text/javascript' src='js/moncode-notes.js'></script>
   <script type='text/javascript' src='js/bulle.js'></script>
   <script src="https://kit.fontawesome.com/0e5643a32a.js" crossorigin="anonymous"></script>
   

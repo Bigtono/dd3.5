@@ -1,6 +1,7 @@
 <?
 // Préparation du contenu
 $nom = stripslashes(ucfirst($dnno['no_nom']));
+$accreditation = isset($accreditation) ? (int)$accreditation : 999;
 $click = 'afficherNote(' . $dnno['no_id'] . ',' . $accreditation . ')';
 if ($_SESSION['debug'] == 1 && $_SESSION['mj'] == 1) $idno = ' (' . $dnno['no_id'] . ')';
 $ligne = '';

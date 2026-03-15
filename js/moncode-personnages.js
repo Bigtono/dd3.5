@@ -45,7 +45,7 @@ function supprimerClassePerso(perso,classe)
 
 function actualiserDivClassesPerso(reponse) {
 	var resultat = reponse.split("@");
-  console.log('Réaffichage des classes du perso #'+resultat[0]+', REQUETE : '+resultat[2]);
+  console.log('RÃ©affichage des classes du perso #'+resultat[0]+', REQUETE : '+resultat[2]);
   $("#classes").html(resultat[1]); 
 }
 
@@ -99,14 +99,14 @@ function ajouterEqt(eqt,perso) {
   if (liste) {
     mod = liste.value;
   } else {
-    console.warn("Élément 'mod" + eqt + "' introuvable. Valeur mod laissée vide.");
+    console.warn("Ã‰lÃ©ment 'mod" + eqt + "' introuvable. Valeur mod laissÃ©e vide.");
   } 
   const liste2 = document.getElementById('so' + eqt);
   let sort = '';
   if (liste2) {
     sort = liste2.value;
   } else {
-    console.warn("Élément 'sort" + eqt + "' introuvable. Valeur sort laissée vide.");
+    console.warn("Ã‰lÃ©ment 'sort" + eqt + "' introuvable. Valeur sort laissÃ©e vide.");
   } 
   console.log('Ajouter Objet magique #'+eqt+' du personnage #'+perso+', mod : '+mod+', sort #'+sort);
 	$.ajax({
@@ -146,7 +146,7 @@ function modifierEqt(eqt) {
 
 function validerModifEqt() {
   console.log('Nom : '+$('#mp_re_nom').val());
-  var mp_re_texte = CKEDITOR.instances.mp_re_texte.getData(); // traitement du champ textarea modifié par CKEDITOR
+  var mp_re_texte = CKEDITOR.instances.mp_re_texte.getData(); // traitement du champ textarea modifiÃ© par CKEDITOR
 	$.ajax({
     type: 'POST',
     url: 'ajax/ajax-validerModifRegle.php',
@@ -158,7 +158,7 @@ function validerModifEqt() {
 		dataType:'text',
     success: function(reponse) {
       var resultat = reponse.split("@");
-      console.log('Affichage regle modifiée #'+resultat[0]);
+      console.log('Affichage regle modifiÃ©e #'+resultat[0]);
       console.log('Requete : '+resultat[1]);
       $("#nomRegle"+resultat[0]).html(resultat[2]); 
       $("#catRegle"+resultat[0]).html(resultat[3]);
@@ -191,15 +191,8 @@ function actualiserEqt(reponse) {
 
 
 function afficherNote(note, accreditation) {
-  console.log('Affichage Note #'+note+', accreditation : '+accreditation);
-	$.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-affichageNote.php',
-    data: "note="+note+"&accreditation="+accreditation,
-		dataType:'text',
-    success: actualiserPage,
-    error: function() {alert('Erreur afficherNote');}
-	}); 
+  if (window.NoteActions && typeof window.NoteActions.afficherNote === 'function') return window.NoteActions.afficherNote(note, accreditation, 0);
+  alert('Module notes indisponible');
 }
 
 function toggleAttributionNoteCampagne(noteId, checkboxEl, event) {
@@ -233,67 +226,22 @@ function toggleAttributionNoteCampagne(noteId, checkboxEl, event) {
 }
 
 function modifierNote(note,perso) {
-  console.log('Ajouter Note #'+note);
-	$.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-modifierNote.php',
-    data: "note="+note+"&perso="+perso,
-		dataType:'text',
-    success: actualiserPageModif,
-    error: function() {alert('Erreur modifierNote');}
-	}); 
+  if (window.NoteActions && typeof window.NoteActions.modifierNote === 'function') return window.NoteActions.modifierNote(note, perso);
+  alert('Module notes indisponible');
 }
 
 function supprimerNote(note, perso) {
-  console.log('Supprimer Note #'+note);
-	$.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-validerSupprNote.php',
-    data: "perso="+perso+"&note="+note,
-		dataType:'text',
-    success: actualiserNote,
-    error: function() {alert('Erreur supprimerNote');}
-	}); 
+  if (window.NoteActions && typeof window.NoteActions.supprimerNote === 'function') return window.NoteActions.supprimerNote(note, perso);
+  alert('Module notes indisponible');
 }
 
 function validerModifNote(perso) {
-  let diffusion="" ;
-  //$("input[type='checkbox']:checked").each(function() {
-  $(".diffusion").each(function() {
-      if ($(this).val()>0) {
-        //diffusion=diffusion+$(this).attr('id');
-        diffusion=diffusion+$(this).attr('id')+'a'+$(this).val();
-      }
-    }
-  ); 
-  console.log('Diffusion : '+diffusion+' Cumulatif : '+$('#mp_no_cumulatif').val()); 
-  var mp_no_texte_basique = CKEDITOR.instances.mp_no_texte_basique.getData(); // traitement du champ textarea modifié par CKEDITOR
-  var mp_no_texte_intermediaire = CKEDITOR.instances.mp_no_texte_intermediaire.getData(); // traitement du champ textarea modifié par CKEDITOR
-  var mp_no_texte_avance = CKEDITOR.instances.mp_no_texte_avance.getData(); // traitement du champ textarea modifié par CKEDITOR
-  var mp_no_texte_expert = CKEDITOR.instances.mp_no_texte_expert.getData(); // traitement du champ textarea modifié par CKEDITOR
-	$.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-validerModifNote.php',
-    data: "mp_no_id="+$('#mp_no_id').val()+
-		"&mp_no_nom="+encodeURIComponent($('#mp_no_nom').val())+
-		"&mp_no_tyno_id="+$('#mp_no_tyno_id').val()+
-    "&mp_no_cumulatif="+$('#mp_no_cumulatif').val()+
-		"&mp_no_texte_basique="+encodeURIComponent(mp_no_texte_basique)+
-    "&mp_no_texte_intermediaire="+encodeURIComponent(mp_no_texte_intermediaire)+
-    "&mp_no_texte_avance="+encodeURIComponent(mp_no_texte_avance)+
-    "&mp_no_texte_expert="+encodeURIComponent(mp_no_texte_expert)+
-    "&diffusion="+diffusion,
-		dataType:'text',
-    success: function(reponse) {
-      var resultat = reponse.split("@");
-      console.log('Actualiser Note #'+resultat[0]+', notes : '+resultat[1]);
-      //console.log('debug : '+resultat[3]);
-      $("#no"+resultat[0]).html(resultat[1]);
-      $("#modification").hide();
-      afficherNote(resultat[0]);      
-    },
-    error: function() {alert('Erreur validerModifNote()');}
-	});		
+  if (window.NoteActions && typeof window.NoteActions.validerModifNote === 'function') return window.NoteActions.validerModifNote(perso);
+  alert('Module notes indisponible');
+}
+
+function actualiserNote(reponse) {
+  if (window.NoteActions && typeof window.NoteActions.actualiserNote === 'function') return window.NoteActions.actualiserNote(reponse);
 }
 
 function diffuser(note, perso) {
@@ -342,7 +290,7 @@ function validerAjoutGrimoire() {
 }
 
 function actualiserPageGrimoire(reponse) {
-  //recup du résultat > tableau 
+  //recup du rÃ©sultat > tableau 
 	var resultat = reponse.split("@");
 	$("#ListeGrimoires").html(resultat[1]); 
 	$("#modification").hide();
