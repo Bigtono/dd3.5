@@ -99,7 +99,10 @@ if (!empty($_SESSION['campagne']) && (int)$_SESSION['campagne'] > 0):
       if ($dnpno) $valdif = (int)$dnpno['pno_dd'];
     endif;
 
-    $perso .= '<div class="line-data-fr100"><label for="pe' . (int)$dnpe['pe_id'] . '" class="gras mr10">' . htmlspecialchars($dnpe['pe_nom'], ENT_QUOTES, 'UTF-8') . '</label><select id="pe' . (int)$dnpe['pe_id'] . '" name="pe' . (int)$dnpe['pe_id'] . '" class="diffusion">' . optionListDdLocal($valdif, 35) . '</select></div>';
+    $perso .= '<div class="note-diffusion-row">';
+    $perso .= '  <label for="pe' . (int)$dnpe['pe_id'] . '" class="note-diffusion-name">' . htmlspecialchars($dnpe['pe_nom'], ENT_QUOTES, 'UTF-8') . '</label>';
+    $perso .= '  <select id="pe' . (int)$dnpe['pe_id'] . '" name="pe' . (int)$dnpe['pe_id'] . '" class="diffusion note-diffusion-select">' . optionListDdLocal($valdif, 35) . '</select>';
+    $perso .= '</div>';
   endwhile;
 endif;
 
@@ -146,7 +149,7 @@ $result .= '  <div><input id="mp_no_nom" class="input_nom" value="' . htmlspecia
 $result .= '  <div class="ligne mt10"><div class="label w90">Categorie</div>' . $categorie . '</div>';
 
 $result .= '  <div class="gras mr10" onCLick="togglePlus(\'diffusion\')">Diffusion <span id="toggle-diffusion"><i class="fa-solid fa-bars"></i></span></div>';
-$result .= '  <div id="diffusion" class="box-data accordion-content noDisplay">' . $perso . '</div>';
+$result .= '  <div id="diffusion" class="box-data note-diffusion-list accordion-content noDisplay">' . $perso . '</div>';
 $result .= '  <div class="gras mr10 mt10" onCLick="togglePlus(\'tags\')">Tags <span id="toggle-tags"><i class="fa-solid fa-bars"></i></span></div>';
 $result .= '  <div id="tags" class="box-data accordion-content noDisplay">' . $tagsHtml . '<div class="mt10"><input id="mp_new_tags" class="input_nom" placeholder="Nouveaux tags (separes par virgule)"></div></div>';
 

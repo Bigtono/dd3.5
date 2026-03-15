@@ -35,6 +35,7 @@ $campagnes = [];
 $stmtCampagnes = $db->prepare('SELECT camp_id, camp_nom FROM dd_campagnes ORDER BY camp_nom ASC');
 $stmtCampagnes->execute();
 $campagnes = $stmtCampagnes->fetchAll(PDO::FETCH_ASSOC);
+$campagneActive = !empty($_SESSION['campagne']) ? (int)$_SESSION['campagne'] : 0;
 
 $tagsDisponibles = [];
 if ($hasTagsTable):
@@ -224,10 +225,18 @@ endif;
         </form>
       </div>
 
+      <div id="bulk-notes" class="bulk-actions-bar mb10" data-bulk-scope="notes" data-campagne-active="<? echo ($campagneActive > 0 ? '1' : '0'); ?>">
+        <label class="bulk-select-all-label"><input type="checkbox" id="bulk-select-all-notes"> Tout selectionner</label>
+        <select id="bulk-action-select-notes" class="search-select"></select>
+        <button type="button" id="bulk-apply-notes" class="search-button" onclick="NoteActions.bulkOpenActionForm('notes')">Appliquer</button>
+        <span id="bulk-action-hint-notes" class="small ml10"></span>
+      </div>
+
       <?
       if (!empty($rowsNo)):
         echo $pagination;
         echo '<div class="item entete">';
+        echo '  <div class="icone_select"><i class="fa-solid fa-list-check" title="Action"></i></div>';
         echo '  <div class="icone_suppr"><i class="fa fa-trash"></i></div>';
         echo '  <div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
         echo '  <div class="nom_note">Nom</div>';
@@ -251,6 +260,7 @@ endif;
           endif;
 
           echo '<div id="no' . $noteId . '" class="item data">';
+          echo '  <div class="icone_select"><input type="checkbox" class="bulk-row-checkbox" data-bulk-scope="notes" data-bulk-id="' . $noteId . '" onclick="event.stopPropagation();"></div>';
           echo '  <div class="icone_suppr"><span onClick="suppression(\'dd_notes\',\'no\',' . $noteId . ')"><i class="fa fa-trash"></i></span></div>';
           echo '  <div class="icone_modif"><span onclick="modifierNote(' . $noteId . ',0)"><i class="fa fa-pencil"></i></span></div>';
           echo '  <div class="nom_note" onclick="' . $click . '">' . htmlspecialchars($nom, ENT_QUOTES, 'UTF-8') . '</div>';

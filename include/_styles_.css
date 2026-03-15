@@ -3860,6 +3860,55 @@ table.armes {
   margin-bottom: 6px;
 }
 
+.bulk-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bulk-actions-bar .search-select {
+  min-width: 260px;
+}
+
+.bulk-actions-bar .search-select option:disabled {
+  color: #8a8a8a;
+}
+
+.bulk-select-all-label {
+  font-weight: 600;
+}
+
+.bulk-actions-bar .bulk-action-disabled {
+  color: #8a8a8a;
+}
+
+#diffusion.note-diffusion-list {
+  column-count: 1;
+}
+
+.note-diffusion-row {
+  display: grid;
+  grid-template-columns: minmax(180px, max-content) 100px;
+  align-items: start;
+  column-gap: 8px;
+  margin-bottom: 6px;
+  justify-content: start;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.note-diffusion-name {
+  font-weight: 700;
+  text-align: left;
+  max-width: min(60vw, 420px);
+  overflow-wrap: anywhere;
+}
+
+#diffusion.note-diffusion-list select.note-diffusion-select {
+  width: 100px;
+}
+
 @media (max-width: 991px) {
 
   .search-input,
