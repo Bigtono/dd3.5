@@ -1960,7 +1960,9 @@ img {
 }
 
 .campagne-toggle-description {
-  min-width: 110px;
+  min-width: 2.2rem;
+  width: 2.2rem;
+  padding: 0;
 }
 
 .campagne-description.is-collapsed {

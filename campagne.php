@@ -197,8 +197,10 @@ endif;
                   class="btNoir campagne-toggle-description"
                   id="btn-toggle-campagne-description"
                   aria-expanded="false"
-                  aria-controls="campagne-description-longue">
-                  Afficher
+                  aria-controls="campagne-description-longue"
+                  aria-label="Afficher la description"
+                  title="Afficher la description">
+                  <i class="fa-solid fa-bars" aria-hidden="true"></i>
                 </button>
               </div>
             </div>
@@ -447,7 +449,9 @@ endif;
         const isCollapsed = blocDescriptionLongue.classList.toggle('is-collapsed')
         const isExpanded = !isCollapsed
         btnToggleDescription.setAttribute('aria-expanded', isExpanded ? 'true' : 'false')
-        btnToggleDescription.textContent = isExpanded ? 'Masquer' : 'Afficher'
+        const actionLabel = isExpanded ? 'Masquer la description' : 'Afficher la description'
+        btnToggleDescription.setAttribute('aria-label', actionLabel)
+        btnToggleDescription.setAttribute('title', actionLabel)
       })
     }
 
@@ -655,3 +659,4 @@ endif;
 
 
 </html>
+

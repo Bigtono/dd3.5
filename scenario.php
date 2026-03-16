@@ -114,6 +114,30 @@ $chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
 
       </div>
 
+      <? if (!empty($scenario['sc_description'])): ?>
+        <div class="titreAction campagne-description-header">
+          <div class="titreB">Description</div>
+          <div>
+            <button
+              type="button"
+              class="btNoir campagne-toggle-description"
+              id="btn-toggle-scenario-description"
+              aria-expanded="false"
+              aria-controls="scenario-description-longue"
+              aria-label="Afficher la description"
+              title="Afficher la description">
+              <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="scenario-description-longue" class="campagne-description is-collapsed">
+          <? echo nl2br(stripslashes($scenario['sc_description'])); ?>
+        </div>
+      <? else: ?>
+        <div class="campagne-description-empty"><em>Aucune description n'a encore été saisie pour ce scénario.</em></div>
+      <? endif; ?>
+
 
       <!-- Bloc chapitres -->
 
@@ -246,6 +270,20 @@ $chapitres = $stmtChap->fetchAll(PDO::FETCH_ASSOC);
 </body>
 
 <script>
+  const btnToggleScenarioDescription = document.getElementById('btn-toggle-scenario-description')
+  const blocScenarioDescriptionLongue = document.getElementById('scenario-description-longue')
+
+  if (btnToggleScenarioDescription && blocScenarioDescriptionLongue) {
+    btnToggleScenarioDescription.addEventListener('click', function() {
+      const isCollapsed = blocScenarioDescriptionLongue.classList.toggle('is-collapsed')
+      const isExpanded = !isCollapsed
+      btnToggleScenarioDescription.setAttribute('aria-expanded', isExpanded ? 'true' : 'false')
+      const actionLabel = isExpanded ? 'Masquer la description' : 'Afficher la description'
+      btnToggleScenarioDescription.setAttribute('aria-label', actionLabel)
+      btnToggleScenarioDescription.setAttribute('title', actionLabel)
+    })
+  }
+
   // refresh chapitres
 
   function refreshChapitres() {
