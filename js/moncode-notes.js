@@ -250,6 +250,11 @@
             alert(reponse);
             return;
           }
+          if ((perso || 0) === 0) {
+            $('#modification').hide();
+            window.location.reload();
+            return;
+          }
           $('#no' + resultat[0]).html(resultat[1]);
           $('#modification').hide();
           NoteActions.afficherNote(resultat[0], 0, perso || 0);
@@ -335,6 +340,38 @@
         },
         error: function () { alert('Erreur validation affectation en masse.'); }
       });
+    },
+
+    bulkApplyAddTags: function () {
+      const ids = parseIdsCsv($('#bulk-note-ids').val());
+      if (!ids.length) {
+        alert('Aucune note selectionnee.');
+        return;
+      }
+
+      let selectedTags = [];
+      $('.note-tag-checkbox:checked').each(function () {
+        selectedTags.push($(this).val());
+      });
+      const newTags = $('#mp_new_tags').length ? $('#mp_new_tags').val() : '';
+
+      $.ajax({
+        type: 'POST',
+        url: 'ajax/ajax-note-bulk-tags-apply.php',
+        data: 'note_ids=' + encodeURIComponent(ids.join(',')) +
+          '&mp_no_tags=' + encodeURIComponent(selectedTags.join(',')) +
+          '&mp_new_tags=' + encodeURIComponent(newTags),
+        dataType: 'json',
+        success: function (data) {
+          if (!data || !data.success) {
+            alert((data && data.message) ? data.message : 'Erreur ajout de tags en masse.');
+            return;
+          }
+          if (typeof fermerDetail === 'function') fermerDetail();
+          window.location.reload();
+        },
+        error: function () { alert('Erreur validation ajout tags en masse.'); }
+      });
     }
   };
 
@@ -363,6 +400,12 @@
           formUrl: 'ajax/ajax-note-bulk-assign-form.php',
           enabled: hasCampagneActive,
           disabledReason: 'Selectionnez une campagne active pour activer cette action.'
+        },
+        add_tags: {
+          label: 'Ajouter des tags',
+          formUrl: 'ajax/ajax-note-bulk-tags-form.php',
+          enabled: true,
+          disabledReason: ''
         }
       }
     });
