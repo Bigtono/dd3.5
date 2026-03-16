@@ -225,13 +225,6 @@ endif;
         </form>
       </div>
 
-      <div id="bulk-notes" class="bulk-actions-bar mb10" data-bulk-scope="notes" data-campagne-active="<? echo ($campagneActive > 0 ? '1' : '0'); ?>">
-        <label class="bulk-select-all-label"><input type="checkbox" id="bulk-select-all-notes"> Tout selectionner</label>
-        <select id="bulk-action-select-notes" class="search-select"></select>
-        <button type="button" id="bulk-apply-notes" class="search-button" onclick="NoteActions.bulkOpenActionForm('notes')">Appliquer</button>
-        <span id="bulk-action-hint-notes" class="small ml10"></span>
-      </div>
-
       <?
       if (!empty($rowsNo)):
         echo $pagination;
@@ -268,6 +261,14 @@ endif;
           echo '  <div class="niveau_note" onclick="' . $click . '">' . $tagsBubbles . '</div>';
           echo '</div>';
         endforeach;
+        echo '<div id="bulk-notes" class="item data notes-bulk-row" data-bulk-scope="notes" data-campagne-active="' . ($campagneActive > 0 ? '1' : '0') . '">';
+        echo '  <div class="icone_select"><label class="bulk-select-all-label"><input type="checkbox" id="bulk-select-all-notes"></label></div>';
+        echo '  <div class="icone_suppr"><i class="fa-solid fa-list-check" title="Action"></i></div>';
+        echo '  <div class="icone_modif"></div>';
+        echo '  <div class="nom_note"><select id="bulk-action-select-notes" class="search-select notes-action-select"></select></div>';
+        echo '  <div class="categorie_note"><button type="button" id="bulk-apply-notes" class="search-button notes-action-apply" onclick="NoteActions.bulkOpenActionForm(\'notes\')">OK</button></div>';
+        echo '  <div class="niveau_note"><span id="bulk-action-hint-notes" class="small"></span></div>';
+        echo '</div>';
         echo '</div>';
       else:
         echo '<div class="nodata">Aucune note disponible !</div>';
