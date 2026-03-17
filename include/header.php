@@ -3,18 +3,10 @@
       <button type="button" id="toggleMenu" class="toggle_menu">
         <i class="fa fa-bars txt-white"></i>
       </button>
+      <a href="http://<? echo $_SESSION['url_site']; ?>" class="header-logo-link" aria-label="Accueil">
+        <img src="images/logo_d&d.png" alt="Bibliothèque de Boll's" class="header-logo" />
+      </a>
       <h1><a href="http://<? echo $_SESSION['url_site']; ?>" class="lien txt-white"><? echo $_SESSION['titre_site']; ?></a></h1>
-
-      <!-- formulaire de recherche desktop -->
-      <form action="recherche.php" method="get" name="recherche" id="recherche">
-        <input type="text" name="critere_recherche" value="<? echo $critere_recherche; ?>" size="20" onClick="myFocus(this)" />
-        <button id="fa-search"><i class="fa fa-search" aria-hidden="true"></i></button>
-      </form>
-
-      <!-- bouton de recherche mobile -->
-      <div id="bouton_recherche">
-        <div onClick="toggle('menu_recherche2')"><i class="fa fa-search" aria-hidden="true"></i></div>
-      </div>
 
       <!-- ruleset actif -->
       <div><span id="ruleset" class="ruleset"><? echo libvar($_SESSION['ruleset']); ?></span></div>
@@ -96,12 +88,23 @@
         <? if (count($header_context_items) > 0): ?>
           <select id="header-context-select" class="search-select" aria-label="Navigation contextuelle" onChange="if(this.value){window.location.href=this.value;}">
             <? foreach ($header_context_items as $idx => $ctx): ?>
-              <option value="<?= htmlspecialchars($ctx['url']); ?>"<?= $idx === count($header_context_items) - 1 ? ' selected' : ''; ?>>
+              <option value="<?= htmlspecialchars($ctx['url']); ?>" <?= $idx === count($header_context_items) - 1 ? ' selected' : ''; ?>>
                 <?= htmlspecialchars($ctx['type'] . ' : ' . $ctx['label']); ?>
               </option>
             <? endforeach; ?>
           </select>
         <? endif; ?>
+      </div>
+
+      <!-- formulaire de recherche desktop -->
+      <form action="recherche.php" method="get" name="recherche" id="recherche">
+        <input type="text" name="critere_recherche" value="<? echo $critere_recherche; ?>" size="20" onClick="myFocus(this)" />
+        <button id="fa-search"><i class="fa fa-search" aria-hidden="true"></i></button>
+      </form>
+
+      <!-- bouton de recherche mobile -->
+      <div id="bouton_recherche">
+        <div onClick="toggle('menu_recherche2')"><i class="fa fa-search" aria-hidden="true"></i></div>
       </div>
     </div>
 

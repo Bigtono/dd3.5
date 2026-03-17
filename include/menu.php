@@ -8,19 +8,27 @@
         </label>
         <ul class="sub_menu">
           <li class="sub_menu--item">
-            <a href="campagnes.php" class="sub_menu--link">Campagnes</a>
-          </li>
-          <li class="sub_menu--item">
             <a href="personnages.php" class="sub_menu--link">Personnages</a>
           </li>
           <li class="sub_menu--item">
-            <a href="notes.php" class="sub_menu--link">Notes</a>
+            <a href="campagnes.php" class="sub_menu--link">Campagnes</a>
           </li>
           <?
           if ($_SESSION['mj'] == 1):
             echo '<li class="sub_menu--item"><a href="grimoires.php" class="sub_menu--link">Grimoires</a></li>';
           endif;
           ?>
+        </ul>
+      </li>
+      <li class="menu--item  menu--item__has_sub_menu">
+        <label class="menu--link" title="Univers">
+          <i class="menu--icon fa fa-fw fa-globe"></i>
+          <span class="menu--label">Univers</span>
+        </label>
+        <ul class="sub_menu">
+          <li class="sub_menu--item">
+            <a href="notes.php" class="sub_menu--link">Notes</a>
+          </li>
         </ul>
       </li>
       <li class="menu--item">

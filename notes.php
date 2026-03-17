@@ -171,7 +171,7 @@ endif;
     <div class="wrapper">
       <? include('include/ariane.php'); ?>
       <div class="titreAction">
-        <div class="titreA">Notes (mes notes)</div>
+        <div class="titreA">Notes</div>
         <div><i class="icon lien fa-solid fa-pen-to-square" onClick="modifierNote('n', 0)"></i></div>
       </div>
 
@@ -190,7 +190,7 @@ endif;
 
             <div class="notes-filter-group">
               <select name="campagne" class="search-select">
-                <option value="Tout"<? if ($campagneFilter === 'Tout') echo ' selected="selected"'; ?>>Toutes les campagnes</option>
+                <option value="Tout" <? if ($campagneFilter === 'Tout') echo ' selected="selected"'; ?>>Toutes les campagnes</option>
                 <?
                 foreach ($campagnes as $camp):
                   $cid = (int)$camp['camp_id'];
