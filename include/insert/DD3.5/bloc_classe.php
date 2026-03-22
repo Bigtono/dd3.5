@@ -1,59 +1,104 @@
 <!--  Bloc Classe DD3.5 --->
 
 <?
-
-/* -------------------------------------------------
-   Détermination des colonnes actives pour la classe
--------------------------------------------------- */
-/* spécial toujours présent */
-$colonnes = ['niveau', 'stats', 'aptitudes'];
-
-
-/* blocs liés aux sorts */
+$gridTemplate = '60px repeat(4, minmax(55px, 70px)) minmax(220px, 1fr)';
 if ($isLanceurSorts) {
-  $colonnes[] = 'sorts';
+  $gridTemplate .= ' repeat(10, minmax(30px, 40px))';
 }
-
-/* -------------------------------------------------
-   Construction dynamique du grid-template-columns
--------------------------------------------------- */
-
-$gridColumns = [];
-
-foreach ($colonnes as $col) {
-
-  switch ($col) {
-
-    case 'niveau':
-      $gridColumns[] = '45px';
-      break;
-
-    case 'stats':
-      $gridColumns[] = '210px';
-      break;
-
-    case 'sorts':
-      $gridColumns[] = '320px';
-      break;
-
-    case 'aptitudes':
-      $gridColumns[] = '1fr';
-      break;
-
-    default:
-      //
-  }
-}
-
-$gridTemplate = implode(' ', $gridColumns);
-
 ?>
 <style>
+  .classe-table {
+    overflow-x: auto;
+  }
+
   .classe-ligne {
     display: grid;
     grid-template-columns: <?= $gridTemplate ?>;
-    gap: 8px;
-    align-items: start;
+    column-gap: 8px;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  .classe-lignes {
+    display: block;
+    gap: 0;
+  }
+
+  .classe-ligne.classe-entete {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.78;
+    margin-bottom: 4px;
+  }
+
+  .classe-niveaux .list-body.classe-lignes {
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  .classe-ligne .cell {
+    text-align: center;
+    white-space: nowrap;
+    padding: 5px 6px;
+    box-sizing: border-box;
+  }
+
+  .classe-ligne .cell.aptitudes {
+    text-align: left;
+    white-space: normal;
+  }
+
+  .classe-ligne .cell.niveau {
+    font-weight: 700;
+  }
+
+  .classe-lignes .classe-ligne.contenu {
+    padding: 0;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .classe-lignes .classe-ligne.contenu:nth-child(odd) {
+    background: #f5efe6;
+  }
+
+  .classe-lignes .classe-ligne.contenu:nth-child(even) {
+    background: #ffffff;
+  }
+
+  @media (max-width: 991px) {
+    .classe-ligne {
+      min-width: 620px;
+    }
+
+    .classe-ligne.classe-entete .cell[data-groupe="sorts"] {
+      display: none;
+    }
+
+    .classe-ligne.contenu .cell[data-groupe="sorts"] {
+      display: none;
+    }
+
+    .classe-niveaux.vue-sorts .classe-ligne.classe-entete .cell[data-groupe="stats"],
+    .classe-niveaux.vue-sorts .classe-ligne.classe-entete .cell[data-groupe="aptitudes"] {
+      display: none;
+    }
+
+    .classe-niveaux.vue-sorts .classe-ligne.contenu .cell[data-groupe="stats"],
+    .classe-niveaux.vue-sorts .classe-ligne.contenu .cell[data-groupe="aptitudes"] {
+      display: none;
+    }
+
+    .classe-niveaux.vue-sorts .classe-ligne.classe-entete .cell[data-groupe="sorts"] {
+      display: block;
+    }
+
+    .classe-niveaux.vue-sorts .classe-ligne.contenu .cell[data-groupe="sorts"] {
+      display: block;
+    }
   }
 </style>
 
@@ -166,45 +211,52 @@ $niveaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <? endif; ?>
   </div>
 
-  <div class="list-body classe-lignes">
+  <div class="classe-table">
+    <div class="classe-ligne classe-entete">
+      <div class="cell niveau" data-groupe="niveau">Niveau</div>
+      <div class="cell" data-groupe="stats">BBA</div>
+      <div class="cell" data-groupe="stats">R&eacute;f.</div>
+      <div class="cell" data-groupe="stats">Vig.</div>
+      <div class="cell" data-groupe="stats">Vol.</div>
+      <div class="cell aptitudes" data-groupe="aptitudes">Sp&eacute;cial</div>
+      <? if ($isLanceurSorts): ?>
+        <div class="cell" data-groupe="sorts">0</div>
+        <div class="cell" data-groupe="sorts">1</div>
+        <div class="cell" data-groupe="sorts">2</div>
+        <div class="cell" data-groupe="sorts">3</div>
+        <div class="cell" data-groupe="sorts">4</div>
+        <div class="cell" data-groupe="sorts">5</div>
+        <div class="cell" data-groupe="sorts">6</div>
+        <div class="cell" data-groupe="sorts">7</div>
+        <div class="cell" data-groupe="sorts">8</div>
+        <div class="cell" data-groupe="sorts">9</div>
+      <? endif; ?>
+    </div>
 
-    <? foreach ($niveaux as $n): ?>
-      <div class="classe-ligne contenu">
-
-        <div class="bloc niveau" data-groupe="niveau">
-          <span class="label">Niveau</span>
-          <span class="valeur"><?= $n['cn_niveau'] ?></span>
+    <div class="list-body classe-lignes">
+      <? foreach ($niveaux as $n): ?>
+        <div class="classe-ligne contenu">
+          <div class="cell niveau" data-groupe="niveau"><?= $n['cn_niveau'] ?></div>
+          <div class="cell" data-groupe="stats"><?= $n['cn_bba'] ?></div>
+          <div class="cell" data-groupe="stats">+<?= $n['cn_reflexes'] ?></div>
+          <div class="cell" data-groupe="stats">+<?= $n['cn_vigueur'] ?></div>
+          <div class="cell" data-groupe="stats">+<?= $n['cn_volonte'] ?></div>
+          <div class="cell aptitudes" data-groupe="aptitudes"><?= $n['capacites'] ?: '&mdash;' ?></div>
+          <? if ($isLanceurSorts): ?>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n0'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n1'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n2'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n3'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n4'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n5'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n6'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n7'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n8'] ?: '&mdash;' ?></div>
+            <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n9'] ?: '&mdash;' ?></div>
+          <? endif; ?>
         </div>
-
-        <div class="bloc stats" data-groupe="stats">
-          <div><span>BBA</span><strong><?= $n['cn_bba'] ?></strong></div>
-          <div><span>Réflexes</span><strong>+<?= $n['cn_reflexes'] ?></strong></div>
-          <div><span>Vigueur</span><strong>+<?= $n['cn_vigueur'] ?></strong></div>
-          <div><span>Volonté</span><strong>+<?= $n['cn_volonte'] ?></strong></div>
-        </div>
-
-        <div class="bloc aptitudes" data-groupe="aptitudes">
-          <span class="label">Special</span>
-          <span class="valeur"><?= $n['capacites'] ?: '—' ?></span>
-        </div>
-
-        <? if ($isLanceurSorts): ?>
-          <div class="bloc sorts" data-groupe="sorts">
-            <div><span>0</span><strong><?= $n['cn_sort_n0'] ?: '—' ?></strong></div>
-            <div><span>1</span><strong><?= $n['cn_sort_n1'] ?: '—' ?></strong></div>
-            <div><span>2</span><strong><?= $n['cn_sort_n2'] ?: '—' ?></strong></div>
-            <div><span>3</span><strong><?= $n['cn_sort_n3'] ?: '—' ?></strong></div>
-            <div><span>4</span><strong><?= $n['cn_sort_n4'] ?: '—' ?></strong></div>
-            <div><span>5</span><strong><?= $n['cn_sort_n5'] ?: '—' ?></strong></div>
-            <div><span>6</span><strong><?= $n['cn_sort_n6'] ?: '—' ?></strong></div>
-            <div><span>7</span><strong><?= $n['cn_sort_n7'] ?: '—' ?></strong></div>
-            <div><span>8</span><strong><?= $n['cn_sort_n8'] ?: '—' ?></strong></div>
-            <div><span>9</span><strong><?= $n['cn_sort_n9'] ?: '—' ?></strong></div>
-          </div>
-        <? endif; ?>
-      </div>
-    <? endforeach; ?>
-
+      <? endforeach; ?>
+    </div>
   </div>
 </div>
 

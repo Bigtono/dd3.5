@@ -268,7 +268,7 @@ endif;
 
         WHERE sc_camp_id = ?
 
-        ORDER BY sc_nom
+        ORDER BY sc_ordre, sc_nom
 
       ");
 
@@ -539,7 +539,7 @@ endif;
               document.getElementById('detail-pp').style.display = 'none'
               refreshPersonnages()
             } else {
-              alert(data.message || 'Impossible d\'affecter ce personnage à la campagne.')
+              alert(data.message || 'Impossible d\'affecter ce personnage ï¿½ la campagne.')
             }
           })
 
@@ -659,4 +659,3 @@ endif;
 
 
 </html>
-

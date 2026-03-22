@@ -41,7 +41,12 @@ function modifierSort(idSort) {
 }
 
 function validerModifSort() {
-  var mp_so_texte = CKEDITOR.instances.mp_so_texte.getData(); // traitement du champ textarea modifié par CKEDITOR
+  var mp_so_texte = '';
+  if (window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.mp_so_texte) {
+    mp_so_texte = CKEDITOR.instances.mp_so_texte.getData();
+  } else {
+    mp_so_texte = $('#mp_so_texte').val() || '';
+  } // traitement du champ textarea modifie
 	var vocal="0";
 	var gestuel="0";
 	var materiel="0";

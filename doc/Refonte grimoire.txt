@@ -4,13 +4,6 @@ Cette page gère les sorts accessibles et utilisables par  un personnage lanceur
 
 Concernant la base de données, les tables impactées sont dd_sorts, dd_sortclasse, dd_classes, dd_classe_niveau, dd_personnages, dd_personnages_classes
 
-Règles métiers générales concernant les classes de personnage
-- par défaut, une classe de de personnage est une classe de base (cla_clt_id=1). Certains ruleset introduisent d'autres types de classe de personnage (cla_clt_id>1).
-- une classe de base est considérée comme une classe de base de lanceur de sort si cla_mag_id >0. Si cla_mag_id=1, le lanceur de sort manipule la magie profane. Si clas_mag_id=2, le lanceur de sort manipule la magie divine.
-- une classe de base compte 20 niveaux (cla_niveauMax=20). Chaque classe possède un enregistrement par niveau dans la table dd_classe_niveau. Chaque enregistrement fournit les avantages de cette classe pour ce niveau. 
-- un personnage est considéré comme un lanceur de sort s'il possède au moins un niveau dans une classe de base de lanceur de sort. La table  dd_personnages_classes stocke les classes du personnage. Le champ pc_pe_id contient l'id du personnage (pe_id). Le champ pc_cla_id contient l'id de la classe (cla_id). Le champ pc_niveau précise le niveau exact du personnage dans cette classe.
-
-
 Règles métiers générales concernant la magie (communes à tous les ruleset)
 - chaque sort possède un niveau (de 0 à 9) déterminé selon une règle spécifique à chaque ruleset
 - chaque jour, un lanceur de sort peut lancer un certain nombre de sorts de chaque niveau selon des conditions fixées par sa classe de lanceur de sort

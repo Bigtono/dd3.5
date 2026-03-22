@@ -49,9 +49,8 @@ include('include/pagination/prepa_pagination.php');
       <div class="titreAction">
         <div class="titreA">
           Monstres
-          <? if ($_SESSION['mj'] == 1) echo '<a href="monstre-modifier.php?mo=n&retour=monstre"><i class="icon fa-solid fa-circle-plus"></i></a>'; ?>
         </div>
-        <div class="TitreA"></div>
+        <div class="TitreA"><? if ($_SESSION['mj'] == 1) echo '<a href="monstre-modifier.php?mo=n&retour=monstre"><i class="icon fa-solid fa-circle-plus"></i></a>'; ?></div>
       </div>
 
       <div class="search-container">
@@ -87,7 +86,7 @@ include('include/pagination/prepa_pagination.php');
         echo $pagination;
         echo '<div class="item entete">';
         echo '  <div class="icone_suppr"><i class="fa fa-trash"></i></div>';
-        echo '\t<div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
+        echo '  <div class="icone_modif"><i class="fa-solid fa-pen-to-square"></i></div>';
         echo '  <div class="nom_monstre">Nom</div>';
         echo '  <div class="fp">FP</div>';
         echo '  <div class="monstre_type">Type</div>';

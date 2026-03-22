@@ -104,151 +104,155 @@ $rencontres = $stmtR->fetchAll(PDO::FETCH_ASSOC);
 
           <a href="chapitre-modifier.php?chapitre=<?= (int)$chapitre['scc_id']; ?>"><i class="fa-solid fa-pen-to-square ml15"></i></a>
 
-        </div>
+          <!-- </div> -->
 
-        <div>
-
-        </div>
-
-      </div>
-
-
-
-      <? if (!empty($chapitre['scc_description'])): ?>
-
-        <div class="titreAction campagne-description-header">
-          <div class="titreB">Description</div>
           <div>
-            <button
-              type="button"
-              class="btNoir campagne-toggle-description"
-              id="btn-toggle-chapitre-description"
-              aria-expanded="false"
-              aria-controls="chapitre-description-longue"
-              aria-label="Afficher la description"
-              title="Afficher la description">
-              <i class="fa-solid fa-bars" aria-hidden="true"></i>
-            </button>
+
           </div>
-        </div>
-
-        <div id="chapitre-description-longue" class="campagne-description is-collapsed">
-          <?= nl2br(htmlspecialchars($chapitre['scc_description'])) ?>
-        </div>
-
-      <? else: ?>
-
-        <div class="campagne-description-empty"><em>Aucune description n'a encore été saisie pour ce chapitre.</em></div>
-
-      <? endif ?>
-
-
-
-      <!-- Bloc rencontres -->
-
-
-
-      <div class="titreAction">
-
-        <div class="titreB">Rencontres</div>
-
-        <div>
-
-          <button
-
-            class="btNoir"
-
-            id="btn-add-rencontre"
-
-            data-chapitre-id="<?= $chapitre_id ?>">
-
-            Nouvelle rencontre
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-
-      <div id="liste-rencontres" class="sortable-list">
-
-
-
-        <div class="list-header">
-
-          <div class="col action-col"></div>
-
-          <div class="col action-col"></div>
-
-          <div class="col">Nom de la rencontre</div>
 
         </div>
 
 
 
-        <div class="list-body">
+        <? if (!empty($chapitre['scc_description'])): ?>
 
-
-
-          <? if (empty($rencontres)): ?>
-
-            <div class="list-row">
-
-              <div class="col">Aucune rencontre</div>
-
+          <div class="titreAction campagne-description-header">
+            <div class="titreB">Description</div>
+            <div>
+              <button
+                type="button"
+                class="btNoir campagne-toggle-description"
+                id="btn-toggle-chapitre-description"
+                aria-expanded="false"
+                aria-controls="chapitre-description-longue"
+                aria-label="Afficher la description"
+                title="Afficher la description">
+                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+              </button>
             </div>
+          </div>
 
-          <? else: ?>
+          <div id="chapitre-description-longue" class="campagne-description is-collapsed">
+            <?= nl2br(htmlspecialchars($chapitre['scc_description'])) ?>
+          </div>
+
+        <? else: ?>
+
+          <div class="campagne-description-empty"><em>Aucune description n'a encore été saisie pour ce chapitre.</em></div>
+
+        <? endif ?>
 
 
 
-            <? foreach ($rencontres as $re): ?>
+        <!-- Bloc rencontres -->
+
+
+
+        <div class="titreAction">
+
+          <div class="titreB">Rencontres</div>
+
+          <div>
+
+            <button
+
+              class="btNoir"
+
+              id="btn-add-rencontre"
+
+              data-chapitre-id="<?= $chapitre_id ?>">
+
+              Nouvelle rencontre
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <div id="liste-rencontres" class="sortable-list">
+
+
+
+          <div class="list-header">
+
+            <div class="col action-col"></div>
+
+            <div class="col action-col"></div>
+
+            <div class="col">Nom de la rencontre</div>
+
+          </div>
+
+
+
+          <div class="list-body">
+
+
+
+            <? if (empty($rencontres)): ?>
 
               <div class="list-row">
 
-
-
-                <div class="col action-col action-delete">
-
-                  <i class="fa fa-trash btn-delete-rencontre" data-re-id="<?= $re['re_id'] ?>"></i>
-
-                </div>
-
-
-
-                <div class="col action-col action-edit">
-
-                  <a href="rencontre-modifier.php?rencontre=<?= $re['re_id'] ?>&retour=chapitre">
-
-                    <i class="fa fa-edit"></i>
-
-                  </a>
-
-                </div>
-
-
-
-                <div class="col">
-
-                  <a href="rencontre.php?rencontre=<?= $re['re_id'] ?>">
-
-                    <?= htmlspecialchars($re['re_nom']) ?>
-
-                  </a>
-
-                </div>
-
-
+                <div class="col">Aucune rencontre</div>
 
               </div>
 
-            <? endforeach ?>
+            <? else: ?>
 
 
 
-          <? endif ?>
+              <? foreach ($rencontres as $re): ?>
+
+                <div class="list-row">
+
+
+
+                  <div class="col action-col action-delete">
+
+                    <i class="fa fa-trash btn-delete-rencontre" data-re-id="<?= $re['re_id'] ?>"></i>
+
+                  </div>
+
+
+
+                  <div class="col action-col action-edit">
+
+                    <a href="rencontre-modifier.php?rencontre=<?= $re['re_id'] ?>&retour=chapitre">
+
+                      <i class="fa fa-edit"></i>
+
+                    </a>
+
+                  </div>
+
+
+
+                  <div class="col">
+
+                    <a href="rencontre.php?rencontre=<?= $re['re_id'] ?>">
+
+                      <?= htmlspecialchars($re['re_nom']) ?>
+
+                    </a>
+
+                  </div>
+
+
+
+                </div>
+
+              <? endforeach ?>
+
+
+
+            <? endif ?>
+
+
+
+          </div>
 
 
 
@@ -256,25 +260,21 @@ $rencontres = $stmtR->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-      </div>
+        <p class="mb50">&nbsp;</p>
+
+        <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
+
+      </div> <!-- wrapper --->
 
 
 
-      <p class="mb50">&nbsp;</p>
+      <div id="modification"></div>
 
-      <button onclick="topFunction()" id="scrollToTopButton" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
+      <div id="detail-pp"></div>
 
-    </div> <!-- wrapper --->
+      <? include('include/footer.php'); ?>
 
-
-
-    <div id="modification"></div>
-
-    <div id="detail-pp"></div>
-
-    <? include('include/footer.php'); ?>
-
-  </div><!-- page --->
+    </div><!-- page --->
 
 </body>
 

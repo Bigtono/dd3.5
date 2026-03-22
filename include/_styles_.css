@@ -491,6 +491,7 @@ h3 {
     padding: 0.2em 2em;
     min-height: 100vh;
     box-sizing: border-box;
+    max-width: var(--largeur);
   }
 
   .ecran {

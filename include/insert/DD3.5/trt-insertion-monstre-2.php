@@ -50,15 +50,15 @@ if ($mode_pouvoirs) {
         $apres = substr($ligne, $pos);                 // à partir du point
 
         $ligne_formatee =
-            '<strong>'.htmlspecialchars($avant).'</strong>'.
+            '<strong>' . htmlspecialchars($avant) . '</strong>' .
             htmlspecialchars($apres);
     } else {
         // Pas de point : on met toute la ligne en gras (ou tu peux la laisser normale si tu préfères)
-        $ligne_formatee = '<strong>'.htmlspecialchars($ligne).'</strong>';
+        $ligne_formatee = '<strong>' . htmlspecialchars($ligne) . '</strong>';
     }
 
-    $monstre  .= '<div>'.$ligne_formatee.'</div>'."\n";
-    $info_trt = 'Ligne Pouvoirs : '.$ligne_orig;
+    $monstre  .= '<div>' . $ligne_formatee . '</div>' . "\n";
+    $info_trt = 'Ligne Pouvoirs : ' . $ligne_orig;
     return;
 }
 
@@ -116,7 +116,7 @@ if (trim($ligne) === '***') {
 // -----------------------------------------------------------------------------
 // CAS SPÉCIAL : DONS
 // -----------------------------------------------------------------------------
-if (preg_match('/^Dons?\s*:\s*(.+)$/ui', $ligne, $m)) {
+if (preg_match('/^Dons?\s*:\s*(.+)$/ui', $ligne, $m) || preg_match('/^Talent?\s*:\s*(.+)$/ui', $ligne, $m)) {
     $label = $m[0];            // "Dons : xxx"
     $liste = $m[1];            // juste la liste "Alerte, Vigilance, ..."
 
@@ -142,19 +142,19 @@ if (preg_match('/^Dons?\s*:\s*(.+)$/ui', $ligne, $m)) {
 
         if ($dn) {
             // Substitution par le span cliquable
-            $dons_html[] = '<span onClick="afficherDon('.(int)$dn['do_id'].')" class="lien">'.htmlspecialchars($dn['do_nom']).'</span>';
-            $debug_parts[] = $donNom.' → id '.$dn['do_id'];
+            $dons_html[] = '<span onClick="afficherDon(' . (int)$dn['do_id'] . ')" class="lien">' . htmlspecialchars($dn['do_nom']) . '</span>';
+            $debug_parts[] = $donNom . ' → id ' . $dn['do_id'];
         } else {
             // Non trouvé : on laisse le texte tel quel
             $dons_html[] = htmlspecialchars($donNom);
-            $debug_parts[] = $donNom.' (non trouvé)';
+            $debug_parts[] = $donNom . ' (non trouvé)';
         }
     }
 
-    $ligne_formatee = '<strong>Dons</strong> : '.implode(', ', $dons_html);
+    $ligne_formatee = '<strong>Dons</strong> : ' . implode(', ', $dons_html);
 
-    $monstre  .= '<div>'.$ligne_formatee.'</div>'."\n";
-    $info_trt = '<div class="mt5"><strong>Ligne "Dons" traitée</strong> : '.implode(' | ', $debug_parts).'</div>';
+    $monstre  .= '<div>' . $ligne_formatee . '</div>' . "\n";
+    $info_trt = '<div class="mt5"><strong>Ligne "Dons" traitée</strong> : ' . implode(' | ', $debug_parts) . '</div>';
 
     return;
 }
@@ -164,7 +164,7 @@ if (preg_match('/^Dons?\s*:\s*(.+)$/ui', $ligne, $m)) {
 // -----------------------------------------------------------------------------
 if (preg_match('/^Compétences?\s*:\s*(.+)$/ui', $ligne, $m)) {
     $liste = $m[1]; // tout ce qui suit "Compétences :"
-    
+
     // chaque compétence est séparée par une virgule
     $comps = array_map('trim', explode(',', $liste));
 
@@ -201,26 +201,26 @@ if (preg_match('/^Compétences?\s*:\s*(.+)$/ui', $ligne, $m)) {
 
         if ($dn) {
             // Seul le nom est cliquable, le modificateur est ajouté après en texte
-            $htmlItem = 
-                '<span onClick="affichercompetence('.(int)$dn['comp_id'].')" class="lien">'.
-                    htmlspecialchars($dn['comp_nom']).
-                '</span>'.
+            $htmlItem =
+                '<span onClick="affichercompetence(' . (int)$dn['comp_id'] . ')" class="lien">' .
+                htmlspecialchars($dn['comp_nom']) .
+                '</span>' .
                 htmlspecialchars($modifier);
 
-            $debug_parts[] = $compItem.' → '.$dn['comp_nom'].' (id '.$dn['comp_id'].')';
+            $debug_parts[] = $compItem . ' → ' . $dn['comp_nom'] . ' (id ' . $dn['comp_id'] . ')';
         } else {
             // Non trouvé : on laisse l’item complet en texte
             $htmlItem = htmlspecialchars($compItem);
-            $debug_parts[] = $compItem.' (non trouvé)';
+            $debug_parts[] = $compItem . ' (non trouvé)';
         }
 
         $comps_html[] = $htmlItem;
     }
 
-    $ligne_formatee = '<strong>Compétences</strong> : '.implode(', ', $comps_html);
+    $ligne_formatee = '<strong>Compétences</strong> : ' . implode(', ', $comps_html);
 
-    $monstre  .= '<div>'.$ligne_formatee.'</div>'."\n";
-    $info_trt = '<div class="mt5"><strong>Ligne "Compétences" traitée</strong> : '.implode(' | ', $debug_parts).'</div>';
+    $monstre  .= '<div>' . $ligne_formatee . '</div>' . "\n";
+    $info_trt = '<div class="mt5"><strong>Ligne "Compétences" traitée</strong> : ' . implode(' | ', $debug_parts) . '</div>';
 
     return;
 }
@@ -233,14 +233,14 @@ $mot_debut_trouve = null;
 
 foreach ($motcles_debut as $motCle) {
     // On teste si la ligne commence par ce mot-clé, éventuellement suivi de ":" 
-    if (preg_match('/^'.preg_quote($motCle, '/').'\b\s*:?\s*(.*)$/u', $ligne, $m)) {
+    if (preg_match('/^' . preg_quote($motCle, '/') . '\b\s*:?\s*(.*)$/u', $ligne, $m)) {
         $mot_debut_trouve = $motCle;
         $reste = $m[1]; // ce qui vient après le mot-clé (+ ":" éventuel)
 
         if ($reste !== '') {
-            $ligne_formatee = '<strong>'.htmlspecialchars($motCle).'</strong> : '.htmlspecialchars($reste);
+            $ligne_formatee = '<strong>' . htmlspecialchars($motCle) . '</strong> : ' . htmlspecialchars($reste);
         } else {
-            $ligne_formatee = '<strong>'.htmlspecialchars($motCle).'</strong>';
+            $ligne_formatee = '<strong>' . htmlspecialchars($motCle) . '</strong>';
         }
         break;
     }
@@ -253,8 +253,8 @@ if ($mot_debut_trouve === null && !empty($motcles_interne)) {
     $ligne_travail = $ligne;
 
     foreach ($motcles_interne as $motCle) {
-        $pattern = '/\b'.preg_quote($motCle, '/').'\b/u';
-        $rempl   = '<strong>'.$motCle.'</strong>';
+        $pattern = '/\b' . preg_quote($motCle, '/') . '\b/u';
+        $rempl   = '<strong>' . $motCle . '</strong>';
         $ligne_travail = preg_replace($pattern, $rempl, $ligne_travail);
     }
 
@@ -264,6 +264,4 @@ if ($mot_debut_trouve === null && !empty($motcles_interne)) {
 // -----------------------------------------------------------------------------
 // Ajout au HTML du monstre et info de debug
 // -----------------------------------------------------------------------------
-$monstre  .= '<div>'.$ligne_formatee.'</div>'."\n";
-
-?>
+$monstre  .= '<div>' . $ligne_formatee . '</div>' . "\n";

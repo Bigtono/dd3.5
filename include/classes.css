@@ -76,7 +76,6 @@
   font-weight: bold;
 }
 
-
 /* ================================
    Bouton switch (icône)
 ================================ */
@@ -108,7 +107,7 @@
 
 .bloc.niveau {
   align-items: center;
-  justify-content: flex-start;  
+  justify-content: flex-start;
 }
 
 .bloc.niveau .valeur {
@@ -122,7 +121,7 @@
    Bloc Stats
 ================================ */
 
-.bloc.stats{
+.bloc.stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
   gap: 6px;
@@ -164,7 +163,9 @@
 /* ================================
    Bloc pouvoirs de classe DD2024
 ================================ */
-.bloc.pouvoir {text-align: center;}
+.bloc.pouvoir {
+  text-align: center;
+}
 
 /* ================================
    Bloc Sorts
@@ -180,7 +181,7 @@
 }
 
 /* Entête centrée au-dessus de tous les niveaux */
-.bloc.sorts > div:first-child::before {
+.bloc.sorts>div:first-child::before {
   content: "Nombre de sorts par jour";
   position: absolute;
   top: 0;
@@ -227,6 +228,7 @@
   .classe-niveaux.vue-sorts .bloc[data-groupe="aptitudes"] {
     display: none;
   }
+
   .classe-niveaux.vue-sorts .bloc[data-groupe="sorts"] {
     display: block;
   }

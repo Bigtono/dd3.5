@@ -56,13 +56,13 @@ endif;
 
 $stmtChap = $db->prepare("
 
-  SELECT scc_id, scc_nom
+  SELECT scc_id, scc_ordre, scc_nom
 
   FROM dd_scenarios_chapitres
 
   WHERE scc_sc_id = ?
 
-  ORDER BY scc_nom
+  ORDER BY scc_ordre, scc_nom
 
 ");
 

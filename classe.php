@@ -55,7 +55,7 @@ $isLanceurSorts = ($dn['cla_mag_id'] != 0);
       <?
       if ($c != ""):
       ?>
-        <div id="classe" class="affichage">
+        <div id="classe">
           <div class="titreAction">
             <div class="titreA"><? echo stripslashes($dn['cla_nom']); ?></div>
             <div>

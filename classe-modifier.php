@@ -8,8 +8,7 @@ include("include/date.inc.php");
 
 $c = isset($_GET['classe'])
 	? (int) $_GET['classe']
-	: "";
-
+	: 0;
 ?>
 <!doctype html>
 
@@ -25,7 +24,7 @@ $c = isset($_GET['classe'])
 		<div class="wrapper">
 			<? include('include/ariane.php'); ?>
 			<?
-			if (isset($c) && $c != "n"): // il s'agit d'une modification
+			if (isset($c) && $c > 0): // il s'agit d'une modification
 				$requete = "SELECT * FROM dd_classes WHERE cla_id='" . $c . "'";
 				$result = queryPDO($requete);
 				$num_rows = $result->rowCount();

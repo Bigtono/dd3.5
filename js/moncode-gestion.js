@@ -45,8 +45,22 @@ function actualiserPageModif(reponse) {
   var resultat = reponse.split("@");
   console.log('Affichage formulaire #'+resultat[0]);
   $("#detail-pp").hide('fast');
+  if (window.CKEDITOR && CKEDITOR.instances) {
+    ['mp_so_texte', 'mp_do_texte'].forEach(function(editorId) {
+      if (CKEDITOR.instances[editorId]) {
+        CKEDITOR.instances[editorId].destroy(true);
+      }
+    });
+  }
 	$("#modification").html(resultat[1]); 
 	$("#modification").show('fast');
+  if (window.CKEDITOR) {
+    ['mp_so_texte', 'mp_do_texte'].forEach(function(editorId) {
+      if (document.getElementById(editorId) && !CKEDITOR.instances[editorId]) {
+        CKEDITOR.replace(editorId);
+      }
+    });
+  }
 }
 
 /******************************************************************************************/

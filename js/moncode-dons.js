@@ -26,7 +26,12 @@ function modifierDon(idDon) {
 }
 
 function validerModifDon() {
-  var mp_do_texte = CKEDITOR.instances.mp_do_texte.getData(); // traitement du champ textarea modifié par CKEDITOR
+  var mp_do_texte = '';
+  if (window.CKEDITOR && CKEDITOR.instances && CKEDITOR.instances.mp_do_texte) {
+    mp_do_texte = CKEDITOR.instances.mp_do_texte.getData();
+  } else {
+    mp_do_texte = $('#mp_do_texte').val() || '';
+  } // traitement du champ textarea modifie
   
   //actualisation des champs de modification du sort
 	$.ajax({
