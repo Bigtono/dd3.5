@@ -1,7 +1,17 @@
 <!--  Bloc Classe DD3.5 --->
 
 <?
+$activePouvoirs = [];
+for ($i = 1; $i <= 4; $i++) {
+  if (trim((string)$dn['cla_pouvoir' . $i]) !== '') {
+    $activePouvoirs[] = $i;
+  }
+}
+
 $gridTemplate = '60px repeat(4, minmax(55px, 70px)) minmax(220px, 1fr)';
+if (!empty($activePouvoirs)) {
+  $gridTemplate .= ' repeat(' . count($activePouvoirs) . ', minmax(90px, 120px))';
+}
 if ($isLanceurSorts) {
   $gridTemplate .= ' repeat(10, minmax(30px, 40px))';
 }
@@ -83,12 +93,14 @@ if ($isLanceurSorts) {
     }
 
     .classe-niveaux.vue-sorts .classe-ligne.classe-entete .cell[data-groupe="stats"],
-    .classe-niveaux.vue-sorts .classe-ligne.classe-entete .cell[data-groupe="aptitudes"] {
+    .classe-niveaux.vue-sorts .classe-ligne.classe-entete .cell[data-groupe="aptitudes"],
+    .classe-niveaux.vue-sorts .classe-ligne.classe-entete .cell[data-groupe="pouvoirs"] {
       display: none;
     }
 
     .classe-niveaux.vue-sorts .classe-ligne.contenu .cell[data-groupe="stats"],
-    .classe-niveaux.vue-sorts .classe-ligne.contenu .cell[data-groupe="aptitudes"] {
+    .classe-niveaux.vue-sorts .classe-ligne.contenu .cell[data-groupe="aptitudes"],
+    .classe-niveaux.vue-sorts .classe-ligne.contenu .cell[data-groupe="pouvoirs"] {
       display: none;
     }
 
@@ -143,7 +155,7 @@ endif;
 <div class="competences"><span class="label"> Comp&eacute;tences de classe : </span><? echo $competences; ?></div>
 
 <? if ($dn['cla_clt_id'] == 2): ?>
-  <div class="label mt10">Conditions (classe de prestige uniquement) :</div>
+  <div class="label_long mt10">Conditions (classe de prestige uniquement) :</div>
   <div class="conditions"><? echo stripslashes($dn['cla_conditions']); ?></div>
 <? endif; ?>
 
@@ -156,6 +168,10 @@ $sql = "
     cn.cn_reflexes,
     cn.cn_vigueur,
     cn.cn_volonte,
+    cn.cn_pouvoir1,
+    cn.cn_pouvoir2,
+    cn.cn_pouvoir3,
+    cn.cn_pouvoir4,
     cn.cn_sort_n0,
     cn.cn_sort_n1,
     cn.cn_sort_n2,
@@ -219,6 +235,9 @@ $niveaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="cell" data-groupe="stats">Vig.</div>
       <div class="cell" data-groupe="stats">Vol.</div>
       <div class="cell aptitudes" data-groupe="aptitudes">Sp&eacute;cial</div>
+      <? foreach ($activePouvoirs as $pow): ?>
+        <div class="cell" data-groupe="pouvoirs"><?= htmlspecialchars((string)$dn['cla_pouvoir' . $pow]) ?></div>
+      <? endforeach; ?>
       <? if ($isLanceurSorts): ?>
         <div class="cell" data-groupe="sorts">0</div>
         <div class="cell" data-groupe="sorts">1</div>
@@ -242,6 +261,9 @@ $niveaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div class="cell" data-groupe="stats">+<?= $n['cn_vigueur'] ?></div>
           <div class="cell" data-groupe="stats">+<?= $n['cn_volonte'] ?></div>
           <div class="cell aptitudes" data-groupe="aptitudes"><?= $n['capacites'] ?: '&mdash;' ?></div>
+          <? foreach ($activePouvoirs as $pow): ?>
+            <div class="cell" data-groupe="pouvoirs"><?= ($n['cn_pouvoir' . $pow] !== '' ? htmlspecialchars((string)$n['cn_pouvoir' . $pow]) : '&mdash;') ?></div>
+          <? endforeach; ?>
           <? if ($isLanceurSorts): ?>
             <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n0'] ?: '&mdash;' ?></div>
             <div class="cell" data-groupe="sorts"><?= $n['cn_sort_n1'] ?: '&mdash;' ?></div>

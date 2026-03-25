@@ -31,12 +31,41 @@ dd_caracteristiques (liste des 6 caractéristiques que possède chaque personnag
 Note : la valeur de car_diminutif est constituée des trois premières lettres du nom de la caractéristique. Le jeu comptes six caractéristiques (Force, Constitution, Dextérité, Intelligence, Sagesse, Charisme). Dans la table dd_personnages, la valeur chaque valeur de caractéristique du personnage (de 1 à 30) est stocké dans un champ nommé "pe_" suivi de la valeur car_diminutif. Exemple : pe_for pour force, pe_dex pour dextérité. Dans la table dd_classes, le champ cla_car_id contient l'id de la caractéristique principale de lanceur de sort si cette classe permet de lancer des sorts (cla_mag_id supérieur à 0).
 
 dd_classes (liste des classes, préfixe cla)
-- cla_id (id, index de la table)
+- cla_id (id, index de la table) 
 - cla_nom (nom du sort)
-- cla_mag_id (id du type de magie, table dd_typeMagie. Indique si la classe permet de lancer des sorts profanes des sorts divins, ou par défaut aucun sort. 0 : pas de magie, 1 : Magie profane, 2 et 3 : magie divine)
-- cla_niveauMax (indique le nombre de niveaux, de 1 à n que possède la classe. Selon les classes, cla_niveauMax peut avoir les valeurs 5, 10 ou 20)
+- cla_clt_id (type de la classe. Par défaut 1 = classe de base. Certains rulesets introduisent d'autres types de classe)
+- cla_abreviation
+- cla_dV
+- cla_pointsCompetences (Ruleset DD3.5 uniquement)
+- cla_alignement
 - cla_car_id (id de la caractéristique de lanceur de sort, table dd_caracteristiques. Par défaut 0, supérieur à 0 uniquement sur cla_mag_id supérieur à 0)
+- cla_po_niveau1 (ruleset DD3.5)
+- cla_conditions (ruleset DD3.5 : conditions à remplir pour pouvoir choisir cette classe de prestique)
+- cla_description
+- cla_traits
+- cla_mag_id (id du type de magie, table dd_typeMagie. Indique si la classe permet de lancer des sorts profanes des sorts divins, ou par défaut aucun sort 0)
+- cla_connu (non nul si cla_mag_id>0 : indique si le lanceur a accès par défaut à toute sa liste de sorts de classe ou non)
+- cla_compris (non nul si cla_mag_id>0 : indique si le lanceur comprend par défaut tous les sorts auxquels il a accès ou s'il doit les apprendre)
+- cla_prepare (non nul si cla_mag_id>0 : indique si le lanceur doit préparer les sorts avant de lancer ou s'il peur les lancer sans préparation préalable)
+- cla_domaine_divin (1 si la classe donne accès aux domanes divins, sinon 0)
+- cla_niveauMax (nombre de niveaux que possède la classe. Selon les types de classes et les rulesets, cla_niveauMax peut avoir les valeurs 3, 5, 10 ou 20)
+- cla_critere_rec
+- cla_cla_id
+- cla_caracteristiques
+- cla_armes (pour le ruleset DD305 : contient aussi les armures)
+- cla_armures (ruleset DD2024)
+- cla_outils
+- cla_competences
+- cla_sauvegardes
+- cla_equipement
+- cla_sorts
+- cla_pouvoir1 (intitulé du pouvoir 1 de la classe. Ruleset DD204 uniquement)
+- cla_pouvoir2 (intitulé du pouvoir 2 de la classe. Ruleset DD204 uniquement)
+- cla_pouvoir3 (intitulé du pouvoir 3 de la classe. Ruleset DD204 uniquement)
+- cla_pouvoir4 (intitulé du pouvoir 4 de la classe. Ruleset DD204 uniquement)
+- cla_res_id (id du livre/supplément dont est issu la classe. Table dd_ressources)
 - cla_ruleset_var_id (id de la version des règles, stocké dans la table dd_variables)
+
 
 dd_races (liste des races, préfixe ra)
 - ra_id (id, index de la table)
@@ -58,6 +87,16 @@ dd_classe_niveau (description des niveau de chaque classe)
 - cn_reflexes (int, bonus au jet de sauvegarde de réflexes)
 - cn_vigueur (int, bonus au jet de sauvegarde de vigueur)
 - cn_volonte (int, bonus au jet de sauvegarde de volonté)
+- cn_sortConnu_n0 (int, ruleset DD3.5 : nombre de sorts du niveau 0 connus)
+- cn_sortConnu_n1 (int, ruleset DD3.5 : nombre de sorts du niveau 1 connus)
+- cn_sortConnu_n2 (int, ruleset DD3.5 : nombre de sorts du niveau 2 connus)
+- cn_sortConnu_n3 (int, ruleset DD3.5 : nombre de sorts du niveau 3 connus)
+- cn_sortConnu_n4 (int, ruleset DD3.5 : nombre de sorts du niveau 4 connus)
+- cn_sortConnu_n5 (int, ruleset DD3.5 : nombre de sorts du niveau 5 connus)
+- cn_sortConnu_n6 (int, ruleset DD3.5 : nombre de sorts du niveau 6 connus)
+- cn_sortConnu_n7 (int, ruleset DD3.5 : nombre de sorts du niveau 7 connus)
+- cn_sortConnu_n8 (int, ruleset DD3.5 : nombre de sorts du niveau 8 connus)
+- cn_sortConnu_n9 (int, ruleset DD3.5 : nombre de sorts du niveau 9 connus)
 - cn_sort_n0 (int, nombre de sorts disponibles par jour pour le niveau 0)
 - cn_sort_n1 (int, nombre de sorts disponibles par jour pour le niveau 1)
 - cn_sort_n2 (int, nombre de sorts disponibles par jour pour le niveau 2)
@@ -68,6 +107,14 @@ dd_classe_niveau (description des niveau de chaque classe)
 - cn_sort_n7 (int, nombre de sorts disponibles par jour pour le niveau 7)
 - cn_sort_n8 (int, nombre de sorts disponibles par jour pour le niveau 8)
 - cn_sort_n9 (int, nombre de sorts disponibles par jour pour le niveau 9)
+- cn_niveauSortArcane (ruleset DD3.5 : classe de prestige, modificateur au NLS pour une classe de lanceur de sort profane)
+- cn_niveauSortDivin (ruleset DD3.5 : classe de prestige, modificateur au NLS pour une classe de lanceur de sort divin)
+- cn_niveauSortEffectif (ruleset DD3.5 : classe de prestige, modificateur au NLS pour une classe de lanceur de sort profane ou divin, au choix)
+- cn_pouvoir1 (varchar)
+- cn_pouvoir2 (varchar)
+- cn_pouvoir3 (varchar)
+- cn_pouvoir4 (varchar)
+- cn_sortPrepare (int, ruleset DD2024 : nombre de sorts préparés par jour)
 
 dd_sorts (contient la description de tous les sorts du jeu. Préfixe so)
 - so_id (id, index de la table)
@@ -88,6 +135,9 @@ dd_personnages_classes (affectation d'une classe au personnage avec un niveau. P
 - pc_pe_id (id du personnage, table dd_ personnages)
 - pc_cla_id (id de la classe, table dd_classes)
 - pc_niveau (niveau du personnage dans cette classe)
+- pc_do_id_1 (id du premier domaine divin. Uniquement si cla_mag_id=2 et cla_domaine_divin=1 pour la classe concernée)
+- pc_do_id_2 (id du deuxième domaine divin. Uniquement si cla_mag_id=2 et cla_domaine_divin=1 pour la classe concernée)
+
 Note : un personnage peut avoir plusieurs classes mais une seule fois la même classe
 
 dd_personnages_sorts (contient la liste des sorts possédés par le personnage. Préfixe pes)

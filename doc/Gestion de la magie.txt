@@ -1,27 +1,27 @@
-Je veux refondre entièrement le fonctionnement métier de la page personnage-grimoire.php.
 
-Cette page gère les sorts accessibles et utilisables par  un personnage lanceurs de sorts. Les règles métier sont spécifiques à chaque ruleset.
+Certaines règles métier relatives à la magie sont spécifiques à chaque ruleset.
+Concernant la base de données, les tables impactées sont dd_sorts, dd_sortclasse, dd_classes, dd_classe_niveau, dd_personnages, dd_personnages_classes, dd_personnages_nls
 
-Concernant la base de données, les tables impactées sont dd_sorts, dd_sortclasse, dd_classes, dd_classe_niveau, dd_personnages, dd_personnages_classes
+Dans la version initiale du site, les sorts d'un personnages étaient gérés dans personnage-grimoire.php. Désormais tous les éléments relatifs aux sorts d'un personnage sont dans personnage-magie.php
+
 
 Règles métiers générales concernant la magie (communes à tous les ruleset)
-- chaque sort possède un niveau (de 0 à 9) déterminé selon une règle spécifique à chaque ruleset
+--------------------------------------------------------------------------
+- Les sorts sont stockés dans la table dd_sorts. Chaque sort possède un niveau (de 0 à 9) déterminé selon une règle spécifique à chaque ruleset
 - chaque jour, un lanceur de sort peut lancer un certain nombre de sorts de chaque niveau selon des conditions fixées par sa classe de lanceur de sort
-- chaque classe de base de lanceur de sort détermine comment, combien et quelles sorts le personnage peut lancer.
-   * le champ cla_sort_connu précise si le lanceur de sort de cette classe connait par défaut tous les sorts de la liste de sort de sa classe (valeur 1) ou si les sorts qu'il connait sont limités à ceux qu'il possède physiquement (livre, parchemin etc...)
+- chaque classe de base de lanceur de sort détermine comment, combien et quelles sorts le personnage peut lancer. La liste de sorts d'une classe est déterminée par la table dd_sortclasse (lien entre l'id du sort et l'id de la classe. Selon le ruleset, le champ sc_niveau est utilisé et indique le niveau du sort pour cette classe).
+   * le champ cla_sort_connu précise si le lanceur de sort de cette classe connait par défaut tous les sorts de la liste de sorts de sa classe (valeur 1) ou si le nombre de sorts qu'il connait est restreint
    * le champ cla_sort_compris précise si le lanceur comprend automatiquement les sorts qu'il connait (valeur 1) ou s'il doit préalablement les étudier pour les comprendre (valeur 0)
    * le champ cla_sort_prepare indique si le lanceur peut lancer spontanément un sort de sa liste (valeur 0) ou s'il doit l'avoir préalablement préparé chaque matin selon un processus propre à la classe (valeur 1)
 - la combinaison cla_sort_connu / cla_sort_compris / cla_sort_prepare est propre à chaque classe
-- la table dd_personnages_sorts
 - le niveau de lanceur de sort (NLS) correspond au niveau d'un personnage dans une classe de lanceur de sort. Exemple : si le personnage est niveau 6 dans la classe de magicien, il a un NLS de 6 quand il lance un sort de magicien. Si le même personnage est aussi Druide de niveau 2, son NLS de druide de de 2. Un personnage a autant de NLS que de classe de base de lanceur de sort.
 - le nombre de sorts qu'un personnage peut préparer et lancer par niveau et jour est déterminé par le niveau de lanceur de sort (NLS) dans chaque classe de base de lanceur de sort. Les champs cn_sort_n0 à cn_sort_n9 indiquent combien de sorts le personnage peut lancer par jour et par niveau de sort. L'enregistrement à prendre en compte est celui dont le champ cn_niveau est égal au NLS du personnage pour cette classe.
 
 
 règles métiers spécifiques au ruleset dd3.5
 -------------------------------------------
-- le ruleset introduit un nouveau type de classe, la classe de prestige (cla_clt_id=2). Une classe de prestige n'est pas une classe de personnage en tant que telle. Un personnage doit obligatoirement posséder des niveaux dans au moins une classe de base pour pouvoir posséder des niveaux dansa au moins une classe de prestige
-- une classe de base compte 3, 5 ou 10 niveaux ((cla_niveauMax=3 ou 5 ou 10)
-- une classe de prestige influe sur le NLS d'une classe de base si un des champs cn_niveauSortArcane, cn_niveauSortDivin ou cn_niveauSortEffectif est égale à 1. A chaque niveau d'une classe de prestige possédé par un personnage, si cn_niveauSortArcane est égale à 1, le NLS d'une des classes de lanceur de sort profane du personnage est augmenté de 1. il en va de même pour une classe de lanceur de sort divin si cn_niveauSortDivin est égal à 1. Si c'est le champ cn_niveauSortEffectif qui est égal à 1, le personnage peut choisir une classe de lanceur de sort divin ou profane pour l'ajout de 1 au NLS. A chaque niveau de classe de prestige, le joueur doit choisir quelle classe de base de lanceur de sort est affectée. Les choix sont stockés dans la table dd_personnages_nls
+- une classe de prestige influe sur le NLS d'une classe de base si un des champs cn_niveauSortArcane, cn_niveauSortDivin ou cn_niveauSortEffectif est égale à 1. A chaque niveau d'une classe de prestige possédé par un personnage, si cn_niveauSortArcane est égale à 1, le NLS d'une des classes de lanceur de sort profane du personnage est augmenté de 1. il en va de même pour une classe de lanceur de sort divin si cn_niveauSortDivin est égal à 1. Si c'est le champ cn_niveauSortEffectif qui est égal à 1, le personnage peut choisir une classe de lanceur de sort divin ou profane pour l'ajout de 1 au NLS. A chaque niveau de classe de prestige, le joueur doit choisir quelle classe de base de lanceur de sort est affectée. Les choix sont stockés dans la table dd_personnages_nls (voir GEstion des cl
+
 - dans ce ruleset, le NLS d'une classe de base lanceur de sort est égal au niveau du personnage dans cette classe (champ pc_niveau dans la table dd_personnages_classes) auquel est ajouté la somme des champs penl_niveau de la table dd_personnages_nls dont penl_b_cla_id est égal à l'id de la classe de base et penl_pe_id est égal à l'id du personnage.
 - si pour une classe de base, cla_clt_id est égal à 3, il s'agit alors d'un lanceur de sort divin disposant d'un accès à des sorts de domaine. Cela se traduit par la capacité à mémoriser un sort supplémentaire par niveau de sort.
 - chaque classe de lanceur de sort possède une liste de sorts accessibles au lanceur de sort de cette classe. La table dd_sortclasse permet de lister les sorts constituant la liste de sorts par la relation sc_cla_id (id de la classe de base) / sc_so_id (id du sort). Le champ sc_niveau précise le niveau du sort (de 0 à 9). Le niveau du sort variant selon la classe du lanceur de sort ( Un sort peut être de niveau 1 pour une classe et de niveau 2 pour une autre), il est stocké dans le champ sc_niveau de la table dd_sortclasse.
@@ -34,11 +34,21 @@ règles métiers spécifiques au ruleset DD2024
 - chaque classe de lanceur de sort possède une liste de sorts accessibles au lanceur de sort de cette classe. La table dd_sortclasse permet de lister les sorts constituant la liste de sorts par la relation sc_cla_id (id de la classe de base) / sc_so_id (id du sort). Dans ce rulset, le niveau du sort étant  le même pour toutes les classes de lanceur de sort, il est stocké dans le champ so_niveau de la table dd_sorts.
 
 
-Fonctionnalités de la page
---------------------------
-- on détermine les classes de base de lanceur de sort du personnage. Pour chaque classe, on calcule le niveau de lanceur de sort (NLS)
-- On affiche un menu horizontal (design identique au menu de la page personnage) contenant toutes les classes de lanceur de sort (intitulé égal au nom de la classe). Les classes sont triées dans l'ordre décroissant du NLS. Par défaut, c'est la classe avec le plus haut NLS qui est sélectionné. Le menu permet de sélectionner une autre classe
-- un sélecteur "affichage" permet de filtrer les sorts selon les états : connus, compris (si applicable à la classe), préparés. Le choix du sélecteur est mémorisé dans une variable de session et utilisé pour afficher la page dans cet état durant toute la session de l'utilisateur.
+Fonctionnalités de la page personnage-magie.php 
+-----------------------------------------------
+La page gère tous les aspects relatifs aux sorts d'un personnages. la page est découpée en sections.
+
+A - Menu spécifique de la page 
+
+1. On détermine les classes de base de lanceur de sort du personnage. Pour chaque classe, on calcule le niveau de lanceur de sort (NLS) selon les conditions spécifiques à chaque ruleset
+2. On affiche un menu horizontal (design identique au menu de la page personnage) contenant toutes les classes de lanceur de sort (intitulé égal au nom de la classe). Les classes sont triées dans l'ordre décroissant de leur NLS. Par défaut, c'est la classe avec le plus haut NLS qui est sélectionnée, elle est dite "active".
+
+B - Affichage des sorts de la classe active
+
+Pour la  classe sélectionné on affiche dans un DIV conteneur 
+   1. un tableau indiquant le nombre de sorts que peux lancer le personnage par niveau. La première ligne contient en colonne les niveaux de sort. La 2ème ligne indique le nombre de sorts disponible pour chaque niveau. cette section est encapsulé dans un DIV retractable avec son bouton Burger
+   2. la liste des sorts de la classe active. Un sélecteur "affichage" permet de filtrer les sorts selon les états : connus, compris (si applicable à la classe), préparés. Le choix du sélecteur est mémorisé dans une variable de session et utilisé pour afficher la page dans cet état durant toute la session de l'utilisateur.
+
 - la liste des sorts de la classe sélectionnée est réparti par niveau de sort (de 0 à 9). Dans un niveau de sort, les sorts sont classés par ordre alphabétique. La mise ne page de la liste des sort par niveau dépend du sélecteur "affichage" et du ruleset
 
 Pour le ruleset dd3.5
@@ -47,3 +57,28 @@ Pour le ruleset dd3.5
       1. on affiche tous les sorts de liste pour le niveau correspond
       2. des boutons + et - permettent de modifier le nombre de fois que le sort est préparé
 
+
+
+
+
+
+		Connu	compris	Préparé
+Barde		1	1	0	6
+
+Prêtre		1	1	1	7
+
+Druide		1	1	1	7
+	
+Magicien	1	0	1	5
+
+Ensorceleur	0	1	0	2
+
+Paladin		1	1	1	7
+
+Rodeur		1	1	1	7
+
+Tourmenteur	0	1	0	2
+
+tueur Domiel	1	1	1	7
+
+élu divin	1	1	0	6
