@@ -112,8 +112,15 @@ if (!$user || !password_verify($password, $user['j_password_hash'])) {
 // Connexion OK
 session_regenerate_id(true);
 
-// création des variables de session
-include('include/insert/'.$_SESSION['rulesetRep'].'/variables_sessions.php');
+// création des variables de session (tronc commun)
+include('include/insert/variables_sessions.php');
+// extension ruleset optionnelle (placeholder pour variables spécifiques futures)
+if (!empty($_SESSION['rulesetRep'])):
+    $rulesetSessionFile = 'include/insert/' . $_SESSION['rulesetRep'] . '/variables_sessions.php';
+    if (is_file($rulesetSessionFile)):
+        include($rulesetSessionFile);
+    endif;
+endif;
 
 // Mise à jour de la dernière connexion
 $sql = "UPDATE dd_joueurs

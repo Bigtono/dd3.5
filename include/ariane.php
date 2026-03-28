@@ -259,16 +259,21 @@ endif;
   <?
   $currentRequestUri = !empty($_SERVER['REQUEST_URI']) ? (string)$_SERVER['REQUEST_URI'] : basename($_SERVER['PHP_SELF']);
   ?>
-  <select id="ariane-mobile-select" class="search-select" aria-label="Navigation rapide du fil d'Ariane">
-    <? foreach ($crumbs as $crumb): ?>
-      <?
-      $optionValue = !empty($crumb['href']) ? (string)$crumb['href'] : $currentRequestUri;
-      ?>
-      <option value="<?= htmlspecialchars($optionValue, ENT_QUOTES, 'UTF-8'); ?>"<?= $crumb['current'] ? ' selected' : ''; ?>>
-        <?= htmlspecialchars($crumb['label'], ENT_QUOTES, 'UTF-8') ?>
-      </option>
-    <? endforeach; ?>
-  </select>
+  <div id="ariane-mobile-row">
+    <a id="ariane-mobile-home" href="index.php" aria-label="Accueil">
+      <i class="icon fa fa-home" aria-hidden="true"></i>
+    </a>
+    <select id="ariane-mobile-select" class="search-select" aria-label="Navigation rapide du fil d'Ariane">
+      <? foreach ($crumbs as $crumb): ?>
+        <?
+        $optionValue = !empty($crumb['href']) ? (string)$crumb['href'] : $currentRequestUri;
+        ?>
+        <option value="<?= htmlspecialchars($optionValue, ENT_QUOTES, 'UTF-8'); ?>"<?= $crumb['current'] ? ' selected' : ''; ?>>
+          <?= htmlspecialchars($crumb['label'], ENT_QUOTES, 'UTF-8') ?>
+        </option>
+      <? endforeach; ?>
+    </select>
+  </div>
   <ol id="ariane-list">
     <? foreach ($crumbs as $index => $crumb): ?>
       <? if ($index === 1): ?>

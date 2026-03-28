@@ -66,7 +66,27 @@
     if (menu) {
       menu.addEventListener("click", function (e) {
         var trigger = e.target.closest(".menu--item__has_sub_menu > .menu--link");
-        if (!trigger) return;
+        if (!trigger) {
+          var subLink = e.target.closest(".sub_menu--link");
+          if (subLink) {
+            var parentSubmenu = subLink.closest(".menu--item__has_sub_menu");
+            closeAllSubmenus(itemsWithSub, parentSubmenu || null);
+            if (parentSubmenu && parentSubmenu.id) {
+              openSubmenu(parentSubmenu);
+              localStorage.setItem("menu_open_id", parentSubmenu.id);
+            } else {
+              localStorage.removeItem("menu_open_id");
+            }
+            return;
+          }
+
+          var plainLink = e.target.closest(".menu--link");
+          if (plainLink) {
+            closeAllSubmenus(itemsWithSub);
+            localStorage.removeItem("menu_open_id");
+          }
+          return;
+        }
 
         e.preventDefault();
         var li = trigger.parentElement;

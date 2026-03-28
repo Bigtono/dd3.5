@@ -104,13 +104,13 @@ $rencontres = $stmtR->fetchAll(PDO::FETCH_ASSOC);
 
           <a href="chapitre-modifier.php?chapitre=<?= (int)$chapitre['scc_id']; ?>"><i class="fa-solid fa-pen-to-square ml15"></i></a>
 
-          <!-- </div> -->
+        </div>
 
-          <div>
-
-          </div>
+        <div>
 
         </div>
+
+      </div>
 
 
 

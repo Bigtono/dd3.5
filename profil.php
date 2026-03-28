@@ -86,7 +86,19 @@ endif;
             <div class="slider"></div>
           </div>          
           <div class="label ml10">Afficher un objet magique dans un onglet</div>    
-        </div> 
+        </div>
+        <div class="ligne">
+          <div class="switch-display <?= (!isset($dn['j_mode_campagne']) || (int)$dn['j_mode_campagne'] === 1) ? 'on' : 'off' ?>">
+            <div class="slider"></div>
+          </div>
+          <div class="label ml10">Mode campagne (affichage des fonctionnalites campagne)</div>
+        </div>
+        <div class="ligne">
+          <div class="switch-display <?= (isset($dn['j_affichage_ruleset']) && (int)$dn['j_affichage_ruleset'] === 1) ? 'on' : 'off' ?>">
+            <div class="slider"></div>
+          </div>
+          <div class="label ml10">Afficher le ruleset dans le header</div>
+        </div>
         
       </div> 
       

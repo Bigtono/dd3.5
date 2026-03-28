@@ -1,25 +1,34 @@
 <nav class="vertical_nav">
   <? if ($_SESSION['pseudo'] != ""): ?>
     <ul id="js-menu" class="menu">
-      <li class="menu--item  menu--item__has_sub_menu">
-        <label class="menu--link" title="Item 1">
-          <i class="menu--icon  fa fa-fw fa-user"></i>
-          <span class="menu--label">Ressources de jeu</span>
-        </label>
-        <ul class="sub_menu">
-          <li class="sub_menu--item">
-            <a href="personnages.php" class="sub_menu--link">Personnages</a>
-          </li>
-          <li class="sub_menu--item">
-            <a href="campagnes.php" class="sub_menu--link">Campagnes</a>
-          </li>
-          <?
-          if ($_SESSION['mj'] == 1):
-            echo '<li class="sub_menu--item"><a href="grimoires.php" class="sub_menu--link">Grimoires</a></li>';
-          endif;
-          ?>
-        </ul>
-      </li>
+      <? if (!isset($_SESSION['mode_campagne']) || (int)$_SESSION['mode_campagne'] === 1): ?>
+        <li class="menu--item  menu--item__has_sub_menu">
+          <label class="menu--link" title="Item 1">
+            <i class="menu--icon  fa fa-fw fa-user"></i>
+            <span class="menu--label">Ressources de jeu</span>
+          </label>
+          <ul class="sub_menu">
+            <li class="sub_menu--item">
+              <a href="personnages.php" class="sub_menu--link">Personnages</a>
+            </li>
+            <li class="sub_menu--item">
+              <a href="campagnes.php" class="sub_menu--link">Campagnes</a>
+            </li>
+            <?
+            if ($_SESSION['mj'] == 1):
+              echo '<li class="sub_menu--item"><a href="grimoires.php" class="sub_menu--link">Grimoires</a></li>';
+            endif;
+            ?>
+          </ul>
+        </li>
+      <? else: ?>
+        <li class="menu--item">
+          <a href="personnages.php" class="menu--link" title="Personnages">
+            <i class="menu--icon  fa fa-fw fa-user"></i>
+            <span class="menu--label">Personnages</span>
+          </a>
+        </li>
+      <? endif; ?>
       <li class="menu--item  menu--item__has_sub_menu">
         <label class="menu--link" title="Univers">
           <i class="menu--icon fa fa-fw fa-globe"></i>

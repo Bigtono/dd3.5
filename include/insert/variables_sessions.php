@@ -8,4 +8,6 @@ $_SESSION['mj']= (int)$user['j_admin'];
 $_SESSION['ruleset']= (int)$user['j_default_ruleset_var_id'];
 $_SESSION['rulesetRep']=libvar($user['j_default_ruleset_var_id']);
 $_SESSION['items_par_page']= (int)$user['j_items_par_page'];
+$_SESSION['mode_campagne']= isset($user['j_mode_campagne']) ? (int)$user['j_mode_campagne'] : 1;
+$_SESSION['affichage_ruleset']= isset($user['j_affichage_ruleset']) ? (int)$user['j_affichage_ruleset'] : 0;
 ?>

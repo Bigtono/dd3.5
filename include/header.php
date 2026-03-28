@@ -9,7 +9,9 @@
       <h1><a href="http://<? echo $_SESSION['url_site']; ?>" class="lien txt-white"><? echo $_SESSION['titre_site']; ?></a></h1>
 
       <!-- ruleset actif -->
-      <div><span id="ruleset" class="ruleset"><? echo libvar($_SESSION['ruleset']); ?></span></div>
+      <? if (!empty($_SESSION['affichage_ruleset']) && (int)$_SESSION['affichage_ruleset'] === 1): ?>
+        <div><span id="ruleset" class="ruleset"><? echo libvar($_SESSION['ruleset']); ?></span></div>
+      <? endif; ?>
 
       <?
       // memorisation du contexte campagne/scenario/chapitre
@@ -22,10 +24,14 @@
       if (isset($_GET['chapitre']) && (int)$_GET['chapitre'] > 0):
         $_SESSION['chapitre'] = (int)$_GET['chapitre'];
       endif;
+      if (isset($_GET['rencontre']) && (int)$_GET['rencontre'] > 0):
+        $_SESSION['rencontre'] = (int)$_GET['rencontre'];
+      endif;
 
       $campagne_id = isset($_SESSION['campagne']) ? (int)$_SESSION['campagne'] : 0;
       $scenario_id = isset($_SESSION['scenario']) ? (int)$_SESSION['scenario'] : 0;
       $chapitre_id = isset($_SESSION['chapitre']) ? (int)$_SESSION['chapitre'] : 0;
+      $rencontre_id = isset($_SESSION['rencontre']) ? (int)$_SESSION['rencontre'] : 0;
 
       $header_context_items = [];
       if ($campagne_id > 0):
@@ -58,6 +64,16 @@
           ];
         endif;
       endif;
+      if ($rencontre_id > 0):
+        $rencontre_nom = libelle("dd_rencontres", "re", "nom", $rencontre_id);
+        if ($rencontre_nom != ''):
+          $header_context_items[] = [
+            'type' => 'Rencontre',
+            'label' => $rencontre_nom,
+            'url' => 'rencontre.php?rencontre=' . $rencontre_id
+          ];
+        endif;
+      endif;
 
       if ($campagne_id === 0):
         $personnage_id = 0;
@@ -85,14 +101,32 @@
             <div><a class="ruleset lien" href="<?= htmlspecialchars($ctx['url']); ?>"><?= htmlspecialchars($ctx['label']); ?></a></div>
           <? endforeach; ?>
         </div>
-        <? if (count($header_context_items) > 0): ?>
-          <select id="header-context-select" class="search-select" aria-label="Navigation contextuelle" onChange="if(this.value){window.location.href=this.value;}">
+        <? if (count($header_context_items) === 1): ?>
+          <? $ctx_single = $header_context_items[0]; ?>
+          <a id="header-context-single" href="<?= htmlspecialchars($ctx_single['url']); ?>"><?= htmlspecialchars($ctx_single['label']); ?></a>
+        <? elseif (count($header_context_items) > 1): ?>
+          <select id="header-context-select" aria-label="Navigation contextuelle" size="1" onChange="navigateHeaderContext(this)">
             <? foreach ($header_context_items as $idx => $ctx): ?>
+              <? $ctx_label = preg_replace('/\s+/', ' ', trim(strip_tags((string)$ctx['label']))); ?>
               <option value="<?= htmlspecialchars($ctx['url']); ?>" <?= $idx === count($header_context_items) - 1 ? ' selected' : ''; ?>>
-                <?= htmlspecialchars($ctx['type'] . ' : ' . $ctx['label']); ?>
+                <?= htmlspecialchars($ctx['type'] . ' : ' . $ctx_label); ?>
               </option>
             <? endforeach; ?>
           </select>
+          <script>
+            function navigateHeaderContext(selectEl) {
+              if (!selectEl) return;
+              var url = selectEl.value || '';
+              if (url !== '') window.location.assign(url);
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+              var ctxSelect = document.getElementById('header-context-select');
+              if (!ctxSelect) return;
+              ctxSelect.addEventListener('change', function() {
+                navigateHeaderContext(ctxSelect);
+              });
+            });
+          </script>
         <? endif; ?>
       </div>
 

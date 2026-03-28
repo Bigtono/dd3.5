@@ -146,7 +146,34 @@ endif;
           document.getElementById('toggleDDOngletOM').addEventListener('change', function() {
             document.getElementById('mp_j_dd_onglet_om').value = this.checked ? 1 : 0;
           });
-        </script>          
+        </script>
+
+        <input type="hidden" name="mp_j_mode_campagne" id="mp_j_mode_campagne" value="<?= (!isset($dn['j_mode_campagne']) || (int)$dn['j_mode_campagne'] === 1) ? 1 : 0 ?>">
+        <div class="ligne">
+          <div class="label w300">Mode campagne (afficher les fonctionnalites campagne)</div>
+          <label class="switch">
+            <input type="checkbox" id="toggleModeCampagne" <?= (!isset($dn['j_mode_campagne']) || (int)$dn['j_mode_campagne'] === 1) ? 'checked' : '' ?>>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <script>
+          document.getElementById('toggleModeCampagne').addEventListener('change', function() {
+            document.getElementById('mp_j_mode_campagne').value = this.checked ? 1 : 0;
+          });
+        </script>
+        <input type="hidden" name="mp_j_affichage_ruleset" id="mp_j_affichage_ruleset" value="<?= (isset($dn['j_affichage_ruleset']) && (int)$dn['j_affichage_ruleset'] === 1) ? 1 : 0 ?>">
+        <div class="ligne">
+          <div class="label w300">Afficher le ruleset dans le header</div>
+          <label class="switch">
+            <input type="checkbox" id="toggleAffichageRuleset" <?= (isset($dn['j_affichage_ruleset']) && (int)$dn['j_affichage_ruleset'] === 1) ? 'checked' : '' ?>>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <script>
+          document.getElementById('toggleAffichageRuleset').addEventListener('change', function() {
+            document.getElementById('mp_j_affichage_ruleset').value = this.checked ? 1 : 0;
+          });
+        </script>
       </div>
 
       <!-- affichage des boutons --->

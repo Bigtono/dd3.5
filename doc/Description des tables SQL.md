@@ -11,19 +11,6 @@ Informations sur la construction de la base :
 Listes des principales tables
 -----------------------------
 
-dd_personnages (liste des personnages. Préfixe pe)
-- pe_id (id, index de la table)
-- pe_nom (nom du personnage)
-- pe_ra_id (id de la race du personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 1)
-- pe_arc_id (id de l'archétype personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 2. L'archétype est optionnel, le champ par défaut est égal à 0 et indique que le personnage n'a pas d'archétype)
-- pe_for (caractéristique de Force du personnage)
-- pe_con (caractéristique de Constitution du personnage)
-- pe_dex (caractéristique de Dextérité du personnage)
-- pe_int (caractéristique d'Intelligence du personnage)
-- pe_sag (caractéristique de Sagesse du personnage)
-- pe_cha (caractéristique de Charisme du personnage)
-- pe_ruleset_var_id (id de la version des règles, stocké dans la table dd_variables)
-
 dd_caracteristiques (liste des 6 caractéristiques que possède chaque personnage. Préfixe car)
 - car_id (id, index de la table)
 - car_nom (nom de la caractéristique)
@@ -130,6 +117,19 @@ dd_sortclasse (liste des sorts pour chaque classe. Préfixe sc)
 - sc_niveau (niveau auquel la classe peut lancer ce sort, de 0 à 9)
 Note : une classe peut avoir plusieurs sort mais une seule fois le même sort
 
+dd_personnages (liste des personnages. Préfixe pe)
+- pe_id (id, index de la table)
+- pe_nom (nom du personnage)
+- pe_ra_id (id de la race du personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 1)
+- pe_arc_id (id de l'archétype personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 2. L'archétype est optionnel, le champ par défaut est égal à 0 et indique que le personnage n'a pas d'archétype)
+- pe_for (caractéristique de Force du personnage)
+- pe_con (caractéristique de Constitution du personnage)
+- pe_dex (caractéristique de Dextérité du personnage)
+- pe_int (caractéristique d'Intelligence du personnage)
+- pe_sag (caractéristique de Sagesse du personnage)
+- pe_cha (caractéristique de Charisme du personnage)
+- pe_ruleset_var_id (id de la version des règles, stocké dans la table dd_variables)
+
 dd_personnages_classes (affectation d'une classe au personnage avec un niveau. Préfixe pc)
 - pc_id (id, index de la table)
 - pc_pe_id (id du personnage, table dd_ personnages)
@@ -137,22 +137,21 @@ dd_personnages_classes (affectation d'une classe au personnage avec un niveau. P
 - pc_niveau (niveau du personnage dans cette classe)
 - pc_do_id_1 (id du premier domaine divin. Uniquement si cla_mag_id=2 et cla_domaine_divin=1 pour la classe concernée)
 - pc_do_id_2 (id du deuxième domaine divin. Uniquement si cla_mag_id=2 et cla_domaine_divin=1 pour la classe concernée)
-
 Note : un personnage peut avoir plusieurs classes mais une seule fois la même classe
 
 dd_personnages_sorts (contient la liste des sorts possédés par le personnage. Préfixe pes)
 - pes_id (id, index de la table)
-- pes_pe_id (id du personnage, table dd_personnages)
+- pes_pc_id (id de l'affectation de la classe, table dd_personnages_classes)
 - pes_so_id (id du sort, table dd_sorts)
 - pes_connu (valeur oui/non indiquant si le personnage peut lancer le sort?)
 - pes_memorise (valeur de 0 à 10 indiquant combien de fois le personnage a memorisé le sort)
 - pes_lance (valeur de 0 à 10 indiquant combien de fois le personnage a lancé le sort)
 Note : un personnage peut avoir plusieurs sorts mais une seule fois le même sort
 
-dd_personnages_nls (ventilation des niveaux de lanceur de sort des classes de prestige, préfixe penl) (spécifique au ruleset DD3.5)
+dd_personnages_nls (affectation des modificateurs de niveaux de lanceur de sort des classes de prestige, préfixe penl) (spécifique au ruleset DD3.5)
 - penl_id (id, index de la table)
-- penl_pc_id (id de l'enregistrement de la classe de personnage possédé la personnage, table dd_personnages_classes)
-- penl_cla_id (id de la classe de prestige dont le niveau de lanceur de sort doit être attribué, table dd_classes, cla_clt_id=2)
+- penl_pc_id_base (id de l'enregistrement de la classe de personnage possédé la personnage, table dd_personnages_classes)
+- penl_pc_id_prestige (id de la classe de prestige dont le niveau de lanceur de sort doit être attribué, table dd_classes, cla_clt_id=2)
 - penl_niveau (niveau de la classe prestige. Permet de ventiler les choix du joueur pour chaque niveau possédé dnas la classe de prestige)
 
 dd_ressources (livres de règles, aussi appelés ressources, dont sont issus les sorts. Préfixe res)
@@ -279,3 +278,30 @@ commentaire sur le fonctionnement des notes. Une note est constituées de plusie
 Une note peut aussi être rattaché à une campagne (table dd_campagnes_notes).
 Les tags sont gérés sans limite via la relation n-n dd_notes_tags.
 La table dd_niveaux_notes est obsolète et doit être supprimée après migration applicative.
+
+
+dd_joueurs (liste des utilisateurs du site)
+- j_id
+- j_prenom
+- j_nom
+- j_pseudo
+- j_avatar_url
+- j_bio
+- j_pass
+- j_password_hash
+- j_remember_token
+- j_remember_token_expires
+- j_email
+- j_date_inscription
+- j_derniere_connexion
+- j_telephone
+- j_admin
+- j_default_ruleset_var_id
+- j_notes
+- j_dd_onglet_sort (affiche un bouton pour permettre l'affichage d'un sort dans un nouvel onglet plutôt que dans le DIV dtail-PP)
+- j_dd_onglet_don (affiche un bouton pour permettre l'affichage d'un don dans un nouvel onglet plutôt que dans le DIV dtail-PP)
+- j_dd_onglet_om (affiche un bouton pour permettre l'affichage d'un objet dans un nouvel onglet plutôt que dans le DIV dtail-PP)
+- j_mode_campagne (0/1 : active ou non les fonctionnalites de gestion de campagne dans l'interface utilisateur)
+- j_affichage_ruleset (0/1 : affiche ou non le ruleset actif dans le header)
+- j_items_par_page
+- j_visible

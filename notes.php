@@ -247,18 +247,18 @@ endif;
           if (isset($tagsByNote[$noteId]) && !empty($tagsByNote[$noteId])):
             $tmp = [];
             foreach ($tagsByNote[$noteId] as $tagNom):
-              $tmp[] = '<span class="mr5" style="display:inline-block;padding:2px 8px;border:1px solid #999;border-radius:12px;font-size:12px;line-height:1.4;">' . htmlspecialchars((string)$tagNom, ENT_QUOTES, 'UTF-8') . '</span>';
+              $tmp[] = '<span class="notes-tag-pill">' . htmlspecialchars((string)$tagNom, ENT_QUOTES, 'UTF-8') . '</span>';
             endforeach;
-            $tagsBubbles = implode('', $tmp);
+            $tagsBubbles = '<div class="notes-tags-wrap">' . implode('', $tmp) . '</div>';
           endif;
 
-          echo '<div id="no' . $noteId . '" class="item data">';
+          echo '<div id="no' . $noteId . '" class="item data notes-row">';
           echo '  <div class="icone_select"><input type="checkbox" class="bulk-row-checkbox" data-bulk-scope="notes" data-bulk-id="' . $noteId . '" onclick="event.stopPropagation();"></div>';
           echo '  <div class="icone_suppr"><span onClick="suppression(\'dd_notes\',\'no\',' . $noteId . ')"><i class="fa fa-trash"></i></span></div>';
           echo '  <div class="icone_modif"><span onclick="modifierNote(' . $noteId . ',0)"><i class="fa fa-pencil"></i></span></div>';
           echo '  <div class="nom_note" onclick="' . $click . '">' . htmlspecialchars($nom, ENT_QUOTES, 'UTF-8') . '</div>';
           echo '  <div class="categorie_note" onclick="' . $click . '">' . libelle("dd_types_notes", "tyno", "nom", $dnno['no_tyno_id']) . '</div>';
-          echo '  <div class="niveau_note" onclick="' . $click . '">' . $tagsBubbles . '</div>';
+          echo '  <div class="niveau_note notes-tags-column" onclick="' . $click . '">' . $tagsBubbles . '</div>';
           echo '</div>';
         endforeach;
         echo '<div id="bulk-notes" class="item data notes-bulk-row" data-bulk-scope="notes" data-campagne-active="' . ($campagneActive > 0 ? '1' : '0') . '">';
