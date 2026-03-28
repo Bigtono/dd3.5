@@ -85,6 +85,12 @@ endif;
 
 $perso = '';
 if (!empty($_SESSION['campagne']) && (int)$_SESSION['campagne'] > 0):
+  $perso .= '<div class="note-diffusion-row mb10">';
+  $perso .= '  <div class="note-diffusion-name gras">Niveau global</div>';
+  $perso .= '  <div class="note-diffusion-global-controls"><select id="note-global-dd" class="note-diffusion-select">' . optionListDdLocal(1, 35) . '</select>';
+  $perso .= '  <button type="button" class="btNoir ml10" onClick="NoteActions.applyDiffusionDdToAll()">Appliquer a tous</button></div>';
+  $perso .= '</div>';
+
   $stmtPerso = $db->prepare('SELECT pe_id, pe_nom FROM dd_personnages WHERE pe_camp_id=:camp ORDER BY pe_nom');
   $stmtPerso->execute([':camp' => (int)$_SESSION['campagne']]);
   while ($dnpe = $stmtPerso->fetch(PDO::FETCH_ASSOC)):

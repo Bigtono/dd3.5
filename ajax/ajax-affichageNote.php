@@ -91,7 +91,7 @@ endif;
 $texte2 = $tocBloc . '<article class="article">' . $htmlWithIds . '</article>';
 
 $boutonModif = '';
-if ($isMj || $isAuteur) $boutonModif = '<div class="dr lien" onclick="modifierNote(' . (int)$dn['no_id'] . ')"><i class="fa fa-pencil"></i></div>';
+if ($isMj || $isAuteur) $boutonModif = '<div class="dr lien" onclick="modifierNote(' . (int)$dn['no_id'] . ',' . (int)$p . ')"><i class="fa fa-pencil"></i></div>';
 
 $result = '<div id="note" class="affichage">';
 $result .= '  <div class="menu2"><div class="ga lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div><div class="ce"></div>' . $boutonModif . '</div>';

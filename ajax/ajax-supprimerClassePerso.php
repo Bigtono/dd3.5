@@ -15,7 +15,14 @@ if ($pcId > 0):
 endif;
 
 // MAJ de l'affichage des classes
-include('../include/insert/'.$_SESSION['rulesetRep'].'/listeClassesPerso.php');
+$liste = '';
+$requete_cl = '';
+if (isset($_SESSION['rulesetRep']) && $_SESSION['rulesetRep'] !== ''):
+  $legacyFile = '../include/insert/' . $_SESSION['rulesetRep'] . '/listeClassesPerso.php';
+  if (file_exists($legacyFile)):
+    include($legacyFile);
+  endif;
+endif;
 
 echo $p."@".$liste."@".$requete_cl;
 

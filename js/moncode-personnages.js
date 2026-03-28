@@ -131,7 +131,7 @@ function ajouterClassePerso(id) {
   var detail = document.getElementById('detail-pp');
   if (!detail) return;
   if (available.length === 0) {
-    detail.innerHTML = '<div class="contenu"><div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div><div>Toutes les classes du ruleset sont deja affectees.</div></div>';
+    detail.innerHTML = '<div class="affichage"><div class="contenu"><div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div><div>Toutes les classes du ruleset sont deja affectees.</div></div></div>';
     detail.style.display = 'block';
     return;
   }
@@ -142,11 +142,13 @@ function ajouterClassePerso(id) {
   });
 
   var html = '';
+  html += '<div class="affichage">';
   html += '<div class="contenu">';
   html += '  <div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div>';
   html += '  <div class="ligne"><span class="label">Classe</span><select id="mp_cla_id" onChange="majNiveauAjoutClasseForm()">' + options + '</select></div>';
   html += '  <div class="ligne"><span class="label">Niveau</span><select id="mp_cp_niveau"></select></div>';
   html += '  <div class="ligneBouton"><button type="button" class="btNoir" onClick="validerAjoutClasse(' + personnageClassesState.personnageId + ')">Valider</button><button type="button" class="btNoir" onClick="fermerDetail()">Annuler</button></div>';
+  html += '</div>';
   html += '</div>';
   detail.innerHTML = html;
   detail.style.display = 'block';
@@ -348,7 +350,15 @@ function actualiserEqt(reponse) {
 
 
 function afficherNote(note, accreditation) {
-  if (window.NoteActions && typeof window.NoteActions.afficherNote === 'function') return window.NoteActions.afficherNote(note, accreditation, 0);
+  var persoId = 0;
+  try {
+    var params = new URLSearchParams(window.location.search || '');
+    persoId = parseInt(params.get('personnage') || '0', 10);
+    if (isNaN(persoId) || persoId < 0) persoId = 0;
+  } catch (e) {
+    persoId = 0;
+  }
+  if (window.NoteActions && typeof window.NoteActions.afficherNote === 'function') return window.NoteActions.afficherNote(note, accreditation, persoId);
   alert('Module notes indisponible');
 }
 
@@ -383,7 +393,9 @@ function toggleAttributionNoteCampagne(noteId, checkboxEl, event) {
 }
 
 function modifierNote(note,perso) {
-  if (window.NoteActions && typeof window.NoteActions.modifierNote === 'function') return window.NoteActions.modifierNote(note, perso);
+  var persoId = parseInt(perso || '0', 10);
+  if (isNaN(persoId) || persoId < 0) persoId = 0;
+  if (window.NoteActions && typeof window.NoteActions.modifierNote === 'function') return window.NoteActions.modifierNote(note, persoId);
   alert('Module notes indisponible');
 }
 

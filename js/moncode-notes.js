@@ -3,6 +3,8 @@
 
 (function (window, $) {
   if (!$) return;
+  const NOTE_REOPEN_KEY = 'dd_note_reopen_context';
+  let noteContext = null;
 
   function nextContenuIndex() {
     let max = 0;
@@ -57,6 +59,84 @@
       if (!Number.isNaN(id) && id > 0) out.push(id);
     }
     return out;
+  }
+
+  function renderDetailResponse(reponse) {
+    const raw = String(reponse || '');
+    const sepIdx = raw.indexOf('@');
+    if (sepIdx < 0) {
+      alert('Reponse serveur invalide.');
+      return;
+    }
+    const payload = raw.substring(sepIdx + 1);
+    if (!payload) {
+      alert('Aucun contenu a afficher.');
+      return;
+    }
+    $('#modification').hide();
+    $('#detail-pp').html(payload).show('fast');
+  }
+
+  function getCurrentSourcePage() {
+    const path = String((window.location && window.location.pathname) || '');
+    const parts = path.split('/');
+    const file = parts.length ? parts[parts.length - 1] : '';
+    return file || '';
+  }
+
+  function parseIntSafe(value, fallback) {
+    const parsed = parseInt(value, 10);
+    return Number.isNaN(parsed) ? fallback : parsed;
+  }
+
+  function updateNoteContext(note, accreditation, perso) {
+    noteContext = {
+      noteId: parseIntSafe(note, 0),
+      accreditation: parseIntSafe(accreditation, 0),
+      perso: parseIntSafe(perso, 0),
+      sourcePage: getCurrentSourcePage()
+    };
+  }
+
+  function getNoteContext() {
+    return noteContext;
+  }
+
+  function shouldReloadAndReopen(ctx) {
+    const currentPage = getCurrentSourcePage();
+    if (currentPage === 'notes.php' || currentPage === 'personnage-connaissances.php') return true;
+    if ($('#bulk-notes').length > 0) return true;
+    if ($('#listeNotesPerso').length > 0) return true;
+    if (!ctx || !ctx.sourcePage) return false;
+    return ctx.sourcePage === 'notes.php' || ctx.sourcePage === 'personnage-connaissances.php';
+  }
+
+  function persistReopenContext(ctx) {
+    if (!window.sessionStorage || !ctx) return;
+    try {
+      window.sessionStorage.setItem(NOTE_REOPEN_KEY, JSON.stringify(ctx));
+    } catch (e) {
+      // Ignore storage failures (private mode/quota).
+    }
+  }
+
+  function consumeReopenContext() {
+    if (!window.sessionStorage) return null;
+    try {
+      const raw = window.sessionStorage.getItem(NOTE_REOPEN_KEY);
+      if (!raw) return null;
+      window.sessionStorage.removeItem(NOTE_REOPEN_KEY);
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.noteId) return null;
+      return {
+        noteId: parseIntSafe(parsed.noteId, 0),
+        accreditation: parseIntSafe(parsed.accreditation, 0),
+        perso: parseIntSafe(parsed.perso, 0),
+        sourcePage: String(parsed.sourcePage || '')
+      };
+    } catch (e) {
+      return null;
+    }
   }
 
   function getSelectedBulkIds(scope) {
@@ -155,7 +235,7 @@
         url: action.formUrl,
         data: 'note_ids=' + encodeURIComponent(ids.join(',')),
         dataType: 'text',
-        success: actualiserPage,
+        success: renderDetailResponse,
         error: function () { alert('Erreur ouverture formulaire action de masse.'); }
       });
     }
@@ -163,10 +243,14 @@
 
   const NoteActions = {
     afficherNote: function (note, accreditation, perso) {
+      const noteId = parseIntSafe(note, 0);
+      const acc = parseIntSafe(accreditation, 0);
+      const peId = parseIntSafe(perso, 0);
+      updateNoteContext(noteId, acc, peId);
       $.ajax({
         type: 'POST',
         url: 'ajax/ajax-affichageNote.php',
-        data: 'note=' + note + '&accreditation=' + (accreditation || 0) + '&perso=' + (perso || 0),
+        data: 'note=' + noteId + '&accreditation=' + acc + '&perso=' + peId,
         dataType: 'text',
         success: actualiserPage,
         error: function () { alert('Erreur afficherNote'); }
@@ -174,10 +258,14 @@
     },
 
     modifierNote: function (note, perso) {
+      const noteId = parseIntSafe(note, 0);
+      let peId = parseIntSafe(perso, 0);
+      const ctx = getNoteContext();
+      if (peId <= 0 && ctx && ctx.noteId === noteId) peId = parseIntSafe(ctx.perso, 0);
       $.ajax({
         type: 'POST',
         url: 'ajax/ajax-modifierNote.php',
-        data: 'note=' + note + '&perso=' + (perso || 0),
+        data: 'note=' + noteId + '&perso=' + peId,
         dataType: 'text',
         success: actualiserPageModif,
         error: function () { alert('Erreur modifierNote'); }
@@ -250,14 +338,25 @@
             alert(reponse);
             return;
           }
-          if ((perso || 0) === 0) {
+          const savedNoteId = parseIntSafe(resultat[0], 0);
+          const ctx = getNoteContext() || {};
+          const effectiveContext = {
+            noteId: savedNoteId,
+            accreditation: parseIntSafe(ctx.accreditation, 999),
+            perso: parseIntSafe((perso || 0), parseIntSafe(ctx.perso, 0)),
+            sourcePage: String(ctx.sourcePage || getCurrentSourcePage())
+          };
+
+          if (shouldReloadAndReopen(effectiveContext)) {
+            persistReopenContext(effectiveContext);
             $('#modification').hide();
             window.location.reload();
             return;
           }
-          $('#no' + resultat[0]).html(resultat[1]);
+
+          $('#no' + savedNoteId).html(resultat[1]);
           $('#modification').hide();
-          NoteActions.afficherNote(resultat[0], 0, perso || 0);
+          NoteActions.afficherNote(savedNoteId, effectiveContext.accreditation, effectiveContext.perso);
         },
         error: function () { alert('Erreur validerModifNote()'); }
       });
@@ -302,6 +401,12 @@
       const dd = parseInt($('#bulk-global-dd').val(), 10) || 0;
       if (dd <= 0) return;
       $('.bulk-assign-dd').val(String(dd));
+    },
+
+    applyDiffusionDdToAll: function () {
+      const dd = parseInt($('#note-global-dd').val(), 10) || 0;
+      if (dd <= 0) return;
+      $('.diffusion').val(String(dd));
     },
 
     bulkApplyAssign: function () {
@@ -379,6 +484,14 @@
   window.BulkActions = BulkActions;
 
   $(function () {
+    const reopenCtx = consumeReopenContext();
+    if (reopenCtx && reopenCtx.noteId > 0) {
+      const currentPage = getCurrentSourcePage();
+      if (!reopenCtx.sourcePage || reopenCtx.sourcePage === currentPage) {
+        NoteActions.afficherNote(reopenCtx.noteId, reopenCtx.accreditation, reopenCtx.perso);
+      }
+    }
+
     const $bulk = $('#bulk-notes[data-bulk-scope="notes"]');
     if (!$bulk.length) return;
 
@@ -410,4 +523,6 @@
       }
     });
   });
+
+  window.getCurrentNoteContext = getNoteContext;
 })(window, window.jQuery);

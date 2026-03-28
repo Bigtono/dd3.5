@@ -44,7 +44,6 @@ function fermerDetail() {
 function actualiserPageModif(reponse) {
   var resultat = reponse.split("@");
   console.log('Affichage formulaire #'+resultat[0]);
-  $("#detail-pp").hide('fast');
   if (window.CKEDITOR && CKEDITOR.instances) {
     ['mp_so_texte', 'mp_do_texte'].forEach(function(editorId) {
       if (CKEDITOR.instances[editorId]) {
