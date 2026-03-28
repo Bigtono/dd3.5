@@ -1,73 +1,230 @@
 // JavaScript Document
 //##############################MOTEUR AJAX 1############################################
-function ajouterClassePerso(id) {
-  console.log('formulaire nouvelle classe Perso #'+id);
-	$.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-ajouterClassePerso.php',
-    data: "perso="+id,
-		dataType:'text',
-    success: actualiserDivNouvelleClasse,
-    error: function() {alert('Erreur ajouterClassePerso()');}
-	}); 
+var personnageClassesState = null;
+
+function escHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-function actualiserDivNouvelleClasse(reponse) {
-  var resultat = reponse.split("@");
-  console.log('Affichage formulaire : '+resultat[0]);
-	$("#nouvelleClasse").html(resultat[1]); 
+function buildNiveauOptions(selected, niveauMax) {
+  var html = '';
+  for (var i = 1; i <= niveauMax; i++) {
+    html += '<option value="' + i + '"' + (i === selected ? ' selected' : '') + '>' + i + '</option>';
+  }
+  return html;
+}
+
+function getCurrentSelectedClasseIds() {
+  if (!personnageClassesState) return {};
+  var selected = {};
+  personnageClassesState.existing.forEach(function(item) {
+    if (!item.deleted) selected[item.cla_id] = true;
+  });
+  personnageClassesState.added.forEach(function(item) {
+    if (!item.deleted) selected[item.cla_id] = true;
+  });
+  return selected;
+}
+
+function buildClassesPayloadInputs() {
+  if (!personnageClassesState) return;
+  var payload = document.getElementById('classesPayload');
+  if (!payload) return;
+
+  var html = '';
+  html += '<input type="hidden" name="mp_classes_payload_ready" value="1">';
+  personnageClassesState.existing.forEach(function(item) {
+    if (item.deleted) {
+      html += '<input type="hidden" name="mp_class_delete_ids[]" value="' + item.pc_id + '">';
+    } else {
+      html += '<input type="hidden" name="mp_class_keep_ids[]" value="' + item.pc_id + '">';
+      html += '<input type="hidden" name="mp_class_keep_niveau[' + item.pc_id + ']" value="' + item.niveau + '">';
+    }
+  });
+  personnageClassesState.added.forEach(function(item) {
+    if (item.deleted) return;
+    html += '<input type="hidden" name="mp_class_add_cla_id[]" value="' + item.cla_id + '">';
+    html += '<input type="hidden" name="mp_class_add_niveau[]" value="' + item.niveau + '">';
+  });
+  payload.innerHTML = html;
+}
+
+function renderClassesEditor() {
+  if (!personnageClassesState) return;
+  var classesDiv = document.getElementById('classes');
+  if (!classesDiv) return;
+
+  var html = '';
+  personnageClassesState.existing.forEach(function(item) {
+    if (item.deleted) return;
+    var selectId = 'pcnexisting-' + item.pc_id;
+    html += '<div id="pc' + item.pc_id + '" class="classe">';
+    html += '  <div onClick="supprimerClassePerso(' + personnageClassesState.personnageId + ',\'existing-' + item.pc_id + '\')" class="suppression"><i class="fa-solid fa-trash"></i></div>';
+    html += '  <div class="libelle_classe">' + escHtml(item.cla_nom) + '</div>';
+    html += '  <select class="niveau_classe" id="' + selectId + '" onChange="majNiveauClassePerso(\'' + selectId + '\')">';
+    html += buildNiveauOptions(item.niveau, item.niveau_max);
+    html += '  </select>';
+    html += '</div>';
+  });
+
+  personnageClassesState.added.forEach(function(item, idx) {
+    if (item.deleted) return;
+    var selectId = 'pcnnew-' + idx;
+    html += '<div id="new' + idx + '" class="classe">';
+    html += '  <div onClick="supprimerClassePerso(' + personnageClassesState.personnageId + ',\'new-' + idx + '\')" class="suppression"><i class="fa-solid fa-trash"></i></div>';
+    html += '  <div class="libelle_classe">' + escHtml(item.cla_nom) + '</div>';
+    html += '  <select class="niveau_classe" id="' + selectId + '" onChange="majNiveauClassePerso(\'' + selectId + '\')">';
+    html += buildNiveauOptions(item.niveau, item.niveau_max);
+    html += '  </select>';
+    html += '</div>';
+  });
+
+  if (html === '') html = '<div class="ml10">Aucune classe</div>';
+  classesDiv.innerHTML = html;
+  buildClassesPayloadInputs();
+}
+
+function initPersonnageClassesEditor(config) {
+  personnageClassesState = {
+    personnageId: parseInt(config.personnageId || 0, 10),
+    existing: (config.classesExistantes || []).map(function(item) {
+      return {
+        pc_id: parseInt(item.pc_id, 10),
+        cla_id: parseInt(item.cla_id, 10),
+        cla_nom: item.cla_nom,
+        niveau: parseInt(item.niveau, 10),
+        niveau_max: parseInt(item.niveau_max, 10),
+        deleted: false
+      };
+    }),
+    added: [],
+    catalog: (config.classesCatalogue || []).map(function(item) {
+      return {
+        cla_id: parseInt(item.cla_id, 10),
+        cla_nom: item.cla_nom,
+        niveau_max: parseInt(item.niveau_max, 10)
+      };
+    })
+  };
+
+  var form = document.getElementById('modif-personnage');
+  if (form) {
+    form.addEventListener('submit', function() {
+      buildClassesPayloadInputs();
+    });
+  }
+  renderClassesEditor();
+}
+
+function ajouterClassePerso(id) {
+  if (!personnageClassesState || parseInt(id, 10) <= 0) return;
+  var selected = getCurrentSelectedClasseIds();
+  var available = personnageClassesState.catalog.filter(function(item) {
+    return !selected[item.cla_id];
+  });
+
+  var detail = document.getElementById('detail-pp');
+  if (!detail) return;
+  if (available.length === 0) {
+    detail.innerHTML = '<div class="contenu"><div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div><div>Toutes les classes du ruleset sont deja affectees.</div></div>';
+    detail.style.display = 'block';
+    return;
+  }
+
+  var options = '';
+  available.forEach(function(item) {
+    options += '<option value="' + item.cla_id + '" data-niveaumax="' + item.niveau_max + '">' + escHtml(item.cla_nom) + '</option>';
+  });
+
+  var html = '';
+  html += '<div class="contenu">';
+  html += '  <div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div>';
+  html += '  <div class="ligne"><span class="label">Classe</span><select id="mp_cla_id" onChange="majNiveauAjoutClasseForm()">' + options + '</select></div>';
+  html += '  <div class="ligne"><span class="label">Niveau</span><select id="mp_cp_niveau"></select></div>';
+  html += '  <div class="ligneBouton"><button type="button" class="btNoir" onClick="validerAjoutClasse(' + personnageClassesState.personnageId + ')">Valider</button><button type="button" class="btNoir" onClick="fermerDetail()">Annuler</button></div>';
+  html += '</div>';
+  detail.innerHTML = html;
+  detail.style.display = 'block';
+  majNiveauAjoutClasseForm();
+}
+
+function majNiveauAjoutClasseForm() {
+  var selectClasse = document.getElementById('mp_cla_id');
+  var selectNiveau = document.getElementById('mp_cp_niveau');
+  if (!selectClasse || !selectNiveau) return;
+  var option = selectClasse.options[selectClasse.selectedIndex];
+  var niveauMax = parseInt(option.getAttribute('data-niveaumax') || '1', 10);
+  if (niveauMax < 1) niveauMax = 1;
+  selectNiveau.innerHTML = buildNiveauOptions(1, niveauMax);
 }
 
 function validerAjoutClasse(id) {
-  console.log('Ajout Classe : '+$('#mp_cla_id').val()+' Niveau '+$('#mp_cp_niveau').val()+' au perso '+id);  
-	$.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-validerAjoutClassePerso.php',
-    data: "perso="+id+"&classe="+$('#mp_cla_id').val()+"&niveau="+$('#mp_cp_niveau').val(),	
-		dataType:'text',
-    success: actualiserDivClassesPerso,
-    error: function() {alert('Erreur validerAjoutClasse()');}
-	});		
+  if (!personnageClassesState || parseInt(id, 10) <= 0) return;
+  var selectClasse = document.getElementById('mp_cla_id');
+  var selectNiveau = document.getElementById('mp_cp_niveau');
+  if (!selectClasse || !selectNiveau) return;
+
+  var claId = parseInt(selectClasse.value || '0', 10);
+  var niveau = parseInt(selectNiveau.value || '1', 10);
+  var option = selectClasse.options[selectClasse.selectedIndex];
+  var niveauMax = parseInt(option.getAttribute('data-niveaumax') || '1', 10);
+  var claNom = option ? option.text : '';
+  if (claId <= 0) return;
+  if (niveau < 1) niveau = 1;
+  if (niveau > niveauMax) niveau = niveauMax;
+
+  personnageClassesState.added.push({
+    cla_id: claId,
+    cla_nom: claNom,
+    niveau: niveau,
+    niveau_max: niveauMax,
+    deleted: false
+  });
+  fermerDetail();
+  renderClassesEditor();
 }
 
-function supprimerClassePerso(perso,classe)
-{
-  console.log('Supprimer Classe #'+classe+" du perso "+perso);  
-	$.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-supprimerClassePerso.php',
-    data: "perso="+perso+"&classe="+classe,	
-		dataType:'text',
-    success: actualiserDivClassesPerso,
-    error: function() {alert('Erreur supprimerClassePerso()');}
-	}); 
+function supprimerClassePerso(perso, classeToken) {
+  if (!personnageClassesState) return;
+  if (!confirm('Voulez-vous supprimer cette classe ?')) return;
+  var token = String(classeToken || '');
+  if (token.indexOf('existing-') === 0) {
+    var pcId = parseInt(token.substring(9), 10);
+    personnageClassesState.existing.forEach(function(item) {
+      if (item.pc_id === pcId) item.deleted = true;
+    });
+  } else if (token.indexOf('new-') === 0) {
+    var idx = parseInt(token.substring(4), 10);
+    if (!isNaN(idx) && personnageClassesState.added[idx]) personnageClassesState.added[idx].deleted = true;
+  }
+  renderClassesEditor();
 }
 
-function actualiserDivClassesPerso(reponse) {
-	var resultat = reponse.split("@");
-  console.log('RÃ©affichage des classes du perso #'+resultat[0]+', REQUETE : '+resultat[2]);
-  $("#classes").html(resultat[1]); 
-}
+function actualiserDivClassesPerso() {}
+function actualiserDivNouvelleClasse() {}
+function actualiserNiveauClassePerso() {}
 
-function majNiveauClassePerso(reponse) {
-  var niveau=document.getElementById(reponse).value;
-	var classe = reponse;
-  console.log('Classe '+classe+', Niveau : '+niveau);
-  $.ajax({
-    type: 'POST',
-    url: 'ajax/ajax-majNiveauClassePerso.php',
-    data: "niveau="+niveau+"&classe="+classe,	
-		dataType:'text',
-    success: actualiserNiveauClassePerso,
-    error: function() {alert('Erreur majNiveauClassePerso()');}
-	});   
+function majNiveauClassePerso(selectId) {
+  if (!personnageClassesState) return;
+  var select = document.getElementById(selectId);
+  if (!select) return;
+  var niveau = parseInt(select.value || '1', 10);
+  if (selectId.indexOf('pcnexisting-') === 0) {
+    var pcId = parseInt(selectId.substring(12), 10);
+    personnageClassesState.existing.forEach(function(item) {
+      if (item.pc_id === pcId) item.niveau = niveau;
+    });
+  } else if (selectId.indexOf('pcnnew-') === 0) {
+    var idx = parseInt(selectId.substring(7), 10);
+    if (!isNaN(idx) && personnageClassesState.added[idx]) personnageClassesState.added[idx].niveau = niveau;
+  }
+  buildClassesPayloadInputs();
 }
-
-function actualiserNiveauClassePerso(reponse) {
-	var resultat = reponse.split("@");
-  console.log('MAJ du niveau de classe #'+resultat[0]);
-}
-
 // nouvelle fonction
 // passage de la fonction jquery accordion dans l'appel ajax
 // la fonction n'utilise plus actualiserPageModif dans success:

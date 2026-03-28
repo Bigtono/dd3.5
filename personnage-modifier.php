@@ -5,6 +5,9 @@ include("connexion.php");
 include("include/diverslib.inc.php");
 include("include/date.inc.php");
 
+$nlsPrestigeContext = ['has_section' => false];
+$nlsValidationError = isset($_GET['nls_error']) && (int)$_GET['nls_error'] === 1;
+
 if (isset($_GET['personnage'])):
   // appel Include
   $p = $_GET['personnage'];
@@ -37,6 +40,12 @@ if (isset($p) && $p != "n"): // il s'agit d'une modification
     exit;
   endif;
   $canEditNotesMj = $isCampaignOwner;
+  if (isset($_SESSION['rulesetRep']) && $_SESSION['rulesetRep'] === 'DD3.5'):
+    include_once("include/insert/DD3.5/personnage_nls_helper.php");
+    if (dd35_ruleset_active()):
+      $nlsPrestigeContext = dd35_load_personnage_nls_context($db, (int)$p);
+    endif;
+  endif;
 else: // il s'agit d'un ajout
   $num_rows = 1;
   $a = "n";
@@ -70,6 +79,42 @@ endif;
           $archetype = '<select id="mp_pe_arc_id" name="mp_pe_arc_id">' . optionList("dd_races", "ra", "nom", $dn['pe_arc_id'], "ra_rat_id=2") . '</select>';
           $organisation = '<select id="mp_pe_org_id" name="mp_pe_org_id">' . optionList("dd_organisations", "org", "nom", $dn['pe_org_id']) . '</select>';
           $alignement = '<select id="mp_pe_al_id" name="mp_pe_al_id">' . optionList("dd_alignements", "al", "abreviation", $dn['pe_al_id'], "", 1, "", "al_id") . '</select>';
+          $classesExistantes = [];
+          $classesCatalogue = [];
+          if ($p != "n"):
+            $stmtClassesExistantes = $db->prepare("
+              SELECT pc.pc_id, pc.pc_cla_id, pc.pc_niveau, c.cla_nom, c.cla_niveauMax
+              FROM dd_personnages_classes pc
+              JOIN dd_classes c ON c.cla_id = pc.pc_cla_id
+              WHERE pc.pc_pe_id = :pid
+              ORDER BY c.cla_nom
+            ");
+            $stmtClassesExistantes->execute([':pid' => (int)$p]);
+            while ($rowClasse = $stmtClassesExistantes->fetch(PDO::FETCH_ASSOC)):
+              $classesExistantes[] = [
+                'pc_id' => (int)$rowClasse['pc_id'],
+                'cla_id' => (int)$rowClasse['pc_cla_id'],
+                'cla_nom' => (string)$rowClasse['cla_nom'],
+                'niveau' => (int)$rowClasse['pc_niveau'],
+                'niveau_max' => (int)$rowClasse['cla_niveauMax'],
+              ];
+            endwhile;
+
+            $stmtCatalogue = $db->prepare("
+              SELECT cla_id, cla_nom, cla_niveauMax
+              FROM dd_classes
+              WHERE cla_ruleset_var_id = :ruleset
+              ORDER BY cla_nom
+            ");
+            $stmtCatalogue->execute([':ruleset' => (int)$_SESSION['ruleset']]);
+            while ($rowCat = $stmtCatalogue->fetch(PDO::FETCH_ASSOC)):
+              $classesCatalogue[] = [
+                'cla_id' => (int)$rowCat['cla_id'],
+                'cla_nom' => (string)$rowCat['cla_nom'],
+                'niveau_max' => (int)$rowCat['cla_niveauMax'],
+              ];
+            endwhile;
+          endif;
         ?>
           <form action="personnage-enregistrement.php?personnage=<? echo $p; ?>&tri=<? echo $_GET['tri']; ?>" class="formulaire" method="post" name="modif-personnage" id="modif-personnage">
             <input type="hidden" name="actionflag" value="modif" />
@@ -97,37 +142,24 @@ endif;
                 </div>
               </div>
               <div class="info_personnage">
-                <div class="label">Classes : </div>
-                <div id="classes"><!-- equal-height-container --->
-                  <?
-                  if ($p == "n"):
-                    echo '<div class="ml10">Veuillez enregistrer le personnage avant de lui ajouter des classes</div>';
-                  else:
-                    $liste = '';
-                    // gestion des classes
-                    $requete_cl = 'SELECT pc_id, pc_niveau, cla_nom, cla_niveauMax FROM dd_personnages_classes JOIN dd_classes ON pc_cla_id=cla_id WHERE pc_pe_id="' . $p . '" ORDER BY pc_niveau DESC;';
-                    $result_cl = queryPDO($requete_cl);
-                    $num_rows_cl = $result_cl->rowCount();
-                    if ($num_rows_cl > 0):
-                      while ($dncl = $result_cl->fetch(PDO::FETCH_ASSOC)):
-                        $liste .= '<div id="pc' . $dncl['pc_id'] . '" class="classe">';
-                        $liste .= '  <div onClick="supprimerClassePerso(' . $p . ',' . $dncl['pc_id'] . ')" class="suppression"><i class="fa-solid fa-trash"></i></div>';
-                        $liste .= '  <div class="libelle_classe">' . $dncl['cla_nom'] . '</div>';
-                        $liste .= '  <select class="niveau_classe" id="pcn' . $dncl['pc_id'] . '" name="pcn' . $dncl['pc_id'] . '" onChange="majNiveauClassePerso(\'pcn' . $dncl['pc_id'] . '\')">';
-                        $liste .= optionListInt(1, $dncl['cla_niveauMax'], $dncl['pc_niveau'], "T");
-                        $liste .= '  </select>';
-                        $liste .= '</div>';
-                      endwhile;
-                    endif;
-                    echo $liste;
-                  endif;
-                  ?>
+                <div class="titreAction">
+                  <div class="titreA">
+                    Classes
+                    <? if ($p != "n"): ?>
+                      <a href="javascript:void(0)" class="lien" onClick="ajouterClassePerso(<? echo (int)$p; ?>)" title="Ajouter une classe">
+                        <i class="icon fa-solid fa-circle-plus"></i>
+                      </a>
+                    <? endif; ?>
+                  </div>
+                  <div>
+                  </div>
                 </div>
-                <? debug($requete_cl); ?>
-                <? if ($p == "n"): ?>
-                  <div onClick="ajouterClassePerso(<? echo $p; ?>)" class="ajout_classe_bouton"><i class="fa-solid fa-circle-plus"></i> Ajouter une nouvelle classe</div>
-                <? endif; ?>
-                <div id="nouvelleClasse"></div> <!--- DIV qui contient le formulaire d'ajout de classe après le click ajouterClassePerso() --->
+                <div id="classes"><!-- rendu dynamique JS -->
+                  <? if ($p == "n"): ?>
+                    <div class="ml10">Veuillez enregistrer le personnage avant de lui ajouter des classes</div>
+                  <? endif; ?>
+                </div>
+                <div id="classesPayload"></div>
               </div>
 
               <div class="carac_personnage">
@@ -206,6 +238,55 @@ endif;
 
               </div>
 
+              <? if ($nlsPrestigeContext['has_section']): ?>
+                <div class="mt10">
+                  <div class="titre">Affectation NLS (classes de prestige)</div>
+                  <? if ($nlsValidationError): ?>
+                    <div style="color:#c62828;font-weight:700;">
+                      Toutes les affectations NLS doivent etre renseignees avant validation.
+                    </div>
+                  <? endif; ?>
+                  <? foreach ($nlsPrestigeContext['prestige_classes'] as $pcIdPrestige => $prestigeData): ?>
+                    <? $blocId = 'nls-prestige-' . (int)$pcIdPrestige; ?>
+                    <div class="mt10">
+                      <div class="gras mr10 lien" onCLick="togglePlus('<? echo $blocId; ?>')">
+                        <? echo htmlspecialchars($prestigeData['cla_nom']); ?>
+                        <span id="toggle-<? echo $blocId; ?>"><i class="fa-solid fa-bars"></i></span>
+                      </div>
+                      <div id="<? echo $blocId; ?>" class="accordion-content noDisplay">
+                        <table>
+                          <thead>
+                            <tr>
+                              <td>Niveau</td>
+                              <td>Classe de base affectee</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <? foreach ($prestigeData['levels'] as $levelData): ?>
+                              <? $fieldName = 'mp_penl_base_' . (int)$pcIdPrestige . '_' . (int)$levelData['niveau']; ?>
+                              <? $selectedPcId = (int)$levelData['assigned_pc_id_base']; ?>
+                              <tr>
+                                <td><? echo (int)$levelData['niveau']; ?></td>
+                                <td>
+                                  <select name="<? echo $fieldName; ?>" id="<? echo $fieldName; ?>">
+                                    <option value="0">Choisir une classe</option>
+                                    <? foreach ($levelData['options'] as $pcIdBase => $claNomBase): ?>
+                                      <option value="<? echo (int)$pcIdBase; ?>" <? echo ((int)$pcIdBase === $selectedPcId) ? 'selected' : ''; ?>>
+                                        <? echo htmlspecialchars($claNomBase); ?>
+                                      </option>
+                                    <? endforeach; ?>
+                                  </select>
+                                </td>
+                              </tr>
+                            <? endforeach; ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  <? endforeach; ?>
+                </div>
+              <? endif; ?>
+
               <? if ($isAdmin): ?>
                 <div class="info_personnage">
                   <div>
@@ -273,6 +354,19 @@ endif;
         ?>
       </div> <!-- #contenu --->
     </div><!-- #page --->
+    <div id="detail-pp"></div>
+    <div id="modification"></div>
+    <? if ($num_rows > 0 && $p != "n"): ?>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          initPersonnageClassesEditor({
+            personnageId: <? echo (int)$p; ?>,
+            classesExistantes: <? echo json_encode($classesExistantes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
+            classesCatalogue: <? echo json_encode($classesCatalogue, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
+          });
+        });
+      </script>
+    <? endif; ?>
 </body>
 
 </html>

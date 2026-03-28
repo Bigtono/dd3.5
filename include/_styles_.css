@@ -2006,6 +2006,20 @@ img {
   color: #666;
 }
 
+.personnage-alerts {
+  margin-top: 0.7rem;
+}
+
+.personnage-alert-item {
+  margin-bottom: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #c62828;
+  border-radius: 0.4rem;
+  background: #fdecea;
+  color: #8e0000;
+  font-weight: 700;
+}
+
 @media (max-width: 991px) {
   .campagne-meta-row {
     flex-wrap: wrap;

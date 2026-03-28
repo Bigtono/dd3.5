@@ -3,11 +3,18 @@ session_start();
 include_once("../include/dblib.inc.php");
 include_once("../include/diverslib.inc.php");
 
-$requete = "DELETE FROM dd_personnages_classes WHERE pc_id='".$_POST['classe']."'";
-$resultat = execPDO($requete);
+$pcId = isset($_POST['classe']) ? (int)$_POST['classe'] : 0;
+$p = isset($_POST['perso']) ? (int)$_POST['perso'] : 0;
+
+if ($pcId > 0):
+  $stmtDeleteNls = $db->prepare("DELETE FROM dd_personnages_nls WHERE penl_pc_id_base = :pcid OR penl_pc_id_prestige = :pcid");
+  $stmtDeleteNls->execute([':pcid' => $pcId]);
+
+  $stmtDeleteClasse = $db->prepare("DELETE FROM dd_personnages_classes WHERE pc_id = :pcid");
+  $stmtDeleteClasse->execute([':pcid' => $pcId]);
+endif;
 
 // MAJ de l'affichage des classes
-$p=$_POST['perso'];
 include('../include/insert/'.$_SESSION['rulesetRep'].'/listeClassesPerso.php');
 
 echo $p."@".$liste."@".$requete_cl;
