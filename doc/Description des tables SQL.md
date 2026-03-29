@@ -121,14 +121,22 @@ dd_personnages (liste des personnages. Préfixe pe)
 - pe_id (id, index de la table)
 - pe_nom (nom du personnage)
 - pe_ra_id (id de la race du personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 1)
-- pe_arc_id (id de l'archétype personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 2. L'archétype est optionnel, le champ par défaut est égal à 0 et indique que le personnage n'a pas d'archétype)
-- pe_for (caractéristique de Force du personnage)
-- pe_con (caractéristique de Constitution du personnage)
-- pe_dex (caractéristique de Dextérité du personnage)
-- pe_int (caractéristique d'Intelligence du personnage)
-- pe_sag (caractéristique de Sagesse du personnage)
-- pe_cha (caractéristique de Charisme du personnage)
+- pe_arc_id (DD3.5 uniquement : id de l'archétype personnage. Table dd_races. Uniquement un enregistrement dont le champ ra_rat_id égal à 2. L'archétype est optionnel, le champ par défaut est égal à 0 et indique que le personnage n'a pas d'archétype? Pour DD2024, le champ est toujours égal à 0)
+- pe_for (caractéristique de Force)
+- pe_con (caractéristique de Constitution)
+- pe_dex (caractéristique de Dextérité)
+- pe_int (caractéristique d'Intelligence)
+- pe_sag (caractéristique de Sagesse)
+- pe_cha (caractéristique de Charisme)
+- pe_ca (classe d'armure)
+- pe_pv (points de vie)
+- pe_background
+- pe_notes
+- pe_notes_mj
 - pe_ruleset_var_id (id de la version des règles, stocké dans la table dd_variables)
+- pe_camp_id
+- pe_j_id
+
 
 dd_personnages_classes (affectation d'une classe au personnage avec un niveau. Préfixe pc)
 - pc_id (id, index de la table)
@@ -154,6 +162,13 @@ dd_personnages_nls (affectation des modificateurs de niveaux de lanceur de sort 
 - penl_pc_id_prestige (id de la classe de prestige dont le niveau de lanceur de sort doit être attribué, table dd_classes, cla_clt_id=2)
 - penl_niveau (niveau de la classe prestige. Permet de ventiler les choix du joueur pour chaque niveau possédé dnas la classe de prestige)
 
+dd_personnages_competences (compétences du perosnnage)
+- pec_id (id, indexd de latable)
+- pec_pe_id (id du personnage, table dd_personnages)
+- pec_comp_id (id de la compétence, table dd_competences)
+- pec_maitrise (DD3.5 : valeur numérique correspondant au degré de maitrise du perosnnage. DD2024 : maitrise de la compétence >> 0 = pas de maitrise, 1 = maitrise de la compétence, 2 = expertise de la compétence)
+
+
 dd_ressources (livres de règles, aussi appelés ressources, dont sont issus les sorts. Préfixe res)
 - res_id (id, index de la table)
 - res_nom (nom du livre)
@@ -170,7 +185,6 @@ dd_typeMagie (liste des types de magie. Préfixe mag)
 - mag_nom (nom du type de magie)
 - mag_abreviation (abréviation du type de magie)
 - mag_ruleset_var_id (id de la version des règles, stocké dans la table dd_variables)
-
 
 dd_modificateurs (liste des modificateurs des caractéristiques. Préfixe mod)
 - mod_id (id, index de la table)
@@ -279,6 +293,16 @@ Une note peut aussi être rattaché à une campagne (table dd_campagnes_notes).
 Les tags sont gérés sans limite via la relation n-n dd_notes_tags.
 La table dd_niveaux_notes est obsolète et doit être supprimée après migration applicative.
 
+dd_dons (listes des dons)
+- do_id (id, index de la table)
+- do_nom (nom du don)
+- do_dado_id (id de la catégorie du don, issu de la table dd_data_don)
+- do_conditions (DD3.5 uniquement : conditions d'accès au don)
+- do_texte (descriptif du don)
+- do_res_id (id de la ressource, table dd_resssources)
+- do_page_source (obsolète, conservé pour la compatibilité)
+- do_resume (résumé du don)
+- do_ruleset_var_id (id de la version des règles, stocké dans la table dd_variables)
 
 dd_joueurs (liste des utilisateurs du site)
 - j_id

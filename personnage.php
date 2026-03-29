@@ -62,15 +62,17 @@ if (isset($_SESSION['rulesetRep']) && $_SESSION['rulesetRep'] === 'DD3.5') {
         </div>
         <div>
           <div class="mb10">
-            <? echo libelle("dd_races", "ra", "nom", $dn['pe_ra_id'], "ra_rat_id=1") . $archetype; ?>,
-            Niveau <? echo niveauPersonnage($p) . ' (' . classesPersonnage($p) . ')'; ?>,
-            <? echo libelle("dd_alignements", "al", "abreviation", $dn['pe_al_id']); ?>,
-            NLS : <? echo $nls; ?>
+            <div>
+              <? echo libelle("dd_races", "ra", "nom", $dn['pe_ra_id'], "ra_rat_id=1") . $archetype; ?>,
+              Niveau <? echo niveauPersonnage($p) . ' (' . classesPersonnage($p) . ')'; ?>,
+              <? echo libelle("dd_alignements", "al", "nom", $dn['pe_al_id']); ?>
+              <!--- NLS : , <? echo $nls; ?>--->
+            </div>
             <?
             $organisation = libelle("dd_organisations", "org", "nom", $dn['pe_org_id']);
-            if ($organisation != '') echo ', ' . $organisation;
+            if ($organisation != '') echo '<div><span class="label">Organisation : </span> ' . $organisation . '</div>';
             if ($_SESSION['mj'] == 1):
-              echo '<br><span class="label">Joueur : </span>' . libelle_joueur($dn['pe_j_id']);
+              echo '<div><span class="label">Joueur : </span>' . libelle_joueur($dn['pe_j_id']) . '</div>';
             endif;
             ?>
           </div>

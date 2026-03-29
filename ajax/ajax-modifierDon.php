@@ -15,8 +15,6 @@ if (isset($_POST['don'])):
     $don_conditions = $dn['do_conditions'];
     $don_resume = $dn['do_resume'];
     $don_source = $dn['do_res_id'];
-    $don_page_source = $dn['do_page_source'];
-    $don_version = $dn['do_version'];
   endif;
   // mise en forme du contenu
   if ($q == 'n'):

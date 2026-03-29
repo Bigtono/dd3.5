@@ -1,11 +1,12 @@
 1. Corriger la partie sorts de l'affichage de la tables des bonus de classe en responsive avec le switch
 2. FAIT : Corriger régression dans filtrage des notes depuis personnage-connaissances.php
-3. Corriger l'affiches des tags dans notes.php (en ligne et non les un en dessous des autres). Ajouter les tags dans la liste des notes de personnage-connaissances.php
+3. FAIT  : Corriger l'affiches des tags dans notes.php (en ligne et non les un en dessous des autres). Ajouter les tags dans la liste des notes de personnage-connaissances.php
 4. FAIT : Depuis le fomulaire de modification d'une note, ajouter la possibilité d'affecter globalement la note à plusieurs personnages comme pour l'action "Affecter des notes"
 5. Corriger l'ajout/suppression d'un objet magique à un personnage.
 6. Ajuster le profil avec l'ajout de nouveaux paramètres spécifiques à l'utilisateur (mode campagne, ressources disponibles...)
 7. revoir le fonctionnement de l'écran du MJ dans les rencontres
 8. revoir le fonctionnement du grimoire d'un personnage
+9. Modifier la gestion du nombre de lignes affichées dans les listes et le positionner comme paramètre du profil utilisateur
 
 
 
