@@ -15,7 +15,7 @@ if ($isDd35) {
 
 if (isset($_POST['ok']) && !empty($p)):
   if ($p != "n"):
-    $stmtPerso = $db->prepare("SELECT pe_j_id, pe_camp_id, pe_notes_mj FROM dd_personnages WHERE pe_id = :pid LIMIT 1");
+    $stmtPerso = $db->prepare("SELECT pe_j_id, pe_camp_id, pe_notes_mj, pe_ca, pe_pv FROM dd_personnages WHERE pe_id = :pid LIMIT 1");
     $stmtPerso->execute([':pid' => (int)$p]);
     $currentPerso = $stmtPerso->fetch(PDO::FETCH_ASSOC);
     if (!$currentPerso):
@@ -63,6 +63,8 @@ if (isset($_POST['ok']) && !empty($p)):
         pe_int = :intell,
         pe_sag = :sag,
         pe_cha = :cha,
+        pe_ca = :ca,
+        pe_pv = :pv,
         pe_background = :background,
         pe_notes = :notes,
         pe_notes_mj = :notes_mj,
@@ -81,6 +83,8 @@ if (isset($_POST['ok']) && !empty($p)):
         ':intell' => (int)$_POST['mp_pe_int'],
         ':sag' => (int)$_POST['mp_pe_sag'],
         ':cha' => (int)$_POST['mp_pe_cha'],
+        ':ca' => isset($_POST['mp_pe_ca']) ? (int)$_POST['mp_pe_ca'] : (int)$currentPerso['pe_ca'],
+        ':pv' => isset($_POST['mp_pe_pv']) ? (int)$_POST['mp_pe_pv'] : (int)$currentPerso['pe_pv'],
         ':background' => isset($_POST['mp_pe_background']) ? $_POST['mp_pe_background'] : '',
         ':notes' => isset($_POST['mp_pe_notes']) ? $_POST['mp_pe_notes'] : '',
         ':notes_mj' => $notesMjValue,
@@ -221,6 +225,56 @@ if (isset($_POST['ok']) && !empty($p)):
         endif;
       endif;
 
+      // --- Competences non bloquant (si payload present) ---
+      $compPayloadReady = isset($_POST['mp_comp_payload_ready']) && (int)$_POST['mp_comp_payload_ready'] === 1;
+      if ($compPayloadReady):
+        $compIdsRaw = isset($_POST['mp_comp_ids']) && is_array($_POST['mp_comp_ids']) ? $_POST['mp_comp_ids'] : [];
+        $compMaitriseRaw = isset($_POST['mp_comp_maitrise']) && is_array($_POST['mp_comp_maitrise']) ? $_POST['mp_comp_maitrise'] : [];
+        $compIds = [];
+        foreach ($compIdsRaw as $compIdRaw) {
+          $compId = (int)$compIdRaw;
+          if ($compId > 0) $compIds[$compId] = true;
+        }
+
+        $allowedCompIds = [];
+        if (!empty($compIds)):
+          $placeholders = [];
+          $paramsAllowed = [':ruleset' => (int)$_SESSION['ruleset']];
+          $idxComp = 0;
+          foreach (array_keys($compIds) as $compId) {
+            $ph = ':c' . $idxComp;
+            $placeholders[] = $ph;
+            $paramsAllowed[$ph] = (int)$compId;
+            $idxComp++;
+          }
+          $sqlAllowed = "SELECT comp_id FROM dd_competences WHERE comp_ruleset_var_id = :ruleset AND comp_id IN (" . implode(',', $placeholders) . ")";
+          $stmtAllowedComp = $db->prepare($sqlAllowed);
+          $stmtAllowedComp->execute($paramsAllowed);
+          while ($rowAllowedComp = $stmtAllowedComp->fetch(PDO::FETCH_ASSOC)) {
+            $allowedCompIds[(int)$rowAllowedComp['comp_id']] = true;
+          }
+        endif;
+
+        $stmtDeleteCompPerso = $db->prepare("DELETE FROM dd_personnages_competences WHERE pec_pe_id = :pid");
+        $stmtDeleteCompPerso->execute([':pid' => (int)$p]);
+
+        if (!empty($allowedCompIds)):
+          $stmtInsertCompPerso = $db->prepare("
+            INSERT INTO dd_personnages_competences (pec_pe_id, pec_comp_id, pec_maitrise)
+            VALUES (:pid, :compid, :maitrise)
+          ");
+          foreach (array_keys($compIds) as $compId) {
+            if (!isset($allowedCompIds[$compId])) continue;
+            $maitrise = isset($compMaitriseRaw[$compId]) ? (int)$compMaitriseRaw[$compId] : 0;
+            $stmtInsertCompPerso->execute([
+              ':pid' => (int)$p,
+              ':compid' => (int)$compId,
+              ':maitrise' => $maitrise,
+            ]);
+          }
+        endif;
+      endif;
+
       $db->commit();
       $message = 1;
     } catch (Exception $e) {
@@ -230,8 +284,38 @@ if (isset($_POST['ok']) && !empty($p)):
 
   else:
     $notesMjValue = '';
-    $sql = "INSERT INTO dd_personnages (pe_nom, pe_ra_id, pe_arc_id, pe_sexe, pe_al_id, pe_org_id, pe_for, pe_dex, pe_con, pe_int, pe_sag, pe_cha, pe_background, pe_notes, pe_notes_mj, pe_j_id, pe_ruleset_var_id) VALUES ('" . addslashes($_POST['mp_pe_nom']) . "', '" . $_POST['mp_pe_ra_id'] . "', '" . $_POST['mp_pe_arc_id'] . "', '" . $_POST['mp_pe_sexe'] . "', '" . $_POST['mp_pe_al_id'] . "', '" . $_POST['mp_pe_org_id'] . "', '" . $_POST['mp_pe_for'] . "', '" . $_POST['mp_pe_dex'] . "', '" . $_POST['mp_pe_con'] . "', '" . $_POST['mp_pe_int'] . "', '" . $_POST['mp_pe_sag'] . "', '" . $_POST['mp_pe_cha'] . "', '" . addslashes($_POST['mp_pe_background']) . "', '" . addslashes($_POST['mp_pe_notes']) . "', '" . addslashes($notesMjValue) . "', '" . addslashes($_POST['mp_pe_j_id']) . "', '" . $_SESSION['ruleset'] . "')";
-    $resultat = execPDO($sql);
+    $stmtInsertPerso = $db->prepare("
+      INSERT INTO dd_personnages (
+        pe_nom, pe_ra_id, pe_arc_id, pe_sexe, pe_al_id, pe_org_id,
+        pe_for, pe_dex, pe_con, pe_int, pe_sag, pe_cha, pe_ca, pe_pv,
+        pe_background, pe_notes, pe_notes_mj, pe_j_id, pe_ruleset_var_id
+      ) VALUES (
+        :nom, :ra, :arc, :sexe, :al, :org,
+        :forc, :dex, :con, :intell, :sag, :cha, :ca, :pv,
+        :background, :notes, :notes_mj, :jid, :ruleset
+      )
+    ");
+    $stmtInsertPerso->execute([
+      ':nom' => isset($_POST['mp_pe_nom']) ? $_POST['mp_pe_nom'] : '',
+      ':ra' => isset($_POST['mp_pe_ra_id']) ? (int)$_POST['mp_pe_ra_id'] : 0,
+      ':arc' => isset($_POST['mp_pe_arc_id']) ? (int)$_POST['mp_pe_arc_id'] : 0,
+      ':sexe' => isset($_POST['mp_pe_sexe']) ? $_POST['mp_pe_sexe'] : '',
+      ':al' => isset($_POST['mp_pe_al_id']) ? (int)$_POST['mp_pe_al_id'] : 0,
+      ':org' => isset($_POST['mp_pe_org_id']) ? (int)$_POST['mp_pe_org_id'] : 0,
+      ':forc' => isset($_POST['mp_pe_for']) ? (int)$_POST['mp_pe_for'] : 0,
+      ':dex' => isset($_POST['mp_pe_dex']) ? (int)$_POST['mp_pe_dex'] : 0,
+      ':con' => isset($_POST['mp_pe_con']) ? (int)$_POST['mp_pe_con'] : 0,
+      ':intell' => isset($_POST['mp_pe_int']) ? (int)$_POST['mp_pe_int'] : 0,
+      ':sag' => isset($_POST['mp_pe_sag']) ? (int)$_POST['mp_pe_sag'] : 0,
+      ':cha' => isset($_POST['mp_pe_cha']) ? (int)$_POST['mp_pe_cha'] : 0,
+      ':ca' => isset($_POST['mp_pe_ca']) ? (int)$_POST['mp_pe_ca'] : 0,
+      ':pv' => isset($_POST['mp_pe_pv']) ? (int)$_POST['mp_pe_pv'] : 0,
+      ':background' => isset($_POST['mp_pe_background']) ? $_POST['mp_pe_background'] : '',
+      ':notes' => isset($_POST['mp_pe_notes']) ? $_POST['mp_pe_notes'] : '',
+      ':notes_mj' => $notesMjValue,
+      ':jid' => isset($_POST['mp_pe_j_id']) ? (int)$_POST['mp_pe_j_id'] : 0,
+      ':ruleset' => (int)$_SESSION['ruleset'],
+    ]);
     $p = lastID("dd_personnages", "pe");
     $message = 0;
   endif;

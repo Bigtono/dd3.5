@@ -1,19 +1,23 @@
+Nous allons repenser la gestion de la magie pour un personnage
 
 Certaines règles métier relatives à la magie sont spécifiques à chaque ruleset.
 Concernant la base de données, les tables impactées sont dd_sorts, dd_sortclasse, dd_classes, dd_classe_niveau, dd_personnages, dd_personnages_classes, dd_personnages_nls
 
-Dans la version initiale du site, les sorts d'un personnages étaient gérés dans personnage-grimoire.php. Désormais tous les éléments relatifs aux sorts d'un personnage sont dans personnage-magie.php
+Dans la version initiale du site, les sorts d'un personnages étaient gérés dans personnage-grimoire.php. Désormais la structure est la suivante :
+- la page personnage-grimoire.php permet à l'utilisateur de gérer les sorts que le personnage pourra manipuler dans une partie.
+- la page personnage-magie.php contient les sorts que le personnage peut lancer dans une partie. 
 
-
+**********************
 Organisation technique
-----------------------
+**********************
 - Les sorts sont stockés dans la table dd_sorts. Chaque sort possède un niveau (de 0 à 9) déterminé selon une règle spécifique à chaque ruleset
 - Les données relatives aux listes de sorts de classe sont stockées dans la table dd_sortclasse 
-- les donénes relatives aux sorts du personnage sont stockées dans dd_personnages_classes
+- les données relatives aux sorts du personnage sont stockées dans dd_personnages_sorts et dd_personnages_sorts_prepares
+- 
 
-
+**************************************************************************
 Règles métiers générales concernant la magie (communes à tous les ruleset)
---------------------------------------------------------------------------
+**************************************************************************
 
 *** Les sorts
 
@@ -31,91 +35,150 @@ Chaque classe de base de lanceur de sort détermine quelles sorts le personnage 
    * le champ cla_sort_prepare indique si le lanceur peut lancer spontanément un sort de sa liste (valeur 0) ou s'il doit l'avoir préalablement préparé chaque matin selon un processus propre à la classe (valeur 1)
 Ces trois champs impacte la façon dont la liste de sorts d'un personnage est affichée et gérée dans la page personnage-magie.php
 
-Chaque classe de lanceur de sort possède une liste des sorts de classe qui contient tous les sorts accessibles au lanceur de sort de cette classe. La table dd_sortclasse permet de lister les sorts constituant la liste de sorts par la relation sc_cla_id (id de la classe de base) / sc_so_id (id du sort). 
+Chaque classe de lanceur de sort possède une liste des sorts de classe qui contient tous les sorts accessibles au lanceur de sort de cette classe. La table dd_sortclasse liste les sorts constituant la liste de sorts de classe par la relation sc_cla_id (id de la classe de base) / sc_so_id (id du sort). 
 
 Le nombre de sorts qu'un personnage peut lancer par niveau et jour est indiqué dans la table des bonus de classe et fonction de son niveau de lanceur de sort (NLS) dans ladite classe de base de lanceur de sort. Les champs cn_sort_n0 à cn_sort_n9 indiquent combien de sorts le personnage peut lancer par jour et par niveau de sort. L'enregistrement à prendre en compte est celui dont le champ cn_niveau est égal au NLS du personnage pour cette classe.
 
 
-
-
+********************************************
 règles métiers spécifiques au ruleset dd3.5
--------------------------------------------
+********************************************
 - une classe de prestige influe sur le NLS d'une classe de base si un des champs cn_niveauSortArcane, cn_niveauSortDivin ou cn_niveauSortEffectif est égale à 1. A chaque niveau d'une classe de prestige possédé par un personnage, si cn_niveauSortArcane est égale à 1, le NLS d'une des classes de lanceur de sort profane du personnage est augmenté de 1. il en va de même pour une classe de lanceur de sort divin si cn_niveauSortDivin est égal à 1. Si c'est le champ cn_niveauSortEffectif qui est égal à 1, le personnage peut choisir une classe de lanceur de sort divin ou profane pour l'ajout de 1 au NLS. A chaque niveau de classe de prestige, le joueur doit choisir quelle classe de base de lanceur de sort est affectée. Les choix sont stockés dans la table dd_personnages_nls (voir Gestion des classes)
 - dans ce ruleset, le NLS d'une classe de base lanceur de sort est égal au niveau du personnage dans cette classe (champ pc_niveau dans la table dd_personnages_classes) auquel est ajouté la somme des champs penl_niveau de la table dd_personnages_nls dont penl_b_cla_id est égal à l'id de la classe de base et penl_pe_id est égal à l'id du personnage.
 - si pour une classe de base, cla_clt_id est égal à 3, il s'agit alors d'un lanceur de sort divin disposant d'un accès à des sorts de domaine. Cela se traduit par la capacité à mémoriser un sort supplémentaire par niveau de sort.
 Concernant la liste des sorts de classe, le champ sc_niveau précise le niveau du sort pour la classe.
 
-
+********************************************
 règles métiers spécifiques au ruleset DD2024
--------------------------------------------
+********************************************
 - les classes de prestige et les sorts de domaine n'existent pas dans ce ruleset
 - dans ce ruleset, le NLS d'une classe de base de lanceur de sort est égal au niveau du personnage dans cette classe (champ pc_niveau dans la table dd_personnages_classes)
 Dans ce ruleset, le niveau du sort étant le même pour toutes les classes de lanceur de sort, il est stocké dans le champ so_niveau de la table dd_sorts.
 
 
 
-Fonctionnalités de la page personnage-magie.php 
------------------------------------------------
-La page gère tous les aspects relatifs aux sorts d'un personnage et est découpée en sections. Le contenu de la page est fortement liés au ruleset. 
+**************************************************
+Fonctionnalités de la page personnage-grimoire.php 
+**************************************************
 
+La page gère tous les aspects relatifs aux sorts qu'un personnage peut manipuler et est découpée en sections. Il s'agit d'une page de gestion. Le contenu de la page est fortement liés au ruleset. 
+
+Note importante : les sorts sont filtrés selon leur ressources. Voir METIER_gestion_des_ressources.md
+
+### Partie commune à tous les ruleset
 
 Section 1 - Menu spécifique de la page 
-
+--------------------------------------
 1. On détermine les classes de base de lanceur de sort du personnage. Pour chaque classe, on calcule le niveau de lanceur de sort (NLS) selon les conditions spécifiques à chaque ruleset
-2. On affiche un menu horizontal (design identique au menu de la page personnage) contenant toutes les classes de lanceur de sort (intitulé égal au nom de la classe suivi entre parenthèse du NLS). Les classes sont triées dans l'ordre décroissant de leur NLS. Un clic  sur un élément du menu met à jour la page avec les données relative à la classe de base de lanceur de sort sélectionnée. Par défaut, c'est la classe avec le plus haut NLS qui est sélectionnée, elle est dite "active".
+2. On affiche un menu horizontal (design identique au menu de la page personnage) contenant toutes les classes de lanceur de sort (intitulé égal au nom de la classe suivi entre parenthèse du NLS). Les classes sont triées dans l'ordre décroissant de leur NLS. Un clic  sur un élément du menu met à jour le DIV "Sorts" contenant toutes les autres sections de la page. Par défaut, c'est la classe avec le plus haut NLS qui est sélectionnée, elle est dite "active".
 
-Section 2 - affichage du tableau du nombre de sorts lançables par niveau
+### Pour le ruleset DD3.5
 
-Un tableau indiquant le nombre de sorts que peux lancer le personnage par niveau. La première ligne contient en colonne les niveaux de sort. La 2ème ligne indique le nombre de sorts disponible pour chaque niveau. cette section est encapsulé dans un DIV rétractable avec son bouton Burger
+Section 2 - affichage du tableau du nombre de sorts lançables par niveau (repliable avec bouton burger). Titre : Nombre de sorts par jour
+-----------------------------------------------------------------------------------------------------------------------------------------
+Un tableau indiquant le nombre de sorts que peux lancer le personnage par niveau pour la classe active. La première ligne contient en colonne les niveaux de sort. La 2ème ligne indique le nombre de sorts disponible pour chaque niveau.
+Le nombre de sort par jour est indiqué par les champs cn_sort_n0 à cn_sort_n9 de la table dd_classes dont le champ cn_niveau est égal au NLS du personnage pour la classe active.
+Les champs mod_bonusSort0 à mod_bonusSort9  table dd_modificateurs, dont mod_carac est égal à la valeur de la caractéristique de lanceur de sort, fournit les bonus à ajouter aux cn_sort_no à cn_sort_n9. La caractéristique de lanceur de sort est déterminé dans dd_classes par le champ cla_car_id (l'id fournit renvoie à dd_caractéristiques. le champ car_diminutif de cette table permet de déterminer le champ de dd_perosnnages contenant la valeur de caractéristiques).
+Exemple : Pour un magicien (cla_id=6), cla_car_id=4. Dans la table dd_caracteristiques, l'enregistrement dont l'id est 4 donne car_diminutif="int". Le champ contenant la valeur de caractéristique de lanceur de sort pour le magicien est donc le champ cla_int ("cla_" + [car_diminutif])
+Exemple2 : Pour un druide (cla_id=3), cla_car_id=5. Dans la table dd_caracteristiques, l'enregistrement dont l'id est 5 donne car_diminutif="sag". Le champ contenant la valeur de caractéristique de lanceur de sort pour le druide est donc le champ cla_sag ("cla_" + [car_diminutif])
+Dans le tableau, mod_bonusSort0 s'additionne à cn_sort_n0, mod_bonusSort1 s'additionne à cn_sort_n1, etc...
 
-Section 3 - Affichage du sélecteur de filtre des sorts affichés
+Section 3 - Affichage du sélecteur de filtrage des sorts affichés
+----------------------------------------------------------------
 
-Selon la classe, le sélecteur propose plusieurs choix pour filtrer les sorts affichés dans la section suivante.
-Le sélecteur propose par défaut 4 choix :
-* Connus (si cla_sort_connu=0 : la liste des sorts du personnage dans la table dd_personnages_sorts. Si cla_sort_connu=1 : tous les sorts de la liste des sorts de classe)
-* Favoris (option disponible uniquement si cla_sort_connu=1. Le joueur peut vouloir sélectionner un certain nombre seulement des sorts "connus" pour réduire la liste des sorts affichés. Les sorts ainsi sélectionnés constituent la liste des sorts "favoris").
-* Compris (option disponible uniquement si cla_sort_compris=0 : liste des sorts de la table dd_personnages_sorts pour lesquels pes_compris=1)
-* Préparés
+Selon la classe, un sélecteur propose plusieurs choix de filtrage des sorts affichés dans la section 4.
+Le sélecteur propose par défaut les choix suivants :
+1. Liste de sorts de classe (option disponible uniquement si cla_sort_connu=0) 
+2. Sorts connus 
+3. Sorts favoris (option disponible uniquement si cla_sort_connu=1. Liste des sorts de la table dd_personnages_sorts pour lesquels pes_favori=1. Si aucun sort n'a été préalablement mis en favori, cette option est grisée et inactive) 
+4. Sorts compris (option disponible uniquement si cla_sort_compris=0. Liste des sorts de la table dd_personnages_sorts pour lesquels pes_compris=1. Si aucun sort n'a été préalablement compris, cette option est grisée et inactive)
 
- le sélecteur est à l'état "connu" :
-   >  :
-      1. on affiche tous les sorts de liste pour le niveau correspond
-      2. des boutons + et - permettent de modifier le nombre de fois que le sort est préparé
-
-
-
+Attention : Le sélecteur met à jour la page sans la recharger.
+Une variable de session mémorise le choix de l'utilisateur pour ce personnage. En cas de rechargement de la page, le sélecteur a comme valeur sélectionnée la variable de sesison. Si l'utilisateur change de personnage, la variable est remise à 0 et c'est le choix par défaut du SELECT qui prévaut
 
 Section 4 - affichage des sorts filtrés de la classe active
+-----------------------------------------------------------
 
-la liste des sorts de la classe sélectionnée est réparti par niveau de sort (de 0 à 9). Dans un niveau de sort, les sorts sont classés par ordre alphabétique. La mise ne page de la liste des sort par niveau dépend du sélecteur "affichage" et du ruleset
+Rappel : toutes les listes de sorts traités dans cette section s'entendent pour le personnage et la classe active.
+
+La structure de la section est la suivante :
+- Un menu horizontal propose les 10 niveaux de sorts (0 à 9) appelé menu des niveaux de sorts selon la même UI que pour la liste des sorts (sorts.php)
+- les sorts sont regroupés par niveau dans un DIV affiché en dessous le menu des niveaux de sorts, après un clic sur le niveau de sort correspondant
+- Par défaut, c'est le niveau 1 qui est affiché
+- dans ce div les sorts sont affichés à raison d'un sort par ligne selon la même UI que pour la liste des sorts (sorts.php). Les sorts sont classés par ordre alphabétique.
+- Le détail d'une ligne est :
+   * bloc de plusieurs icones d'actions (selon l'option précise du sélecteur - détaillé plus bas).
+   * Nom du sort
+   * Ecole du sort (uniquement en mode normal)
+
+Caractéristiques des icones d'action
+-------------------------------------
+- Chaque action a son propre icone
+- Par défaut la couleur de l'icone est noir
+- Un clic sur un icone noir le fait devenir vert et passe à 1 l'état relatif à l'action pour ce sort (l'état est stocké pour chaque sort via un procédé de ton choix)
+- Un clic sur un icone vert le fait devenir noir et passe à 0 la variable relative à l'action pour ce sort
+- les actions se contentent de mémoriser des états o ou 1 pour les sorts relatifs à chaque action. Ces états sont enregistrés en base lors du commit global de la page
+
+Si l'option du sélecteur est 1. List de sorts de classe
+---------------------------------------------------------
+Rappel : uniquement si cla_sort_connu=0 
+
+# Contenu de la liste de sorts
+- tous les sorts de la liste des sorts de classe de la classe active sont affichés.
+- si un sort est présent dans la table dd_personnages_sort pour ce personnage et pour la classe active, l'icone de l'action "Connaitre le sort" est vert et l'état "connu" pour ce sort vaut 1. Dans le cas contraire, l'icone est noir et l'état "connu" pour ce sort vaut 0
+
+# Liste des actions possibles sur les sorts
+* Connaitre le sort (inverse l'état "connu". Lors du commit global, seuls les sorts avec l'état "connu" à 1 sont enregistré dans la table dd_personnages_sorts pour ce personnage et cette classe active.
+
+Si l'option du sélecteur est 2. Sorts connus
+--------------------------------------------
+# Contenu de la liste de sorts
+- Si cla_sort_connu=1 : tous les sorts de la liste des sorts de classe de la classe active sont affichés. si pes_favori=1, l'icone de l'action "Mettre en favori" est vert et l'état "favori" pour ce sort vaut 1. Dans le cas contraire, l'icone est noir et l'état "favori" pour ce sort vaut 0
+
+- Si cla_sort_connu=0 : tous les sorts présents dans la table dd_personnages_sorts pour la classe active sont affichés. La présence du sort dans la table signifie que le personnage a accès à ce sort et le "connait". L'icone de l'action "Connaitre le sort" est vert et l'état "connu" pour ce sort vaut 1. Si pes_compris=1 pour ce sort, l'icone de l'action "Comprendre le sort" est vert et l'etat "compris" vaut 1. Dans le cas contraire, l'icone est noir et l'état vaut 0.
+
+# Liste des actions possibles sur les sorts
+* Connaitre le sort (inverse l'état "connu" du sort. Lors du commit global, seuls les sorts avec l'état "connu" à 1 sont enregistrés dans la table dd_personnages_sorts pour ce personnage et cette classe active. 
+* (si cla_sort_connu=1) Mettre en favori (inverse l'état "favori". Lors du commit global, le champ pes_favori prend la  valeur de l'état "favori")
+* (si cla__sort_compris=0) Comprendre le sort (inverse l'état "compris. Lors du commit global, le champ pes_compris prend la  valeur de l'état "compris")
+
+Si l'option du sélecteur est 3. Sorts favoris
+---------------------------------------------
+Rappel : uniquement si cla_sort_connu=1 
+
+# Contenu de la liste de sorts
+- tous les sorts, pour ce personnage et pour la classe active, de la table dd_personnages_sorts avec la valeur pes_favori=1. L'icone de l'action "Mettre en favori" est vert et l'état "favori" pour ce sort vaut 1.
+
+# Liste des actions possibles sur les sorts
+* Mettre en favori (inverse l'état "favori". Lors du commit global, le champ pes_favori prend la  valeur de l'état "favori")
+
+Si l'option du sélecteur est 4. Sorts compris
+---------------------------------------------
+Rappel : uniquement si cla_sort_connu=0 
+
+# Contenu de la liste de sorts
+- tous les sorts, pour ce personnage et pour la classe active, de la table dd_personnages_sorts avec la valeur pes_compris=1. L'icone de l'action "Comprendre le sort" est vert et l'état "compris" pour ce sort vaut 1.
+
+# Liste des actions possibles sur les sorts
+* Comprendre le sort (inverse l'état "compris. Lors du commit global, le champ pes_compris prend la  valeur de l'état "compris")
+
+
+Si l'option du sélecteur est 5. Sorts préparés
+----------------------------------------------
+# Contenu de la liste de sorts
+- si cla_sort_prepare=1 : tous les sorts, pour ce personnage et pour la classe active, de la table dd_personnages_sorts_prepares.
+- si cla_sort_prepare=0 :  tous les sorts, pour ce personnage et pour la classe active, de la liste des sorts de classes ou de la liste des sorts favoris si au moins un sort a été mis en favori
+
+# Liste des actions possibles sur les sorts
+* Comprendre le sort (inverse l'état "compris. Lors du commit global, le champ pes_compris prend la  valeur de l'état "compris")
+
+
+**************************************************
+Fonctionnalités de la page personnage-magie.php 
+**************************************************
+
+La page personnage-magie.php reste en place pour l'instant et fera l'objet d'une refonte dans une 2ème analyse.
+Seul le bouton à droite du titre "Magie" avec l'icone <i class="fa-solid fa-book" aria-hidden="true"></i> doit être modifiée et pointer désormais vers la page personnage-grimoire.php nouvellement créée.
 
 
 
-
-
-
-
-
-
-
-
-		Connu	compris	Préparé
-Barde		1	1	0	6
-
-Prêtre		1	1	1	7
-
-Druide		1	1	1	7
-	
-Magicien	1	0	1	5
-
-Ensorceleur	0	1	0	2
-
-Paladin		1	1	1	7
-
-Rodeur		1	1	1	7
-
-Tourmenteur	0	1	0	2
-
-tueur Domiel	1	1	1	7
-
-élu divin	1	1	0	6

@@ -155,11 +155,11 @@ $extraParams = [
             <i class="fa-solid fa-pen-to-square"></i>
           </div>
 
-          <div class="<?= $campagneClass ?>" data-sort-field="campagne">
+          <div class="<?= $campagneClass ?> campagne-col-nom" data-sort-field="campagne">
             Campagne
           </div>
 
-          <div class="col3">
+          <div class="col3 campagne-col-description">
             Description
           </div>
         </div>
@@ -186,14 +186,17 @@ $extraParams = [
                 </a>
               </div>
 
-              <div class="col">
+              <div class="col campagne-col-nom">
                 <a href="campagne.php?campagne=<?= $camp['camp_id'] ?>" class="ajout_perso lien">
                   <?= htmlspecialchars($camp['camp_nom']) ?>
                 </a>
+                <div class="list-secondary-meta">
+                  <?= htmlspecialchars($camp['camp_resume']) ?>
+                </div>
               </div>
 
 
-              <div class="col3">
+              <div class="col3 campagne-col-description">
                 <?= htmlspecialchars($camp['camp_resume']) ?>
               </div>
             </div>

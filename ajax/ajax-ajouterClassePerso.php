@@ -19,7 +19,7 @@ if (isset($_POST['perso'])):
   endif;
 
   $result = '<div class="affichage">';
-  $result .= '  <div class="contenu">';
+  $result .= '  <div class="popup-contenu">';
   $result .= '    <div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div>';
 
   if ($optionsClasses === ''):

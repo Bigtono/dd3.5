@@ -151,10 +151,21 @@ dd_personnages_sorts (contient la liste des sorts possédés par le personnage. 
 - pes_id (id, index de la table)
 - pes_pc_id (id de l'affectation de la classe, table dd_personnages_classes)
 - pes_so_id (id du sort, table dd_sorts)
-- pes_connu (valeur oui/non indiquant si le personnage peut lancer le sort?)
-- pes_memorise (valeur de 0 à 10 indiquant combien de fois le personnage a memorisé le sort)
-- pes_lance (valeur de 0 à 10 indiquant combien de fois le personnage a lancé le sort)
+- pes_connu (valeur 0/1 indiquant si le sort est disponible pour le personnage. Pertinent si cla_sort_connus=0 dans dd_classes)
+- pes_favori (valeur 0/1, indique si le sort a été ajouté à la liste des sorts favoris du personnage. Pertinent si cla_sort_connu=1 dans dd_classes)
+- pes_compris (valeur 0/1, indique si le sort est compris par le personnage. Pertinent si cla_sort_compris=0 dans dd_classes)
 Note : un personnage peut avoir plusieurs sorts mais une seule fois le même sort
+
+dd_personnages_sorts_prepares (liste des sorts préparés par le personnage. préfixe pesp)
+- pesp_id (id, index de la table)
+- pesp_pe_id (id du personnage, table dd_personnages)
+- pesp_cla_id (id de la classe de base de lanceur de sorts, table dd_classes)
+- pesp_so_id (id du sort, table dd_sorts)
+- pesp_metamagie (DD3.5 : liste des id des dons de métamagie appliqués au sort, séparés par une virgule)
+- pesp_niveau (DD3.5 : niveau effectif du sort après application du don de métamagie)
+- pesp_nb (DD3.5 : Nombre de fois que le sort a été préparé. DD2024 : 0/1 indique si le sort a été préparé)
+Note : pour un personnage donné, les sorts de cette liste sont forcément dans dd_personnages_sorts. Un personnage ne peut pas lancer un sort auquel il n'a pas accès
+
 
 dd_personnages_nls (affectation des modificateurs de niveaux de lanceur de sort des classes de prestige, préfixe penl) (spécifique au ruleset DD3.5)
 - penl_id (id, index de la table)

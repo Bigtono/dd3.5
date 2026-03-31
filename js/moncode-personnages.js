@@ -1,6 +1,7 @@
 // JavaScript Document
 //##############################MOTEUR AJAX 1############################################
 var personnageClassesState = null;
+var personnageCompetencesState = null;
 
 function escHtml(value) {
   return String(value)
@@ -22,10 +23,10 @@ function buildNiveauOptions(selected, niveauMax) {
 function getCurrentSelectedClasseIds() {
   if (!personnageClassesState) return {};
   var selected = {};
-  personnageClassesState.existing.forEach(function(item) {
+  personnageClassesState.existing.forEach(function (item) {
     if (!item.deleted) selected[item.cla_id] = true;
   });
-  personnageClassesState.added.forEach(function(item) {
+  personnageClassesState.added.forEach(function (item) {
     if (!item.deleted) selected[item.cla_id] = true;
   });
   return selected;
@@ -38,7 +39,7 @@ function buildClassesPayloadInputs() {
 
   var html = '';
   html += '<input type="hidden" name="mp_classes_payload_ready" value="1">';
-  personnageClassesState.existing.forEach(function(item) {
+  personnageClassesState.existing.forEach(function (item) {
     if (item.deleted) {
       html += '<input type="hidden" name="mp_class_delete_ids[]" value="' + item.pc_id + '">';
     } else {
@@ -46,12 +47,33 @@ function buildClassesPayloadInputs() {
       html += '<input type="hidden" name="mp_class_keep_niveau[' + item.pc_id + ']" value="' + item.niveau + '">';
     }
   });
-  personnageClassesState.added.forEach(function(item) {
+  personnageClassesState.added.forEach(function (item) {
     if (item.deleted) return;
     html += '<input type="hidden" name="mp_class_add_cla_id[]" value="' + item.cla_id + '">';
     html += '<input type="hidden" name="mp_class_add_niveau[]" value="' + item.niveau + '">';
   });
   payload.innerHTML = html;
+}
+
+function refreshNlsPrestigeSectionsVisibility() {
+  var blocks = document.querySelectorAll('.js-nls-prestige-block');
+  if (!blocks || blocks.length === 0 || !personnageClassesState) return;
+
+  var activePrestigePcIds = {};
+  personnageClassesState.existing.forEach(function (item) {
+    if (!item.deleted) activePrestigePcIds[item.pc_id] = true;
+  });
+
+  var visibleCount = 0;
+  blocks.forEach(function (block) {
+    var pcId = parseInt(block.getAttribute('data-pc-id-prestige') || '0', 10);
+    var visible = !!activePrestigePcIds[pcId];
+    block.style.display = visible ? '' : 'none';
+    if (visible) visibleCount++;
+  });
+
+  var wrapper = document.getElementById('nls-section-wrapper');
+  if (wrapper) wrapper.style.display = visibleCount > 0 ? '' : 'none';
 }
 
 function renderClassesEditor() {
@@ -60,7 +82,7 @@ function renderClassesEditor() {
   if (!classesDiv) return;
 
   var html = '';
-  personnageClassesState.existing.forEach(function(item) {
+  personnageClassesState.existing.forEach(function (item) {
     if (item.deleted) return;
     var selectId = 'pcnexisting-' + item.pc_id;
     html += '<div id="pc' + item.pc_id + '" class="classe">';
@@ -72,7 +94,7 @@ function renderClassesEditor() {
     html += '</div>';
   });
 
-  personnageClassesState.added.forEach(function(item, idx) {
+  personnageClassesState.added.forEach(function (item, idx) {
     if (item.deleted) return;
     var selectId = 'pcnnew-' + idx;
     html += '<div id="new' + idx + '" class="classe">';
@@ -87,12 +109,13 @@ function renderClassesEditor() {
   if (html === '') html = '<div class="ml10">Aucune classe</div>';
   classesDiv.innerHTML = html;
   buildClassesPayloadInputs();
+  refreshNlsPrestigeSectionsVisibility();
 }
 
 function initPersonnageClassesEditor(config) {
   personnageClassesState = {
     personnageId: parseInt(config.personnageId || 0, 10),
-    existing: (config.classesExistantes || []).map(function(item) {
+    existing: (config.classesExistantes || []).map(function (item) {
       return {
         pc_id: parseInt(item.pc_id, 10),
         cla_id: parseInt(item.cla_id, 10),
@@ -103,7 +126,7 @@ function initPersonnageClassesEditor(config) {
       };
     }),
     added: [],
-    catalog: (config.classesCatalogue || []).map(function(item) {
+    catalog: (config.classesCatalogue || []).map(function (item) {
       return {
         cla_id: parseInt(item.cla_id, 10),
         cla_nom: item.cla_nom,
@@ -114,7 +137,7 @@ function initPersonnageClassesEditor(config) {
 
   var form = document.getElementById('modif-personnage');
   if (form) {
-    form.addEventListener('submit', function() {
+    form.addEventListener('submit', function () {
       buildClassesPayloadInputs();
     });
   }
@@ -124,26 +147,26 @@ function initPersonnageClassesEditor(config) {
 function ajouterClassePerso(id) {
   if (!personnageClassesState || parseInt(id, 10) <= 0) return;
   var selected = getCurrentSelectedClasseIds();
-  var available = personnageClassesState.catalog.filter(function(item) {
+  var available = personnageClassesState.catalog.filter(function (item) {
     return !selected[item.cla_id];
   });
 
   var detail = document.getElementById('detail-pp');
   if (!detail) return;
   if (available.length === 0) {
-    detail.innerHTML = '<div class="affichage"><div class="contenu"><div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div><div>Toutes les classes du ruleset sont deja affectees.</div></div></div>';
+    detail.innerHTML = '<div class="affichage"><div class="popup-contenu"><div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div><div>Toutes les classes du ruleset sont deja affectees.</div></div></div>';
     detail.style.display = 'block';
     return;
   }
 
   var options = '';
-  available.forEach(function(item) {
+  available.forEach(function (item) {
     options += '<option value="' + item.cla_id + '" data-niveaumax="' + item.niveau_max + '">' + escHtml(item.cla_nom) + '</option>';
   });
 
   var html = '';
   html += '<div class="affichage">';
-  html += '<div class="contenu">';
+  html += '<div class="popup-contenu">';
   html += '  <div class="titreAction"><div class="titreA">Ajouter une classe</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div>';
   html += '  <div class="ligne"><span class="label">Classe</span><select id="mp_cla_id" onChange="majNiveauAjoutClasseForm()">' + options + '</select></div>';
   html += '  <div class="ligne"><span class="label">Niveau</span><select id="mp_cp_niveau"></select></div>';
@@ -197,7 +220,7 @@ function supprimerClassePerso(perso, classeToken) {
   var token = String(classeToken || '');
   if (token.indexOf('existing-') === 0) {
     var pcId = parseInt(token.substring(9), 10);
-    personnageClassesState.existing.forEach(function(item) {
+    personnageClassesState.existing.forEach(function (item) {
       if (item.pc_id === pcId) item.deleted = true;
     });
   } else if (token.indexOf('new-') === 0) {
@@ -207,9 +230,9 @@ function supprimerClassePerso(perso, classeToken) {
   renderClassesEditor();
 }
 
-function actualiserDivClassesPerso() {}
-function actualiserDivNouvelleClasse() {}
-function actualiserNiveauClassePerso() {}
+function actualiserDivClassesPerso() { }
+function actualiserDivNouvelleClasse() { }
+function actualiserNiveauClassePerso() { }
 
 function majNiveauClassePerso(selectId) {
   if (!personnageClassesState) return;
@@ -218,7 +241,7 @@ function majNiveauClassePerso(selectId) {
   var niveau = parseInt(select.value || '1', 10);
   if (selectId.indexOf('pcnexisting-') === 0) {
     var pcId = parseInt(selectId.substring(12), 10);
-    personnageClassesState.existing.forEach(function(item) {
+    personnageClassesState.existing.forEach(function (item) {
       if (item.pc_id === pcId) item.niveau = niveau;
     });
   } else if (selectId.indexOf('pcnnew-') === 0) {
@@ -227,19 +250,200 @@ function majNiveauClassePerso(selectId) {
   }
   buildClassesPayloadInputs();
 }
+
+function getCurrentSelectedCompetenceIds() {
+  if (!personnageCompetencesState) return {};
+  var selected = {};
+  personnageCompetencesState.existing.forEach(function (item) {
+    if (!item.deleted) selected[item.comp_id] = true;
+  });
+  personnageCompetencesState.added.forEach(function (item) {
+    if (!item.deleted) selected[item.comp_id] = true;
+  });
+  return selected;
+}
+
+function buildCompetencesPayloadInputs() {
+  if (!personnageCompetencesState) return;
+  var payload = document.getElementById('competencesPayload');
+  if (!payload) return;
+
+  var html = '<input type="hidden" name="mp_comp_payload_ready" value="1">';
+  personnageCompetencesState.existing.forEach(function (item) {
+    if (item.deleted) return;
+    html += '<input type="hidden" name="mp_comp_ids[]" value="' + item.comp_id + '">';
+    html += '<input type="hidden" name="mp_comp_maitrise[' + item.comp_id + ']" value="' + item.maitrise + '">';
+  });
+  personnageCompetencesState.added.forEach(function (item) {
+    if (item.deleted) return;
+    html += '<input type="hidden" name="mp_comp_ids[]" value="' + item.comp_id + '">';
+    html += '<input type="hidden" name="mp_comp_maitrise[' + item.comp_id + ']" value="' + item.maitrise + '">';
+  });
+  payload.innerHTML = html;
+}
+
+function renderCompetencesEditor() {
+  if (!personnageCompetencesState) return;
+  var compDiv = document.getElementById('competences');
+  if (!compDiv) return;
+
+  var html = '';
+  personnageCompetencesState.existing.forEach(function (item) {
+    if (item.deleted) return;
+    var inputId = 'pcmexisting-' + item.comp_id;
+    html += '<div class="classe">';
+    html += '  <div onClick="supprimerCompetencePerso(\'existing-' + item.comp_id + '\')" class="suppression"><i class="fa-solid fa-trash"></i></div>';
+    html += '  <div class="libelle_classe">' + escHtml(item.comp_nom) + '</div>';
+    html += '  <input type="number" class="input_comp_maitrise" id="' + inputId + '" value="' + item.maitrise + '" onChange="majValeurCompetence(\'' + inputId + '\')">';
+    html += '</div>';
+  });
+
+  personnageCompetencesState.added.forEach(function (item, idx) {
+    if (item.deleted) return;
+    var inputId = 'pcmnew-' + idx;
+    html += '<div class="classe">';
+    html += '  <div onClick="supprimerCompetencePerso(\'new-' + idx + '\')" class="suppression"><i class="fa-solid fa-trash"></i></div>';
+    html += '  <div class="libelle_classe">' + escHtml(item.comp_nom) + '</div>';
+    html += '  <input type="number" class="input_comp_maitrise" id="' + inputId + '" value="' + item.maitrise + '" onChange="majValeurCompetence(\'' + inputId + '\')">';
+    html += '</div>';
+  });
+
+  if (html === '') html = '<div class="ml10">Aucune compétence</div>';
+  compDiv.innerHTML = html;
+  buildCompetencesPayloadInputs();
+}
+
+function initPersonnageCompetencesEditor(config) {
+  personnageCompetencesState = {
+    personnageId: parseInt(config.personnageId || 0, 10),
+    existing: (config.competencesExistantes || []).map(function (item) {
+      return {
+        comp_id: parseInt(item.comp_id, 10),
+        comp_nom: item.comp_nom,
+        maitrise: parseInt(item.maitrise, 10) || 0,
+        deleted: false
+      };
+    }),
+    added: [],
+    catalog: (config.competencesCatalogue || []).map(function (item) {
+      return {
+        comp_id: parseInt(item.comp_id, 10),
+        comp_nom: item.comp_nom
+      };
+    })
+  };
+
+  var form = document.getElementById('modif-personnage');
+  if (form) {
+    form.addEventListener('submit', function () {
+      buildCompetencesPayloadInputs();
+    });
+  }
+  renderCompetencesEditor();
+}
+
+function ajouterCompetencePerso(id) {
+  if (!personnageCompetencesState || parseInt(id, 10) <= 0) return;
+  var selected = getCurrentSelectedCompetenceIds();
+  var available = personnageCompetencesState.catalog.filter(function (item) {
+    return !selected[item.comp_id];
+  });
+
+  var detail = document.getElementById('detail-pp');
+  if (!detail) return;
+  if (available.length === 0) {
+    detail.innerHTML = '<div class="affichage"><div class="popup-contenu"><div class="titreAction"><div class="titreA">Ajouter une competence</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div><div>Toutes les competences du ruleset sont deja affectees.</div></div></div>';
+    detail.style.display = 'block';
+    return;
+  }
+
+  var options = '';
+  available.forEach(function (item) {
+    options += '<option value="' + item.comp_id + '">' + escHtml(item.comp_nom) + '</option>';
+  });
+
+  var html = '';
+  html += '<div class="affichage">';
+  html += '<div class="popup-contenu">';
+  html += '  <div class="titreAction"><div class="titreA">Ajouter une compétence</div><div class="lien" onClick="fermerDetail()"><i class="fa fa-close"></i></div></div>';
+  html += '  <div class="ligne popup-competence-row"><span class="label">Compétence</span><select id="mp_comp_id">' + options + '</select></div>';
+  html += '  <div class="ligne popup-competence-row"><span class="label">Valeur</span><input type="number" id="mp_comp_maitrise" value="0" class="input_comp_maitrise"></div>';
+  html += '  <div class="ligneBouton popup-competence-actions"><button type="button" class="btNoir" onClick="validerAjoutCompetence(' + personnageCompetencesState.personnageId + ')">Valider</button><button type="button" class="btNoir" onClick="fermerDetail()">Annuler</button></div>';
+  html += '</div>';
+  html += '</div>';
+  detail.innerHTML = html;
+  detail.style.display = 'block';
+}
+
+function validerAjoutCompetence(id) {
+  if (!personnageCompetencesState || parseInt(id, 10) <= 0) return;
+  var selectComp = document.getElementById('mp_comp_id');
+  var inputMaitrise = document.getElementById('mp_comp_maitrise');
+  if (!selectComp || !inputMaitrise) return;
+
+  var compId = parseInt(selectComp.value || '0', 10);
+  var maitrise = parseInt(inputMaitrise.value || '0', 10);
+  var option = selectComp.options[selectComp.selectedIndex];
+  var compNom = option ? option.text : '';
+  if (compId <= 0) return;
+
+  personnageCompetencesState.added.push({
+    comp_id: compId,
+    comp_nom: compNom,
+    maitrise: isNaN(maitrise) ? 0 : maitrise,
+    deleted: false
+  });
+  fermerDetail();
+  renderCompetencesEditor();
+}
+
+function supprimerCompetencePerso(token) {
+  if (!personnageCompetencesState) return;
+  if (!confirm('Voulez-vous supprimer cette competence ?')) return;
+  var t = String(token || '');
+  if (t.indexOf('existing-') === 0) {
+    var compId = parseInt(t.substring(9), 10);
+    personnageCompetencesState.existing.forEach(function (item) {
+      if (item.comp_id === compId) item.deleted = true;
+    });
+  } else if (t.indexOf('new-') === 0) {
+    var idx = parseInt(t.substring(4), 10);
+    if (!isNaN(idx) && personnageCompetencesState.added[idx]) personnageCompetencesState.added[idx].deleted = true;
+  }
+  renderCompetencesEditor();
+}
+
+function majValeurCompetence(inputId) {
+  if (!personnageCompetencesState) return;
+  var input = document.getElementById(inputId);
+  if (!input) return;
+  var val = parseInt(input.value || '0', 10);
+  if (isNaN(val)) val = 0;
+
+  if (inputId.indexOf('pcmexisting-') === 0) {
+    var compId = parseInt(inputId.substring(12), 10);
+    personnageCompetencesState.existing.forEach(function (item) {
+      if (item.comp_id === compId) item.maitrise = val;
+    });
+  } else if (inputId.indexOf('pcmnew-') === 0) {
+    var idx = parseInt(inputId.substring(7), 10);
+    if (!isNaN(idx) && personnageCompetencesState.added[idx]) personnageCompetencesState.added[idx].maitrise = val;
+  }
+  buildCompetencesPayloadInputs();
+}
 // nouvelle fonction
 // passage de la fonction jquery accordion dans l'appel ajax
 // la fonction n'utilise plus actualiserPageModif dans success:
 function gererEquipement(perso) {
-  console.log('gererEquipement Personnage #'+perso);
-	$.ajax({
+  console.log('gererEquipement Personnage #' + perso);
+  $.ajax({
     type: 'POST',
     url: 'ajax/ajax-gererEquipement.php',
-    data: "perso="+perso,
-		dataType:'text',
-    success: function(result) {
+    data: "perso=" + perso,
+    dataType: 'text',
+    success: function (result) {
       var resultat = result.split("@");
-      console.log('Personnage : '+resultat[0]);
+      console.log('Personnage : ' + resultat[0]);
       $("#modification").html(resultat[1]);
       $('#accordion').accordion({
         heightStyle: "content",
@@ -249,101 +453,101 @@ function gererEquipement(perso) {
       console.log('Affichage formulaire #');
       $("#modification").show('fast');
     },
-    error: function() {alert('Erreur gererEquipement');}
-	}); 
+    error: function () { alert('Erreur gererEquipement'); }
+  });
 }
-function ajouterEqt(eqt,perso) {
+function ajouterEqt(eqt, perso) {
   const liste = document.getElementById('mod' + eqt);
   let mod = '';
   if (liste) {
     mod = liste.value;
   } else {
     console.warn("Ã‰lÃ©ment 'mod" + eqt + "' introuvable. Valeur mod laissÃ©e vide.");
-  } 
+  }
   const liste2 = document.getElementById('so' + eqt);
   let sort = '';
   if (liste2) {
     sort = liste2.value;
   } else {
     console.warn("Ã‰lÃ©ment 'sort" + eqt + "' introuvable. Valeur sort laissÃ©e vide.");
-  } 
-  console.log('Ajouter Objet magique #'+eqt+' du personnage #'+perso+', mod : '+mod+', sort #'+sort);
-	$.ajax({
+  }
+  console.log('Ajouter Objet magique #' + eqt + ' du personnage #' + perso + ', mod : ' + mod + ', sort #' + sort);
+  $.ajax({
     type: 'POST',
     url: 'ajax/ajax-validerAjoutEqt.php',
-    data: "perso="+perso+"&eqt="+eqt+"&mod="+mod+"&sort="+sort,
-		dataType:'text',
+    data: "perso=" + perso + "&eqt=" + eqt + "&mod=" + mod + "&sort=" + sort,
+    dataType: 'text',
     success: actualiserEqt,
-    error: function() {alert('Erreur ajouterEqt()');}
-	}); 
+    error: function () { alert('Erreur ajouterEqt()'); }
+  });
 }
 
 function afficherEqt(eqt) {
-  console.log('Affichage Eqt #'+eqt);
-	$.ajax({
+  console.log('Affichage Eqt #' + eqt);
+  $.ajax({
     type: 'POST',
     url: 'ajax/ajax-affichageEqt.php',
-    data: "eqt="+eqt,
-		dataType:'text',
+    data: "eqt=" + eqt,
+    dataType: 'text',
     success: actualiserPage,
-    error: function() {alert('Erreur afficherEqt()');}
-	}); 
+    error: function () { alert('Erreur afficherEqt()'); }
+  });
 }
 
 function modifierEqt(eqt) {
   //alert('ID '+idRegle);
-  console.log('Modification regle #'+idRegle);
-	$.ajax({
+  console.log('Modification regle #' + idRegle);
+  $.ajax({
     type: 'POST',
     url: 'ajax/ajax-modifierRegle.php',
-    data: "regle="+ idRegle,
-		dataType:'text',
+    data: "regle=" + idRegle,
+    dataType: 'text',
     success: actualiserPageModif,
-    error: function() {alert('Erreur modifierRegle');}
-	}); 
+    error: function () { alert('Erreur modifierRegle'); }
+  });
 }
 
 function validerModifEqt() {
-  console.log('Nom : '+$('#mp_re_nom').val());
+  console.log('Nom : ' + $('#mp_re_nom').val());
   var mp_re_texte = CKEDITOR.instances.mp_re_texte.getData(); // traitement du champ textarea modifiÃ© par CKEDITOR
-	$.ajax({
+  $.ajax({
     type: 'POST',
     url: 'ajax/ajax-validerModifRegle.php',
-    data: "mp_re_id="+$('#mp_re_id').val()+
-    "&mp_re_cr_id="+$('#mp_re_cr_id').val()+
-    "&mp_re_re_id="+$('#mp_re_re_id').val()+
-		"&mp_re_nom="+encodeURIComponent($('#mp_re_nom').val())+
-		"&mp_re_texte="+encodeURIComponent(mp_re_texte),	
-		dataType:'text',
-    success: function(reponse) {
+    data: "mp_re_id=" + $('#mp_re_id').val() +
+      "&mp_re_cr_id=" + $('#mp_re_cr_id').val() +
+      "&mp_re_re_id=" + $('#mp_re_re_id').val() +
+      "&mp_re_nom=" + encodeURIComponent($('#mp_re_nom').val()) +
+      "&mp_re_texte=" + encodeURIComponent(mp_re_texte),
+    dataType: 'text',
+    success: function (reponse) {
       var resultat = reponse.split("@");
-      console.log('Affichage regle modifiÃ©e #'+resultat[0]);
-      console.log('Requete : '+resultat[1]);
-      $("#nomRegle"+resultat[0]).html(resultat[2]); 
-      $("#catRegle"+resultat[0]).html(resultat[3]);
+      console.log('Affichage regle modifiÃ©e #' + resultat[0]);
+      console.log('Requete : ' + resultat[1]);
+      $("#nomRegle" + resultat[0]).html(resultat[2]);
+      $("#catRegle" + resultat[0]).html(resultat[3]);
       afficherRegle(resultat[0]);
       $("#modification").hide();
     },
-    error: function() {alert('Erreur validerModifRegle()');}
-	});		
+    error: function () { alert('Erreur validerModifRegle()'); }
+  });
 }
 
-function supprimerEqt(eqt,perso) {
-  console.log('Supprimer Objet magique #'+eqt+' du perso #'+perso);
-	$.ajax({
+function supprimerEqt(eqt, perso) {
+  console.log('Supprimer Objet magique #' + eqt + ' du perso #' + perso);
+  $.ajax({
     type: 'POST',
     url: 'ajax/ajax-validerSupprEqt.php',
-    data: "eqt="+eqt+"&perso="+perso,
-		dataType:'text',
+    data: "eqt=" + eqt + "&perso=" + perso,
+    dataType: 'text',
     success: actualiserEqt,
-    error: function() {alert('Erreur supprimerEqt()');}
-	}); 
+    error: function () { alert('Erreur supprimerEqt()'); }
+  });
 }
 
 function actualiserEqt(reponse) {
   var resultat = reponse.split("@");
-  console.log('Perso : '+resultat[2]+', mod : '+resultat[3]+', sort #'+resultat[4]+', Objet : '+resultat[0]);
-  $("#listeOM").html(resultat[1]);      
+  console.log('Perso : ' + resultat[2] + ', mod : ' + resultat[3] + ', sort #' + resultat[4] + ', Objet : ' + resultat[0]);
+  $("#listeOM").html(resultat[1]);
 }
 
 
@@ -374,7 +578,7 @@ function toggleAttributionNoteCampagne(noteId, checkboxEl, event) {
     url: 'ajax/note_campagne_toggle.php',
     data: "note_id=" + noteId + "&checked=" + checked,
     dataType: 'json',
-    success: function(reponse) {
+    success: function (reponse) {
       if (reponse && reponse.success) {
         checkboxEl.checked = parseInt(reponse.checked, 10) === 1;
       } else {
@@ -382,17 +586,17 @@ function toggleAttributionNoteCampagne(noteId, checkboxEl, event) {
         alert((reponse && reponse.message) ? reponse.message : 'Erreur attribution note/campagne.');
       }
     },
-    error: function() {
+    error: function () {
       checkboxEl.checked = (checked === 1) ? false : true;
       alert('Erreur toggleAttributionNoteCampagne()');
     },
-    complete: function() {
+    complete: function () {
       checkboxEl.disabled = false;
     }
   });
 }
 
-function modifierNote(note,perso) {
+function modifierNote(note, perso) {
   var persoId = parseInt(perso || '0', 10);
   if (isNaN(persoId) || persoId < 0) persoId = 0;
   if (window.NoteActions && typeof window.NoteActions.modifierNote === 'function') return window.NoteActions.modifierNote(note, persoId);
@@ -414,53 +618,53 @@ function actualiserNote(reponse) {
 }
 
 function diffuser(note, perso) {
-  let diffusion="" ;
-  $("input[type='checkbox']:checked").each(function() {
-      diffusion=diffusion+"@"+$(this).attr('id');
-    }
-  );          
-  console.log(diffusion); 
+  let diffusion = "";
+  $("input[type='checkbox']:checked").each(function () {
+    diffusion = diffusion + "@" + $(this).attr('id');
+  }
+  );
+  console.log(diffusion);
   $.ajax({
     type: 'POST',
     url: 'ajax/ajax-diffusionNote.php',
-    data: "diffusion="+diffusion,	
-		dataType:'text',
+    data: "diffusion=" + diffusion,
+    dataType: 'text',
     success: actualiserNote,
-    error: function() {alert('Erreur diffuser()');}
-	});		
+    error: function () { alert('Erreur diffuser()'); }
+  });
 }
 
 function ajouterGrimoire() {
   //alert('ID '+idDon);
   console.log('Ajout Grimoire');
-	$.ajax({
+  $.ajax({
     type: 'POST',
     url: 'ajax/ajax-ajouterGrimoire.php',
-    data:'grimoire=n',
-		dataType:'text',
+    data: 'grimoire=n',
+    dataType: 'text',
     success: actualiserPageModif,
-    error: function() {alert('Erreur ajouterGrimoire()');}
-	}); 
+    error: function () { alert('Erreur ajouterGrimoire()'); }
+  });
 }
 
 function validerAjoutGrimoire() {
-  console.log('Valider Ajout Grimoire. Format #'+$('#mp_gr_grf_id').val()+', Classe #'+$('#mp_gr_cla_id').val()+', Perso #'+$('#mp_gr_pe_id').val());
+  console.log('Valider Ajout Grimoire. Format #' + $('#mp_gr_grf_id').val() + ', Classe #' + $('#mp_gr_cla_id').val() + ', Perso #' + $('#mp_gr_pe_id').val());
   $.ajax({
     type: 'POST',
     url: 'ajax/ajax-validerAjoutGrimoire.php',
-    data: "mp_gr_nom="+encodeURIComponent($('#mp_gr_nom').val())+
-    "&mp_gr_grf_id="+$('#mp_gr_grf_id').val()+
-		"&mp_gr_pe_id="+$('#mp_gr_pe_id').val()+
-    "&mp_gr_cla_id="+$('#mp_gr_cla_id').val(),	
-		dataType:'text',
+    data: "mp_gr_nom=" + encodeURIComponent($('#mp_gr_nom').val()) +
+      "&mp_gr_grf_id=" + $('#mp_gr_grf_id').val() +
+      "&mp_gr_pe_id=" + $('#mp_gr_pe_id').val() +
+      "&mp_gr_cla_id=" + $('#mp_gr_cla_id').val(),
+    dataType: 'text',
     success: actualiserPageGrimoire,
-    error: function() {alert('Erreur validerPageGrimoire()');}
-	});		
+    error: function () { alert('Erreur validerPageGrimoire()'); }
+  });
 }
 
 function actualiserPageGrimoire(reponse) {
   //recup du rÃ©sultat > tableau 
-	var resultat = reponse.split("@");
-	$("#ListeGrimoires").html(resultat[1]); 
-	$("#modification").hide();
+  var resultat = reponse.split("@");
+  $("#ListeGrimoires").html(resultat[1]);
+  $("#modification").hide();
 }

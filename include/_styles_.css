@@ -11,7 +11,7 @@
 
 
 html {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 body {
@@ -170,9 +170,11 @@ h3 {
     z-index: 1000;
     display: none;
   }
+
   #detail-pp {
     z-index: 1001;
   }
+
   #modification {
     z-index: 1002;
   }
@@ -1821,49 +1823,6 @@ img {
   color: black;
 }
 
-/*
-.btIcone {
-  font-size: 1em;
-  text-align: center;
-  border: none;
-  background-color: none;
-  padding: 0 2px;
-  cursor: pointer;
-}
-
-.btSmall {
-  font-size: 0.8em;
-  font-weight: 700;
-  text-align: center;
-  border: thin solid #EDEDED;
-  border-radius: .25rem;
-  background-color: none;
-  padding: 2px;
-  cursor: pointer;
-}
-
-.btSmallDelete {
-  font-size: 0.8em;
-  font-weight: 700;
-  color: white;
-  text-align: center;
-  border: thin solid #EDEDED;
-  border-radius: .25rem;
-  background-color: #FF5153;
-  padding: 2px;
-  cursor: pointer;
-}
-  */
-
-/* Affichage de données sour la forme de bloc aux bords arrondis (pastilles). Ex : sorts dans un grimoire de la page personnage */
-/*
-.lignePastille {
-  width: 100%;
-  text-align: right;
-  margin-top: 0.1em;
-}
-  */
-
 .pastille {
   float: right;
   background-color: #E8E7D2;
@@ -3220,6 +3179,51 @@ table.competence td {
   text-align: center;
 }
 
+.input_comp_maitrise {
+  width: 60px;
+  text-align: center;
+}
+
+.popup-competence-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.5em;
+}
+
+.popup-competence-row .label {
+  text-align: left;
+}
+
+.popup-competence-row select,
+.popup-competence-row input {
+  justify-self: start;
+}
+
+.popup-competence-actions {
+  display: flex;
+  gap: 0.5em;
+}
+
+/* Contenu interne des popups detail-pp/modification sans double bordure */
+.popup-contenu {
+  padding: 0.65rem;
+  border: none;
+  background: transparent;
+}
+
+.popup-contenu .ligneBouton>.btNoir+.btNoir,
+.popup-contenu .ligneBouton>.btNoir+.btRouge,
+.popup-contenu .ligneBouton>.btRouge+.btNoir,
+.popup-contenu .ligneBouton>.btRouge+.btRouge,
+.popup-contenu .ligneBouton>.btNoir+.btDisabled,
+.popup-contenu .ligneBouton>.btRouge+.btDisabled,
+.popup-contenu .ligneBouton>.btDisabled+.btNoir,
+.popup-contenu .ligneBouton>.btDisabled+.btRouge,
+.popup-contenu .ligneBouton>.btDisabled+.btDisabled {
+  margin-left: 0.5em;
+}
+
 
 /* Liste des classes existantes : une ligne par classe */
 #classes {
@@ -3292,6 +3296,174 @@ table.competence td {
   width: 24px;
 }
 
+/* Sections dedies aux pages personnage / personnage-modifier */
+.personnage-section {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+/* Titres de sections dedies aux pages personnage / personnage-modifier */
+.personnage-section>.titre {
+  display: flex;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.personnage-section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.8em;
+  font-weight: 700;
+  text-align: left;
+}
+
+.personnage-section-title .personnage-section-icon {
+  width: 1.2em;
+  text-align: center;
+}
+
+.personnage-section-toggle .lien {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+/* Caracteristiques (fiche personnage) */
+#page .personnage-section .personnage-carac-block {
+  width: 100%;
+  max-width: 500px;
+}
+
+#page .personnage-section table.personnage-carac-table {
+  width: min(100%, 500px);
+  max-width: 500px;
+  margin: 0.4rem 0 0 0;
+  border-collapse: collapse;
+}
+
+#page .personnage-section table.personnage-carac-table thead tr {
+  border-bottom: 1px solid #6f6f6f;
+}
+
+#page .personnage-section table.personnage-carac-table th,
+#page .personnage-section table.personnage-carac-table td,
+#page .personnage-section table.personnage-carac-table tbody tr td {
+  text-align: center !important;
+  vertical-align: middle;
+  padding: 4px 2px;
+}
+
+#page .personnage-section table.personnage-carac-table th {
+  font-weight: 700;
+}
+
+#page .personnage-section table.personnage-carac-table tbody tr:nth-child(odd),
+#page .personnage-section table.personnage-carac-table tbody tr:nth-child(even) {
+  background: transparent;
+}
+
+/* Combat (fiche + modification) */
+.personnage-combat-values {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(100%, 500px);
+  max-width: 500px;
+  margin: 0.4rem auto 0 auto;
+}
+
+.personnage-combat-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex: 1 1 0;
+  text-align: center;
+}
+
+.personnage-combat-item .label {
+  min-width: 120px;
+  text-align: left;
+}
+
+.personnage-combat-values-form .personnage-combat-item {
+  justify-content: flex-start;
+}
+
+/* Aeration + separation visuelle des sections en mode modification */
+#personnage .formulaire .personnage-section {
+  margin-bottom: 0.85rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #b9b9b9;
+  border-radius: 0.35rem;
+  background: #fff;
+}
+
+#personnage .formulaire .personnage-accordion-box {
+  column-count: 1 !important;
+  border-left: none;
+  padding-left: 10px;
+}
+
+#personnage .formulaire .personnage-accordion-box table {
+  width: 100%;
+  max-width: 100%;
+}
+
+#personnage .formulaire .personnage-accordion-box td select {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+}
+
+#campagne-personnage-bloc .btRouge {
+  background: #1f1f1f;
+  border-color: #1f1f1f;
+  color: #fff;
+}
+
+#campagne-personnage-bloc .btRouge:hover {
+  background: #000;
+  border-color: #000;
+}
+
+@media (max-width: 991px) {
+  .personnage-section-title {
+    font-size: 0.6em;
+  }
+
+  .popup-contenu {
+    padding: 0.5rem;
+  }
+
+  .personnage-combat-values {
+    width: 100%;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 0.4rem 0 0 0;
+    gap: 0.4rem;
+  }
+
+  .personnage-combat-item {
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%;
+  }
+
+  .personnage-combat-item .label {
+    min-width: 120px;
+  }
+
+  #page .personnage-section .personnage-carac-block,
+  #page .personnage-section table.personnage-carac-table {
+    width: 100%;
+    max-width: 100%;
+  }
+}
 
 /***************************************************************************************
 /* Note
@@ -4636,6 +4808,17 @@ input:checked+.slider:before {
   color: #555;
 }
 
+/* Pattern canonique responsive:
+   afficher une information secondaire sous le libelle principal */
+.list-secondary-meta {
+  display: none;
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.25;
+  margin-top: 0.15rem;
+  color: #555;
+}
+
 @media (max-width: 991px) {
 
   .sortable-list .personnage-col-joueur,
@@ -4662,6 +4845,23 @@ input:checked+.slider:before {
 
   .sortable-list .personnage-col-nom a {
     word-break: break-word;
+  }
+
+  /* campagnes.php : description sous le nom en responsive */
+  .sortable-list .campagne-col-description {
+    display: none;
+  }
+
+  .sortable-list .campagne-col-nom {
+    min-width: 0;
+  }
+
+  .sortable-list .campagne-col-nom a {
+    word-break: break-word;
+  }
+
+  .sortable-list .campagne-col-nom .list-secondary-meta {
+    display: block;
   }
 }
 

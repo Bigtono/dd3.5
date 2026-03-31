@@ -1,6 +1,5 @@
 
-Règles métiers générales sur les classes
------------------------------
+## Règles métiers générales sur les classes
 
 Par défaut, une classe de de personnage est une classe de base (cla_clt_id=1). Certains ruleset introduisent d'autres types de classe de personnage (cla_clt_id>1).
 
@@ -11,14 +10,14 @@ Une classe de base compte 20 niveaux (cla_niveauMax=20). Chaque classe possède 
 Un personnage est considéré comme un lanceur de sort s'il possède au moins un niveau dans une classe de base de lanceur de sort. La table  dd_personnages_classes stocke les classes du personnage. Le champ pc_pe_id contient l'id du personnage (pe_id). Le champ pc_cla_id contient l'id de la classe (cla_id). Le champ pc_niveau précise le niveau exact du personnage dans cette classe.
 
 
-règles métiers spécifiques au ruleset dd3.5
--------------------------------------------
+## règles métiers spécifiques au ruleset dd3.5
+
 - le ruleset introduit un nouveau type de classe, la classe de prestige (cla_clt_id=2). Une classe de prestige n'est pas une classe de personnage en tant que telle. Un personnage doit obligatoirement posséder des niveaux dans au moins une classe de base pour pouvoir posséder des niveaux dans au moins une classe de prestige.
 - une classe de prestige compte 3, 5 ou 10 niveaux (cla_niveauMax=3 ou 5 ou 10)
 
 
-Types de données d'une classe
------------------------------
+## Types de données d'une classe
+
 Une classe est composées de plusieurs types de données qui feront l'objet de traitements spécifiques.
 
 A - Les données de classes stockées dans dd_classes
@@ -33,8 +32,8 @@ B - les données liées aux niveaux de classe stockées dans dd_classe_niveau. C
 C - selon la classe et le niveau, une ou plusieurs capacités spéciales. Chaque capacité spéciale est décrite dans la table dd_capacites_speciales. L'attribution d'une capacité à un niveau de classe spécifique est faite via la table dd_classe_capacite selon la relation entre l'id de la classe (cc_cla_id) et l'id de la capacité spéciale (cc_cap_id) pour un niveau donné (cc_niveau). Le champ cc_precision contient des indications complémentaires spécifique à l'attribution de la capacité spéciales à ce niveau précis (nombre d'utilisation de la capacité spéciales, restriction d'emploi etc...). Le contenu de cc_precision est alors affiché entre parenthèses immédiatement après le nom de la capacité spéciale dans la table
 
 
-Conception de la page
----------------------
+## Conception de la page
+
 La page classe.php est constituée de plusieurs sections
 
 La première section contient les données principales de la classe. Ces données de ce bloc sont issues de la table dd_classes
@@ -99,12 +98,12 @@ La 3ème section contient les capacités spéciales
 
 L'interface doit permettre d'afficher toutes les capacités spéciales de la classe dans un tableau similaire aux précédent (l ligne par niveau). Chaque capacité est affichée avec son nom (cap_nom) et entre parenthèses ses précisions (cc_precision). Le nom est cliquable [onclick="affecterCapacite(id)] et affiche dans detailPP les données relatives à la capacité spéciales.
 
-Le div detailPP présente un premier bloc contenant :
+Le div detail-PP présente un premier bloc contenant :
 - le nom de la capacité (cap_nom)
 - sa description complète (cap_description)
 - son type (cap_type)
 - sa catégorie (cap_categorie_var_id, issu de la table dd_variables, fonction libVar pour afficher la valeur).
-Un bouton Modifier permet de basculer en modification. Le contenu du premier bloc devient un formulaire affichant :
+Un bouton Modifier permet de basculer en modification et ouvre un popup dans le DIV modification. Le contenu est alors présenté comme un formulaire affichant :
 - un input avec le nom de la capacité (cap_nom)
 - un textarea contenant sa description complète (cap_description)
 - un input avec son type (cap_type)

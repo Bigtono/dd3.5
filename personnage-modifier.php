@@ -7,6 +7,7 @@ include("include/date.inc.php");
 
 $nlsPrestigeContext = ['has_section' => false];
 $nlsValidationError = isset($_GET['nls_error']) && (int)$_GET['nls_error'] === 1;
+$isAdmin = isset($_SESSION['mj']) && (int)$_SESSION['mj'] === 1;
 
 if (isset($_GET['personnage'])):
   // appel Include
@@ -53,6 +54,26 @@ else: // il s'agit d'un ajout
   $j = $_SESSION['user_id'];
   $personnageCampagneId = 0;
   $canEditNotesMj = false;
+  $isAdmin = isset($_SESSION['mj']) && (int)$_SESSION['mj'] === 1;
+  $dn = [
+    'pe_nom' => '',
+    'pe_ra_id' => 0,
+    'pe_arc_id' => 0,
+    'pe_sexe' => '',
+    'pe_al_id' => 0,
+    'pe_org_id' => 0,
+    'pe_for' => 10,
+    'pe_dex' => 10,
+    'pe_con' => 10,
+    'pe_int' => 10,
+    'pe_sag' => 10,
+    'pe_cha' => 10,
+    'pe_ca' => 10,
+    'pe_pv' => 1,
+    'pe_background' => '',
+    'pe_notes' => '',
+    'pe_notes_mj' => '',
+  ];
 endif;
 ?>
 <!doctype html>
@@ -81,6 +102,8 @@ endif;
           $alignement = '<select id="mp_pe_al_id" name="mp_pe_al_id">' . optionList("dd_alignements", "al", "abreviation", $dn['pe_al_id'], "", 1, "", "al_id") . '</select>';
           $classesExistantes = [];
           $classesCatalogue = [];
+          $personnageCompetences = [];
+          $competencesCatalogue = [];
           if ($p != "n"):
             $stmtClassesExistantes = $db->prepare("
               SELECT pc.pc_id, pc.pc_cla_id, pc.pc_niveau, c.cla_nom, c.cla_niveauMax
@@ -114,188 +137,55 @@ endif;
                 'niveau_max' => (int)$rowCat['cla_niveauMax'],
               ];
             endwhile;
+
+            $stmtCompPerso = $db->prepare("
+              SELECT c.comp_id, c.comp_nom, pc.pec_maitrise
+              FROM dd_personnages_competences pc
+              JOIN dd_competences c ON c.comp_id = pc.pec_comp_id
+              WHERE pc.pec_pe_id = :pid
+                AND c.comp_ruleset_var_id = :ruleset
+              ORDER BY c.comp_nom
+            ");
+            $stmtCompPerso->execute([
+              ':pid' => (int)$p,
+              ':ruleset' => (int)$_SESSION['ruleset'],
+            ]);
+            while ($rowComp = $stmtCompPerso->fetch(PDO::FETCH_ASSOC)):
+              $personnageCompetences[] = [
+                'comp_id' => (int)$rowComp['comp_id'],
+                'comp_nom' => (string)$rowComp['comp_nom'],
+                'maitrise' => (int)$rowComp['pec_maitrise'],
+              ];
+            endwhile;
+
+            $stmtCompCatalogue = $db->prepare("
+              SELECT comp_id, comp_nom
+              FROM dd_competences
+              WHERE comp_ruleset_var_id = :ruleset
+              ORDER BY comp_nom
+            ");
+            $stmtCompCatalogue->execute([':ruleset' => (int)$_SESSION['ruleset']]);
+            while ($rowCompCat = $stmtCompCatalogue->fetch(PDO::FETCH_ASSOC)):
+              $competencesCatalogue[] = [
+                'comp_id' => (int)$rowCompCat['comp_id'],
+                'comp_nom' => (string)$rowCompCat['comp_nom'],
+              ];
+            endwhile;
           endif;
         ?>
-          <form action="personnage-enregistrement.php?personnage=<? echo $p; ?>&tri=<? echo $_GET['tri']; ?>" class="formulaire" method="post" name="modif-personnage" id="modif-personnage">
+          <form action="personnage-enregistrement.php?personnage=<? echo $p; ?>&tri=<? echo isset($_GET['tri']) ? $_GET['tri'] : ''; ?>" class="formulaire" method="post" name="modif-personnage" id="modif-personnage">
             <input type="hidden" name="actionflag" value="modif" />
             <input type="hidden" name="mp_pe_id" value="<? echo $p; ?>" />
-            <input type="hidden" name="campagne" value="<? echo $_GET['campagne']; ?>" />
+            <input type="hidden" name="campagne" value="<? echo isset($_GET['campagne']) ? (int)$_GET['campagne'] : 0; ?>" />
             <div id="description" class="principal">
-              <div class="info_personnage">
-                <div>
-                  <div class="label">Nom</div><input type="text" id="mp_pe_nom" name="mp_pe_nom" value="<? echo $dn['pe_nom']; ?>" class="input_left">
-                </div>
-                <div>
-                  <div class="label">Race</div><? echo $race; ?>
-                </div>
-                <div>
-                  <div class="label">Archetype</div><? echo $archetype; ?>
-                </div>
-                <div>
-                  <div class="label">Sexe</div><input type="text" id="mp_pe_sexe" name="mp_pe_sexe" value="<? echo $dn['pe_sexe']; ?>" class="input_left">
-                </div>
-                <div>
-                  <div class="label">Alignement</div><? echo $alignement; ?>
-                </div>
-                <div>
-                  <div class="label">Organisation</div><? echo $organisation; ?>
-                </div>
-              </div>
-              <div class="info_personnage">
-                <div class="titreAction">
-                  <div class="titreA">
-                    Classes
-                    <? if ($p != "n"): ?>
-                      <a href="javascript:void(0)" class="lien" onClick="ajouterClassePerso(<? echo (int)$p; ?>)" title="Ajouter une classe">
-                        <i class="icon fa-solid fa-circle-plus"></i>
-                      </a>
-                    <? endif; ?>
-                  </div>
-                  <div>
-                  </div>
-                </div>
-                <div id="classes"><!-- rendu dynamique JS -->
-                  <? if ($p == "n"): ?>
-                    <div class="ml10">Veuillez enregistrer le personnage avant de lui ajouter des classes</div>
-                  <? endif; ?>
-                </div>
-                <div id="classesPayload"></div>
-              </div>
-
-              <div class="carac_personnage">
-                <div class="titre">Caract&eacute;ristiques</div>
-                <div class="carac_ligne">
-                  <div class="label">For</div>
-                  <input
-                    type="number"
-                    id="mp_pe_for"
-                    name="mp_pe_for"
-                    min="0"
-                    max="30"
-                    value="<? echo (int)$dn['pe_for']; ?>"
-                    class="input_carac">
-                </div>
-
-                <div class="carac_ligne">
-                  <div class="label">Dex</div>
-                  <input
-                    type="number"
-                    id="mp_pe_dex"
-                    name="mp_pe_dex"
-                    min="0"
-                    max="30"
-                    value="<? echo (int)$dn['pe_dex']; ?>"
-                    class="input_carac">
-                </div>
-
-                <div class="carac_ligne">
-                  <div class="label">Con</div>
-                  <input
-                    type="number"
-                    id="mp_pe_con"
-                    name="mp_pe_con"
-                    min="0"
-                    max="30"
-                    value="<? echo (int)$dn['pe_con']; ?>"
-                    class="input_carac">
-                </div>
-
-                <div class="carac_ligne">
-                  <div class="label">Int</div>
-                  <input
-                    type="number"
-                    id="mp_pe_int"
-                    name="mp_pe_int"
-                    min="0"
-                    max="30"
-                    value="<? echo (int)$dn['pe_int']; ?>"
-                    class="input_carac">
-                </div>
-
-                <div class="carac_ligne">
-                  <div class="label">Sag</div>
-                  <input
-                    type="number"
-                    id="mp_pe_sag"
-                    name="mp_pe_sag"
-                    min="0"
-                    max="30"
-                    value="<? echo (int)$dn['pe_sag']; ?>"
-                    class="input_carac">
-                </div>
-
-                <div class="carac_ligne">
-                  <div class="label">Cha</div>
-                  <input
-                    type="number"
-                    id="mp_pe_cha"
-                    name="mp_pe_cha"
-                    min="0"
-                    max="30"
-                    value="<? echo (int)$dn['pe_cha']; ?>"
-                    class="input_carac">
-                </div>
-
-              </div>
-
-              <? if ($nlsPrestigeContext['has_section']): ?>
-                <div class="mt10">
-                  <div class="titre">Affectation NLS (classes de prestige)</div>
-                  <? if ($nlsValidationError): ?>
-                    <div style="color:#c62828;font-weight:700;">
-                      Toutes les affectations NLS doivent etre renseignees avant validation.
-                    </div>
-                  <? endif; ?>
-                  <? foreach ($nlsPrestigeContext['prestige_classes'] as $pcIdPrestige => $prestigeData): ?>
-                    <? $blocId = 'nls-prestige-' . (int)$pcIdPrestige; ?>
-                    <div class="mt10">
-                      <div class="gras mr10 lien" onCLick="togglePlus('<? echo $blocId; ?>')">
-                        <? echo htmlspecialchars($prestigeData['cla_nom']); ?>
-                        <span id="toggle-<? echo $blocId; ?>"><i class="fa-solid fa-bars"></i></span>
-                      </div>
-                      <div id="<? echo $blocId; ?>" class="accordion-content noDisplay">
-                        <table>
-                          <thead>
-                            <tr>
-                              <td>Niveau</td>
-                              <td>Classe de base affectee</td>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <? foreach ($prestigeData['levels'] as $levelData): ?>
-                              <? $fieldName = 'mp_penl_base_' . (int)$pcIdPrestige . '_' . (int)$levelData['niveau']; ?>
-                              <? $selectedPcId = (int)$levelData['assigned_pc_id_base']; ?>
-                              <tr>
-                                <td><? echo (int)$levelData['niveau']; ?></td>
-                                <td>
-                                  <select name="<? echo $fieldName; ?>" id="<? echo $fieldName; ?>">
-                                    <option value="0">Choisir une classe</option>
-                                    <? foreach ($levelData['options'] as $pcIdBase => $claNomBase): ?>
-                                      <option value="<? echo (int)$pcIdBase; ?>" <? echo ((int)$pcIdBase === $selectedPcId) ? 'selected' : ''; ?>>
-                                        <? echo htmlspecialchars($claNomBase); ?>
-                                      </option>
-                                    <? endforeach; ?>
-                                  </select>
-                                </td>
-                              </tr>
-                            <? endforeach; ?>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  <? endforeach; ?>
-                </div>
-              <? endif; ?>
-
-              <? if ($isAdmin): ?>
-                <div class="info_personnage">
-                  <div>
-                    <div class="label">Joueur</div><select id="mp_pe_j_id" name="mp_pe_j_id"><? echo OptionListeJoueurs($j); ?></select>
-                  </div>
-                </div>
-              <? else: ?>
-                <input type="hidden" id="mp_pe_j_id" name="mp_pe_j_id" value="<? echo $j; ?>" />
-              <? endif; ?>
+              <?php
+              $personnageModifTemplate = 'include/insert/' . $_SESSION['rulesetRep'] . '/personnage_modifier_sections.php';
+              if (file_exists($personnageModifTemplate)):
+                include($personnageModifTemplate);
+              else:
+                echo '<div class="nodata">Template modification personnage introuvable pour ce ruleset.</div>';
+              endif;
+              ?>
 
               <div class="mt10">
                 <div class="label">Background</div>
@@ -363,6 +253,11 @@ endif;
             personnageId: <? echo (int)$p; ?>,
             classesExistantes: <? echo json_encode($classesExistantes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
             classesCatalogue: <? echo json_encode($classesCatalogue, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
+          });
+          initPersonnageCompetencesEditor({
+            personnageId: <? echo (int)$p; ?>,
+            competencesExistantes: <? echo json_encode($personnageCompetences, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
+            competencesCatalogue: <? echo json_encode($competencesCatalogue, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
           });
         });
       </script>
