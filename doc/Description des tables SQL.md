@@ -31,9 +31,9 @@ dd_classes (liste des classes, préfixe cla)
 - cla_description
 - cla_traits
 - cla_mag_id (id du type de magie, table dd_typeMagie. Indique si la classe permet de lancer des sorts profanes des sorts divins, ou par défaut aucun sort 0)
-- cla_connu (non nul si cla_mag_id>0 : indique si le lanceur a accès par défaut à toute sa liste de sorts de classe ou non)
-- cla_compris (non nul si cla_mag_id>0 : indique si le lanceur comprend par défaut tous les sorts auxquels il a accès ou s'il doit les apprendre)
-- cla_prepare (non nul si cla_mag_id>0 : indique si le lanceur doit préparer les sorts avant de lancer ou s'il peur les lancer sans préparation préalable)
+- cla_sort_connu (non nul si cla_mag_id>0 : indique si le lanceur a accès par défaut à toute sa liste de sorts de classe ou non)
+- cla_sort_compris (non nul si cla_mag_id>0 : indique si le lanceur comprend par défaut tous les sorts auxquels il a accès ou s'il doit les apprendre)
+- cla_sort_prepare (non nul si cla_mag_id>0 : indique si le lanceur doit préparer les sorts avant de lancer ou s'il peur les lancer sans préparation préalable)
 - cla_domaine_divin (1 si la classe donne accès aux domanes divins, sinon 0)
 - cla_niveauMax (nombre de niveaux que possède la classe. Selon les types de classes et les rulesets, cla_niveauMax peut avoir les valeurs 3, 5, 10 ou 20)
 - cla_critere_rec
@@ -151,8 +151,6 @@ dd_personnages_sorts (contient la liste des sorts possédés par le personnage. 
 - pes_id (id, index de la table)
 - pes_pc_id (id de l'affectation de la classe, table dd_personnages_classes)
 - pes_so_id (id du sort, table dd_sorts)
-- pes_connu (valeur 0/1 indiquant si le sort est disponible pour le personnage. Pertinent si cla_sort_connus=0 dans dd_classes)
-- pes_favori (valeur 0/1, indique si le sort a été ajouté à la liste des sorts favoris du personnage. Pertinent si cla_sort_connu=1 dans dd_classes)
 - pes_compris (valeur 0/1, indique si le sort est compris par le personnage. Pertinent si cla_sort_compris=0 dans dd_classes)
 Note : un personnage peut avoir plusieurs sorts mais une seule fois le même sort
 

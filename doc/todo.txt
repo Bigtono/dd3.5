@@ -7,6 +7,8 @@
 7. revoir le fonctionnement de l'écran du MJ dans les rencontres
 8. revoir le fonctionnement du grimoire d'un personnage
 9. Modifier la gestion du nombre de lignes affichées dans les listes et le positionner comme paramètre du profil utilisateur
+10. Ajout de plans dans les pages scenario, chapitre et rencontre. L'image doit pouvoir être téléchargée depuis l'application et stockées sur le serveur
+
 
 
 

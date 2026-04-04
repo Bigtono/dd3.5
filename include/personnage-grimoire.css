@@ -1,0 +1,127 @@
+/* Page personnage-grimoire.php */
+
+.personnage-grimoire .personnage-section {
+  margin-bottom: 1rem;
+}
+
+.personnage-grimoire-resources .pg-box-data {
+  padding: 10px;
+  border: 1px solid #e2e2dd;
+  border-radius: 0.35rem;
+  background: #f3f3ef;
+  column-count: 1;
+}
+
+.personnage-grimoire #pg-class-menu,
+.personnage-grimoire #pg-level-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.personnage-grimoire .pg-class-item,
+.personnage-grimoire .pg-level-item {
+  border: 1px solid #d1d1d1;
+  background: #fff;
+}
+
+.personnage-grimoire .pg-class-item.is-active,
+.personnage-grimoire .pg-level-item.is-active {
+  border-color: #1f1f1f;
+  background: #f0f0ed;
+}
+
+.personnage-grimoire .pg-level-item.is-disabled {
+  opacity: 0.45;
+}
+
+.pg-slots-grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  max-width: 700px;
+}
+
+.pg-slots-grid thead {
+  display: table-header-group;
+}
+
+.pg-slots-grid tbody {
+  display: table-row-group;
+}
+
+.pg-slots-grid tr {
+  display: table-row;
+}
+
+.pg-slots-grid th,
+.pg-slots-grid td {
+  display: table-cell;
+  border: 1px solid #d6d6d6;
+  text-align: center;
+  padding: 4px 6px;
+}
+
+.pg-slots-grid th {
+  font-weight: 700;
+  background: #f3f3ef;
+}
+
+#personnage-grimoire-form #pg-slots-section {
+  column-count: 1 !important;
+}
+
+.pg-spell-rows {
+  width: 100%;
+}
+
+.pg-spell-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 200px;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid #e7e7e2;
+  padding: 0.35rem 0;
+}
+
+.pg-spell-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pg-action-icon {
+  border: none;
+  background: transparent;
+  color: #121212;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+}
+
+.pg-action-icon.is-on {
+  color: #198754;
+}
+
+.pg-action-icon:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pg-spell-name {
+  text-align: left;
+}
+
+.pg-spell-school {
+  text-align: left;
+  color: #4c4c4c;
+}
+
+@media (max-width: 991px) {
+  .pg-spell-row {
+    grid-template-columns: 120px 1fr;
+  }
+
+  .pg-spell-school {
+    display: none;
+  }
+}

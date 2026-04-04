@@ -39,6 +39,10 @@ $redirect = $_GET['redirect'] ?? 'index.php';
           <label class="label"><input type="checkbox" name="remember" value="1"> Se souvenir de moi</label>
         </div>
         
+        <div class="mb10">
+          <a href="newpwd.php">Mot de passe oubli&eacute; ?</a>
+        </div>
+        
         <button type="submit" class="btNoir">Connexion</button>
       </form>      
       

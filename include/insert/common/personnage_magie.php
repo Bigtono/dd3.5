@@ -1,59 +1,44 @@
 <?
-// recherche du grimoire par defaut
-$requete = 'SELECT gr_id FROM dd_grimoires WHERE gr_pe_id="' . $p . '" AND gr_defaut="1"';
-$result_grd = queryPDO($requete);
-$num_rows_grd = $result_grd->rowCount();
-if ($num_rows_grd > 0):
-  $dngrd = $result_grd->fetch(PDO::FETCH_ASSOC);
-  $grimoire = $dngrd['gr_id'];
-else:
-  $grimoire = 0;
-endif;
+include_once(__DIR__ . '/personnage_grimoire_helper.php');
+
+// Contexte slots aligné sur la page grimoire (inclut bonus carac/domain/NLS prestige)
+$pgContext = pg_magic_load_context($db, (int)$p, (string)$_SESSION['rulesetRep'], []);
 ?>
 <div class="contenu">
   <div class="titreAction">
     <div class="titreA">
       Magie
-      <span class="ml15"><a class="lien_cbt" href="grimoire.php?personnage=<? echo $p; ?>&campagne=<? echo $campagneId; ?>"><i class="fa-solid fa-book"></i></a></span>
+      <span class="ml15"><a class="lien_cbt" href="personnage-grimoire.php?personnage=<? echo $p; ?>&campagne=<? echo $campagneId; ?>"><i class="fa-solid fa-book"></i></a></span>
     </div>
     <div><a class="lien_cbt" href="grimoire-modifier.php?personnage=<? echo $p; ?>&campagne=<? echo $campagneId; ?>"><i class="fa-solid fa-pen-to-square"></i></a></div>
   </div>
   <div>
-    <?
-    // recherche de la classe de LS
-    $requete = 'SELECT * FROM dd_personnages_classes JOIN dd_classes ON pc_cla_id=cla_id JOIN dd_caracteristiques ON cla_car_id=car_id WHERE cla_mag_id>0 AND pc_pe_id="' . $p . '" ORDER BY cla_mag_id';
-    $result_ls = queryPDO($requete);
-    $num_rows_ls = $result_ls->rowCount();
-    if ($num_rows_ls > 0):
-      $dnls = $result_ls->fetch(PDO::FETCH_ASSOC);
-      echo '<div>Nombre de sorts pas jour</div>';
-      $requete = 'SELECT * FROM dd_personnages_classes JOIN dd_classes ON pc_cla_id=cla_id JOIN dd_classe_niveau ON cn_cla_id=cla_id WHERE cla_mag_id>0 AND pc_pe_id="' . $p . '" AND cla_id="' . $dnls['cla_id'] . '" AND cn_niveau="' . $nls . '"';
-      if ($_SESSION['mj'] == 1 && $_SESSION['debug'] == 1) echo '<div>' . $requete . '</div>';
-      $result_nls = queryPDO($requete);
-      $num_rows_nls = $result_nls->rowCount();
-      if ($num_rows_nls > 0):
-        $dnnls = $result_nls->fetch(PDO::FETCH_ASSOC);
-        $result = '  <div class="tabMain mb10">';
-        for ($i = 0; $i < 10; $i++):
-          $compCss = '';
-          if ($i == 1) $compCss = " cellLeft";
-          if (strlen($dnnls['cn_sort_n' . $i]) > 0):
-            $nbs = $dnnls['cn_sort_n' . $i];
-          else:
-            $nbs = '-';
-          endif;
-          $result .= '    <div class="cellMainSort">';
-          $result .= '      <div>';
-          $result .= '        <div class="cellEntete' . $compCss . '">' . $i . '</div>';
-          $result .= '        <div class="cellValue' . $compCss . '">' . $nbs . '</div>';
-          $result .= '      </div>';
-          $result .= '    </div>';
-        endfor;
-        $result .= '  </div>';
-        echo '<div>' . $result . '</div>';
-      endif;
-    endif;
-    ?>
+    <?php
+    if ((string)$_SESSION['rulesetRep'] === 'DD3.5' && !empty($pgContext['has_spellcasting'])):
+      foreach ($pgContext['ordered_class_ids'] as $pcId):
+        $classData = $pgContext['classes'][$pcId];
+        ?>
+        <div class="mb10">
+          <div class="gras mb5">Nombre de sorts par jour &mdash; <? echo htmlspecialchars($classData['cla_nom']); ?> (NLS <? echo (int)$classData['nls']; ?>)</div>
+          <div class="tabMain mb10">
+            <? for ($lvl = 0; $lvl <= 9; $lvl++):
+              $compCss = ($lvl == 1) ? ' cellLeft' : '';
+              $value = (isset($classData['slots'][$lvl]) ? $classData['slots'][$lvl] : null);
+              $display = ($value === null || $value === '') ? '-' : (int)$value;
+            ?>
+              <div class="cellMainSort">
+                <div>
+                  <div class="cellEntete<? echo $compCss; ?>"><? echo $lvl; ?></div>
+                  <div class="cellValue<? echo $compCss; ?>"><? echo $display; ?></div>
+                </div>
+              </div>
+            <? endfor; ?>
+          </div>
+        </div>
+      <? endforeach;
+    else: ?>
+      <div class="nodata">Ce personnage ne poss&egrave;de aucune classe de lanceur de sorts.</div>
+    <? endif; ?>
   </div>
 
   <div>

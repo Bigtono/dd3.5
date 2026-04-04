@@ -4,16 +4,33 @@ include("include/dblib.inc.php");
 include("include/diverslib.inc.php");
 include("include/date.inc.php");
 
+// S'assure que la table de récupération existe pour éviter l'erreur 1146
+function ensureRecuperationTable()
+{
+    $sql = "CREATE TABLE IF NOT EXISTS recuperation (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      mail VARCHAR(255) NOT NULL,
+      code VARCHAR(64) NOT NULL,
+      confirme TINYINT(1) NOT NULL DEFAULT 0,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_mail (mail)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+    execPDO($sql);
+}
+ensureRecuperationTable();
+
 	// traitement de l'envoi de l'email
 	if (isset($_POST['recup_submit'],$_POST['recup_mail'])): 
 		if (!empty($_POST['recup_mail'])):
 	  	$recup_mail = htmlspecialchars($_POST['recup_mail']);
 	    if (filter_var($recup_mail,FILTER_VALIDATE_EMAIL)):
-				$requete="SELECT j_id,j_pseudo FROM joueurs WHERE j_email ='".$recup_mail."'";
-				$result=queryPDO($requete);
-				$mailexist_count=$result->rowCount();
+				$requete="SELECT j_id,j_pseudo FROM dd_joueurs WHERE j_email = :mail";
+        $stmt = $db->prepare($requete);
+        $stmt->execute([':mail' => $recup_mail]);
+				$mailexist_count=$stmt->rowCount();
 	    	if ($mailexist_count == 1): 
-					$dn = $result->fetch(PDO::FETCH_ASSOC);
+					$dn = $stmt->fetch(PDO::FETCH_ASSOC);
 	      	$pseudo = $dn['j_pseudo'];
 	        $_SESSION['recup_mail'] = $recup_mail;
 	        $recup_code = "";
@@ -105,29 +122,40 @@ include("include/date.inc.php");
 
 	if (isset($_POST['change_submit'])):
 		if (isset($_POST['change_mdp'],$_POST['change_mdpc'])):
-			$requete="SELECT confirme FROM recuperation WHERE mail ='".$_SESSION['recup_mail']."'";
-			$result=queryPDO($requete);
-			$dn=$result->fetch(PDO::FETCH_ASSOC);
-			$verif_confirme=$dn['confirme'];
-			if ($verif_confirme == 1):
-				$mdp = htmlspecialchars($_POST['change_mdp']);
-				$mdpc = htmlspecialchars($_POST['change_mdpc']);
-				if (!empty($mdp) AND !empty($mdpc)):
-					if ($mdp == $mdpc): 
-						$mdp = password_hash($mdp, PASSWORD_DEFAULT);
-						$requete="UPDATE joueurs SET j_pass='".$mdp."' WHERE j_email ='".$_SESSION['recup_mail']."'";
-						$result=execPDO($requete);
-						header('Location:login.php?change=ok');
-						exit();
-						else:
-						$error = "Vos mots de passes ne correspondent pas";
-					endif;
-					else:
-					$error = "Veuillez remplir tous les champs";
-				endif;
-				else:
-				$error = "Veuillez valider votre mail avec le code de v&eacute;rification qui vous a &eacute;t&eacute; envoy&eacute; par mail ";
-			endif;
+      if (!empty($_SESSION['recup_mail'])):
+        $requete="SELECT confirme FROM recuperation WHERE mail = :mail";
+        $stmt = $db->prepare($requete);
+        $stmt->execute([':mail' => $_SESSION['recup_mail']]);
+        $dn=$stmt->fetch(PDO::FETCH_ASSOC);
+        $verif_confirme = $dn ? (int)$dn['confirme'] : 0;
+        if ($verif_confirme === 1):
+          $mdp = htmlspecialchars($_POST['change_mdp']);
+          $mdpc = htmlspecialchars($_POST['change_mdpc']);
+          if (!empty($mdp) AND !empty($mdpc)):
+            if ($mdp == $mdpc): 
+              $hash = password_hash($mdp, PASSWORD_DEFAULT);
+              // Mise à jour du mot de passe sur la table utilisée par la connexion
+              $requete="UPDATE dd_joueurs SET j_password_hash = :hash WHERE j_email = :mail";
+              $stmt = $db->prepare($requete);
+              $stmt->execute([':hash' => $hash, ':mail' => $_SESSION['recup_mail']]);
+              // On supprime le ticket de récupération et on nettoie la session
+              $stmt = $db->prepare("DELETE FROM recuperation WHERE mail = :mail");
+              $stmt->execute([':mail' => $_SESSION['recup_mail']]);
+              unset($_SESSION['recup_mail']);
+              header('Location:login.php?change=ok');
+              exit();
+              else:
+              $error = "Vos mots de passes ne correspondent pas";
+            endif;
+            else:
+            $error = "Veuillez remplir tous les champs";
+          endif;
+          else:
+          $error = "Veuillez valider votre mail avec le code de v&eacute;rification qui vous a &eacute;t&eacute; envoy&eacute; par mail ";
+        endif;
+        else:
+        $error = "Votre session de r&eacute;cup&eacute;ration a expir&eacute;.";
+      endif;
 			else:
 			$error = "Veuillez remplir tous les champs";
 		endif;

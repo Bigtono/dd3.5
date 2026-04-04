@@ -1,0 +1,18 @@
+
+      }
+
+      // Ajoute les sorts connus issus directement de dd_personnages_sorts (au cas où ils ne figurent pas dans la liste de classe filtrée)
+      if (!empty($knownSpellRows)) {
+        foreach ($knownSpellRows as $krow) {
+          $soId = (int)$krow['so_id'];
+          if (!isset($classData['known_spells_index'])) $classData['known_spells_index'] = [];
+          if (isset($classData['known_spells_index'][$soId])) continue;
+          $classData['known_spells'][] = [
+            'so_id' => $soId,
+            'nom' => (string)$krow['so_nom'],
+            'ecole' => (string)$krow['so_ecole'],
+            'source' => '',
+            'niveau' => (int)$krow['spell_level'],
+            'known' => 1,
+            'understood' => (int)$krow['pes_compris'] === 1 ? 1 : 0,
+            'prepared' => 0,
