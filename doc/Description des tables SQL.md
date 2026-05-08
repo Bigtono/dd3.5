@@ -1,5 +1,5 @@
 Description des tables de ma base.
-Version 3
+Version 4
 
 Informations sur la construction de la base :
 - toutes les tables sont préfixées par dd. Les préfixes sont suivis du caractère _ pour les différencier du reste du nom des tables. Exemple : dd_personnages.
