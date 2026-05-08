@@ -8,7 +8,7 @@ function optionListDdLocal($selected, $max = 99)
 {
   $selected = (int)$selected;
   $options = '';
-  for ($i = 1; $i <= $max; $i++):
+  for ($i = 0; $i <= $max; $i++):
     $sel = ($i === $selected) ? ' selected="selected"' : '';
     $options .= '<option value="' . $i . '"' . $sel . '>DD ' . $i . '</option>';
   endfor;

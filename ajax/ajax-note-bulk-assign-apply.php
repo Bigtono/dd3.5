@@ -42,7 +42,7 @@ foreach ($assignments as $peIdRaw => $ddRaw):
   $peId = (int)$peIdRaw;
   $dd = (int)$ddRaw;
   if ($peId <= 0 || !isset($campPersoIds[$peId])) continue;
-  if ($dd < 1 || $dd > 35) continue;
+  if ($dd < 0 || $dd > 35) continue;
   $assignmentsFiltered[$peId] = $dd;
 endforeach;
 

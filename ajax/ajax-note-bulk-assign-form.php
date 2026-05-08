@@ -31,7 +31,7 @@ endif;
 $buildDdOptions = function ($selected = 1) {
   $selected = (int)$selected;
   $html = '';
-  for ($i = 1; $i <= 35; $i++):
+  for ($i = 0; $i <= 35; $i++):
     $sel = ($i === $selected) ? ' selected="selected"' : '';
     $html .= '<option value="' . $i . '"' . $sel . '>DD ' . $i . '</option>';
   endfor;

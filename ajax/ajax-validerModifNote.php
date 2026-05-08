@@ -88,7 +88,7 @@ try {
       $dif = explode('a', $value);
       $peId = isset($dif[0]) ? (int)$dif[0] : 0;
       $dd = isset($dif[1]) ? (int)$dif[1] : 0;
-      if ($peId > 0 && $dd > 0):
+      if ($peId > 0 && $dd >= 0 && $dd <= 35):
         $stmtAddPno->execute([
           ':no_id' => $n,
           ':pe_id' => $peId,

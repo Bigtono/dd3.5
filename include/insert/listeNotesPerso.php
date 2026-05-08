@@ -3,7 +3,7 @@
   if (isset($_GET['type']) && ctype_digit((string)$_GET['type']) && (int)$_GET['type'] > 0):
     $filtreTypeSql = ' AND no_tyno_id="' . (int)$_GET['type'] . '"';
   endif;
-  $requete_no='SELECT * FROM dd_notes JOIN dd_types_notes ON no_tyno_id=tyno_id LEFT JOIN dd_personnages_notes ON no_id=pno_no_id WHERE pno_pe_id="'.$p.'"' . $filtreTypeSql; 
+  $requete_no='SELECT * FROM dd_notes JOIN dd_types_notes ON no_tyno_id=tyno_id LEFT JOIN dd_personnages_notes ON no_id=pno_no_id WHERE pno_pe_id="'.$p.'" AND pno_dd > 0' . $filtreTypeSql; 
   $result_no=queryPDO($requete_no);
   $num_rows_no=$result_no->rowCount();
   //echo '<div id="notes">';

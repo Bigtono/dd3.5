@@ -258,14 +258,15 @@
     },
 
     modifierNote: function (note, perso) {
-      const noteId = parseIntSafe(note, 0);
+      const isNew = String(note).toLowerCase() === 'n';
+      const noteId = isNew ? 0 : parseIntSafe(note, 0);
       let peId = parseIntSafe(perso, 0);
       const ctx = getNoteContext();
       if (peId <= 0 && ctx && ctx.noteId === noteId) peId = parseIntSafe(ctx.perso, 0);
       $.ajax({
         type: 'POST',
         url: 'ajax/ajax-modifierNote.php',
-        data: 'note=' + noteId + '&perso=' + peId,
+        data: 'note=' + (isNew ? 'n' : noteId) + '&perso=' + peId,
         dataType: 'text',
         success: actualiserPageModif,
         error: function () { alert('Erreur modifierNote'); }
@@ -306,7 +307,8 @@
     validerModifNote: function (perso) {
       let diffusion = '';
       $('.diffusion').each(function () {
-        if ($(this).val() > 0) diffusion += $(this).attr('id') + 'a' + $(this).val();
+        const val = parseInt($(this).val(), 10);
+        if (!Number.isNaN(val) && val >= 0) diffusion += $(this).attr('id') + 'a' + val;
       });
 
       let mp_no_tags = [];
@@ -399,13 +401,13 @@
 
     bulkAssignApplyAll: function () {
       const dd = parseInt($('#bulk-global-dd').val(), 10) || 0;
-      if (dd <= 0) return;
+      if (Number.isNaN(dd) || dd < 0) return;
       $('.bulk-assign-dd').val(String(dd));
     },
 
     applyDiffusionDdToAll: function () {
       const dd = parseInt($('#note-global-dd').val(), 10) || 0;
-      if (dd <= 0) return;
+      if (Number.isNaN(dd) || dd < 0) return;
       $('.diffusion').val(String(dd));
     },
 
@@ -420,7 +422,7 @@
       $('.bulk-assign-dd').each(function () {
         const peId = parseInt($(this).attr('data-pe-id'), 10);
         const dd = parseInt($(this).val(), 10);
-        if (!Number.isNaN(peId) && peId > 0 && !Number.isNaN(dd) && dd >= 1 && dd <= 35) {
+        if (!Number.isNaN(peId) && peId > 0 && !Number.isNaN(dd) && dd >= 0 && dd <= 35) {
           assignments[peId] = dd;
         }
       });
